@@ -21,7 +21,14 @@
           @points-change="onPointsChange"
         />
   </div>
+      <OptionsButton
+        id="about-page-button"
+        title="ABOUT"
+        icon="about"
+        @click.native="toggleAboutPage"
+      />
     </div>
+    <AboutPage ref="aboutPage" />
   </div>
 </template>
 
@@ -29,6 +36,7 @@
 import TheLogo from "./components/TheLogo";
 import PotreeViewer from "./components/PotreeViewer";
 import SettingsMenu from "./components/SettingsMenu";
+import AboutPage from "./components/AboutPage";
 import OptionsButton from "./components/OptionsButton";
 
 export default {
@@ -37,6 +45,7 @@ export default {
     TheLogo,
     PotreeViewer,
     SettingsMenu,
+    AboutPage,
     OptionsButton
   },
   data() {
@@ -58,6 +67,9 @@ export default {
     },
     toggleSettingsMenu() {
       this.$refs.settingsMenu.toggleMenu();
+    },
+    toggleAboutPage() {
+      this.$refs.aboutPage.togglePage();
     }
   }
 };
