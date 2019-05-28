@@ -19,14 +19,41 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: "CamphorPro-Regular";
+  src: url("assets/fonts/CamphorPro-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "CamphorPro-Italic";
+  src: url("assets/fonts/CamphorPro-Italic.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Flaco-Mono";
+  src: url("assets/fonts/Flaco-Mono.woff2") format("woff2"),
+    url("assets/fonts/Flaco-Mono.woff") format("woff"),
+    url("assets/fonts/Flaco-Mono.ttf") format("truetype"),
+    url("assets/fonts/Flaco-Mono.eot") format("eot");
+}
+
 html {
   overflow-x: hidden;
 }
 
 body {
+  font-family: "CamphorPro-Regular", sans-serif;
   margin: 0;
   overflow-x: hidden;
 }
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Flaco-Mono", sans-serif;
+}
+
 #app {
   position: relative;
   width: 100vw;
