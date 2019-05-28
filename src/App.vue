@@ -1,28 +1,50 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <TheLogo titleColor="#FFFFFF" subtitleColor="#FFFFFF" lineColor="#FFFFFF" />
+    <PotreeViewer ref="PotreeViewer" />
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import TheLogo from "./components/TheLogo";
+import PotreeViewer from "./components/PotreeViewer";
 
 export default {
   name: "app",
   components: {
-    HelloWorld
+    TheLogo,
+    PotreeViewer,
   }
 };
 </script>
 
 <style>
+html {
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+#potree-viewer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+</style>
+
+<style scoped>
+#logo {
+  position: absolute;
+  top: 1rem;
+  left: 3rem;
+  z-index: 9;
 }
 </style>
