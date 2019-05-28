@@ -11,6 +11,7 @@
     "core-js": "^2.6.5",
     "potree": "github:chrislcs/potree#westerbork",
     "vue": "^2.6.10",
+    "vue-slider-component": "^3.0.31"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",
