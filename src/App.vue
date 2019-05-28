@@ -20,12 +20,18 @@
           @graphics-change="onGraphicsChange"
           @points-change="onPointsChange"
         />
-  </div>
+      </div>
       <OptionsButton
         id="about-page-button"
         title="ABOUT"
         icon="about"
         @click.native="toggleAboutPage"
+      />
+      <OptionsButton
+        id="share-button"
+        title="share"
+        icon="share"
+        @click.native="share"
       />
     </div>
     <AboutPage ref="aboutPage" />
@@ -70,6 +76,9 @@ export default {
     },
     toggleAboutPage() {
       this.$refs.aboutPage.togglePage();
+    },
+    share() {
+      console.log("Share!");
     }
   }
 };
