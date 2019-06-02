@@ -148,7 +148,8 @@ export default {
   top: 0;
   left: 0;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: auto;
   background-color: #ebebeb;
   color: #4a4a4a;
   visibility: hidden;

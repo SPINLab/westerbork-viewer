@@ -3,11 +3,12 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 const Potree = window.Potree;
 
 export default {
   name: "PotreeViewer",
-  viewer: null,
   props: {
     graphics: {
       type: String,
@@ -30,48 +31,48 @@ export default {
     graphics: function(value) {
       switch (value) {
         case "low":
-          this.$options.viewer.useEDL = false;
-          this.$options.viewer.useHQ = false;
+          this.$viewer.useEDL = false;
+          this.$viewer.useHQ = false;
           break;
         case "medium":
-          this.$options.viewer.useEDL = true;
-          this.$options.viewer.useHQ = false;
+          this.$viewer.useEDL = true;
+          this.$viewer.useHQ = false;
           break;
         case "high":
-          this.$options.viewer.useEDL = true;
-          this.$options.viewer.useHQ = true;
+          this.$viewer.useEDL = true;
+          this.$viewer.useHQ = true;
           break;
         default:
           break;
       }
     },
     numPoints: function(value) {
-      this.$options.viewer.setPointBudget(value);
+      this.$viewer.setPointBudget(value);
     }
   },
   mounted() {
-    this.$options.viewer = new Potree.Viewer(this.$el);
-    this.$options.viewer.setFOV(80);
-    this.$options.viewer.pathControls.loop = false;
+    Vue.prototype.$viewer = new Potree.Viewer(this.$el);
+    this.$viewer.setFOV(80);
+    this.$viewer.pathControls.loop = false;
 
     switch (this.graphics) {
       case "low":
-        this.$options.viewer.setEDLEnabled(false);
-        this.$options.viewer.useHQ = false;
+        this.$viewer.setEDLEnabled(false);
+        this.$viewer.useHQ = false;
         break;
       case "medium":
-        this.$options.viewer.setEDLEnabled(true);
-        this.$options.viewer.useHQ = false;
+        this.$viewer.setEDLEnabled(true);
+        this.$viewer.useHQ = false;
         break;
       case "high":
-        this.$options.viewer.setEDLEnabled(true);
-        this.$options.viewer.useHQ = true;
+        this.$viewer.setEDLEnabled(true);
+        this.$viewer.useHQ = true;
         break;
       default:
         break;
     }
 
-    this.$options.viewer.setPointBudget(this.numPoints);
+    this.$viewer.setPointBudget(this.numPoints);
 
     Potree.loadPointCloud(
       //   "data/ahn2/ept.json",
@@ -79,7 +80,7 @@ export default {
       "AHN2",
       e => {
         this.onPointCloudLoaded(e.pointcloud, 0.65);
-        this.$options.viewer.fitToScreen();
+        this.$viewer.fitToScreen();
       }
     );
 
@@ -89,14 +90,16 @@ export default {
       "Commandantshuis",
       e => {
         this.onPointCloudLoaded(e.pointcloud, 0.65);
-        this.$options.viewer.setMoveSpeed(2);
+        this.$viewer.setMoveSpeed(2);
         // viewer.fitToScreen();
       }
     );
+
+    console.log(this.$viewer);
   },
   methods: {
     onPointCloudLoaded(pointcloud, size) {
-      this.$options.viewer.scene.addPointCloud(pointcloud);
+      this.$viewer.scene.addPointCloud(pointcloud);
 
       const material = pointcloud.material;
       material.size = size;

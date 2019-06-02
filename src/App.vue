@@ -34,6 +34,13 @@
         @click.native="share"
       />
     </div>
+
+    <div ref="narrativeAndProgression" class="narrative-progression-container">
+      <NarrativeSelector />
+      <ProgressionBar />
+      <div id="bottom-fade" class="fade"></div>
+    </div>
+
     <AboutPage ref="aboutPage" />
   </div>
 </template>
@@ -44,6 +51,8 @@ import PotreeViewer from "./components/PotreeViewer";
 import SettingsMenu from "./components/SettingsMenu";
 import AboutPage from "./components/AboutPage";
 import OptionsButton from "./components/OptionsButton";
+import ProgressionBar from "./components/ProgressionBar";
+import NarrativeSelector from "./components/NarrativeSelector";
 
 export default {
   name: "app",
@@ -52,7 +61,9 @@ export default {
     PotreeViewer,
     SettingsMenu,
     AboutPage,
-    OptionsButton
+    OptionsButton,
+    ProgressionBar,
+    NarrativeSelector
   },
   data() {
     return {
@@ -104,13 +115,13 @@ export default {
 }
 
 html {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body {
   font-family: "CamphorPro-Regular", sans-serif;
   margin: 0;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 h1,
@@ -155,5 +166,28 @@ h4 {
   display: flex;
   align-items: flex-start;
   max-height: 2.5rem;
+}
+
+.narrative-progression-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  display: flex;
+  align-items: flex-end;
+  padding: 0.2rem 0;
+}
+
+.fade {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  pointer-events: none;
+}
+
+#bottom-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4rem;
 }
 </style>
