@@ -268,7 +268,7 @@ export default {
   width: 5.6%;
   height: 5rem;
   position: absolute;
-  transform: translate(0, -0.2rem);
+  transform: translate(0, -0.4rem);
 }
 
 .selected {
