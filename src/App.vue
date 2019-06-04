@@ -27,12 +27,15 @@
         icon="about"
         @click.native="toggleAboutPage"
       />
+      <div class="share-menu-container">
       <OptionsButton
         id="share-button"
         title="share"
         icon="share"
-        @click.native="share"
+          @click.native="toggleShareMenu"
       />
+        <ShareMenu ref="shareMenu" />
+      </div>
     </div>
 
     <div ref="narrativeAndProgression" class="narrative-progression-container">
@@ -50,6 +53,7 @@ import TheLogo from "./components/TheLogo";
 import PotreeViewer from "./components/PotreeViewer";
 import SettingsMenu from "./components/SettingsMenu";
 import AboutPage from "./components/AboutPage";
+import ShareMenu from "./components/ShareMenu";
 import OptionsButton from "./components/OptionsButton";
 import ProgressionBar from "./components/ProgressionBar";
 import NarrativeSelector from "./components/NarrativeSelector";
@@ -61,6 +65,7 @@ export default {
     PotreeViewer,
     SettingsMenu,
     AboutPage,
+    ShareMenu,
     OptionsButton,
     ProgressionBar,
     NarrativeSelector
@@ -88,8 +93,8 @@ export default {
     toggleAboutPage() {
       this.$refs.aboutPage.togglePage();
     },
-    share() {
-      console.log("Share!");
+    toggleShareMenu() {
+      this.$refs.shareMenu.toggleMenu();
     }
   }
 };
@@ -165,6 +170,13 @@ h4 {
 .settings-menu-container {
   display: flex;
   align-items: flex-start;
+  max-height: 2.5rem;
+}
+
+.share-menu-container {
+  display: flex;
+  align-items: flex-start;
+  transform: translateY(-1rem);
   max-height: 2.5rem;
 }
 
