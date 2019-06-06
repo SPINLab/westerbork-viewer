@@ -28,12 +28,12 @@
         @click.native="toggleAboutPage"
       />
       <div class="share-menu-container">
-      <OptionsButton
-        id="share-button"
-        title="share"
-        icon="share"
+        <OptionsButton
+          id="share-button"
+          title="share"
+          icon="share"
           @click.native="toggleShareMenu"
-      />
+        />
         <ShareMenu ref="shareMenu" />
       </div>
     </div>
@@ -43,6 +43,8 @@
       <ProgressionBar />
       <div id="bottom-fade" class="fade"></div>
     </div>
+
+    <InfoBox />
 
     <AboutPage ref="aboutPage" />
   </div>
@@ -57,6 +59,7 @@ import ShareMenu from "./components/ShareMenu";
 import OptionsButton from "./components/OptionsButton";
 import ProgressionBar from "./components/ProgressionBar";
 import NarrativeSelector from "./components/NarrativeSelector";
+import InfoBox from "./components/InfoBox";
 
 export default {
   name: "app",
@@ -68,7 +71,8 @@ export default {
     ShareMenu,
     OptionsButton,
     ProgressionBar,
-    NarrativeSelector
+    NarrativeSelector,
+    InfoBox
   },
   data() {
     return {
