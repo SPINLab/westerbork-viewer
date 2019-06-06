@@ -94,8 +94,6 @@ export default {
         // viewer.fitToScreen();
       }
     );
-
-    console.log(this.$viewer);
   },
   methods: {
     onPointCloudLoaded(pointcloud, size) {
