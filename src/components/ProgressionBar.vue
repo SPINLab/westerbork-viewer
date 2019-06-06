@@ -266,7 +266,7 @@ export default {
   );
   pointer-events: none;
   width: 5.6%;
-  height: 5rem;
+  height: 100%;
   position: absolute;
   transform: translate(0, -0.4rem);
 }
