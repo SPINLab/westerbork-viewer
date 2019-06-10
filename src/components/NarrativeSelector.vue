@@ -13,7 +13,7 @@
         </span>
       </div>
     </div>
-    <ul class="narrative-selection" ref="narrativeSelection">
+    <ol class="narrative-selection" ref="narrativeSelection">
       <li
         v-for="(narrative, index) in narratives.slice().reverse()"
         :key="index"
@@ -22,7 +22,7 @@
       >
         <button>{{ narrative }}</button>
       </li>
-    </ul>
+    </ol>
   </div>
 </template>
 
@@ -98,7 +98,7 @@ export default {
       //     introduction.$tours.navTour.nextStep();
       //   }
 
-      this.narrative = narrative;
+      this.narrative = narrative.split(". ")[1];
       this.toggleNarrativeSelection();
 
       for (const item of this.$refs.narrativeSelection.children) {
@@ -114,7 +114,7 @@ export default {
           "narrative-icon-grow-shrink"
         );
       }, 300);
-      this.$emit("narrative-changed", this.narrative);
+      this.$emit("narrative-change", this.narrative);
     },
     documentClick(e) {
       if (!this.$el.parentElement.contains(e.target)) {
@@ -219,7 +219,7 @@ export default {
   transition: visibility 0s 0.2s, opacity 0.2s linear;
 }
 
-@keyframes growShrink {
+@keyframes grow-shrink {
   0% {
     transform: scale(1.5);
   }
@@ -232,7 +232,7 @@ export default {
 }
 
 .narrative-icon-grow-shrink {
-  animation-name: growShrink;
+  animation-name: grow-shrink;
   animation-duration: 0.3s;
   animation-fill-mode: both;
 }

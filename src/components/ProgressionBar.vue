@@ -7,7 +7,7 @@
       v-bind="options"
       @change="moveToRoom"
     />
-    <ul class="labels">
+    <ol class="labels">
       <li
         v-for="(room, index) of rooms"
         :key="index"
@@ -18,7 +18,7 @@
         <button v-if="room == step" class="selected">{{ room }}</button>
         <button v-if="room != step">{{ room }}</button>
       </li>
-    </ul>
+    </ol>
   </div>
 </template>
 
@@ -154,7 +154,7 @@ export default {
           }
           if (step !== this.step) {
             this.step = step;
-            this.$emit("room-changed", step);
+            this.$emit("room-change", step);
           }
         }, 10);
 
@@ -188,7 +188,7 @@ export default {
         this.$viewer.renderArea.classList.add("warp");
         setTimeout(() => {
           this.$viewer.pathControls.position = stepLoc;
-          this.$emit("room-changed", this.step);
+          this.$emit("room-change", this.step);
           setTimeout(() => {
             this.$viewer.renderArea.classList.remove("warp");
           }, 500);

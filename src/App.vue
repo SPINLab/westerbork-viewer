@@ -39,8 +39,8 @@
     </div>
 
     <div ref="narrativeAndProgression" class="narrative-progression-container">
-      <NarrativeSelector />
-      <ProgressionBar />
+      <NarrativeSelector @narrative-change="changeNarrative" />
+      <ProgressionBar @room-change="changeRoom" />
       <div id="bottom-fade" class="fade"></div>
     </div>
 
@@ -127,6 +127,12 @@ export default {
     },
     toggleShareMenu() {
       this.$refs.shareMenu.toggleMenu();
+    },
+    changeNarrative(narrative) {
+      this.narrative = narrative;
+    },
+    changeRoom(room) {
+      this.room = room;
     },
     openSourcePage() {
       this.$refs.sourcePage.open();
