@@ -40,13 +40,13 @@
     <div class="info-container">
       <div class="expand-collapse-buttons">
         <ExpandCollapseButton
-          v-if="!cardsExpanded"
+          v-show="!cardsExpanded"
           direction="left"
           arrowColor="#333333"
           @click.native="expand"
         />
         <ExpandCollapseButton
-          v-if="visible"
+          v-show="visible"
           direction="right"
           arrowColor="#333333"
           @click.native="collapse"

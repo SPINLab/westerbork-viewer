@@ -15,10 +15,10 @@
             v-model="selectedPointClouds"
             @change="onChange"
           />
-          <span v-if="selectedPointClouds.includes(pc)" class="selected">{{
+          <span v-show="selectedPointClouds.includes(pc)" class="selected">{{
             pc.name
           }}</span>
-          <span v-if="!selectedPointClouds.includes(pc)">{{ pc.name }}</span>
+          <span v-show="!selectedPointClouds.includes(pc)">{{ pc.name }}</span>
         </label>
       </li>
     </ul>

@@ -20,13 +20,13 @@
       </button>
     </div>
     <div v-show="expanded" class="nav-card-buttons">
-      <button v-if="isHouse" class="active">
+      <button v-show="isHouse" class="active">
         HOUSE
       </button>
-      <button v-if="isCamp" class="active">
+      <button v-show="isCamp" class="active">
         CAMP
       </button>
-      <button v-if="isMemory" class="active">
+      <button v-show="isMemory" class="active">
         MEMORY
       </button>
     </div>

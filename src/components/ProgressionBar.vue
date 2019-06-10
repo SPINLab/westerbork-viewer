@@ -13,10 +13,10 @@
         :key="index"
         @click="onLabelClick(room)"
       >
-        <div v-if="room == step" class="highlight"></div>
+        <div v-show="room == step" class="highlight"></div>
         <br />
-        <button v-if="room == step" class="selected">{{ room }}</button>
-        <button v-if="room != step">{{ room }}</button>
+        <button v-show="room == step" class="selected">{{ room }}</button>
+        <button v-show="room != step">{{ room }}</button>
       </li>
     </ol>
   </div>
