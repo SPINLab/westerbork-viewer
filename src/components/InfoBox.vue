@@ -5,14 +5,36 @@
   >
     <div class="media-container">
       <transition name="delayed-fade">
-      <ZoomButton
+        <ZoomButton
           v-show="!cardsExpanded && visible"
-        iconColor="#333333"
+          iconColor="#333333"
           @click.native="openSource"
-      />
+        />
       </transition>
       <transition name="fade">
-        <div v-if="!cardsExpanded" class="media" v-html="media"></div>
+        <div class="media-container" ref="media">
+          <transition name="fade">
+            <div
+              v-show="!cardsExpanded && activeLayer === 'house'"
+              class="media"
+              v-html="houseMedia"
+            ></div>
+          </transition>
+          <transition name="fade">
+            <div
+              v-show="!cardsExpanded && activeLayer === 'camp'"
+              class="media"
+              v-html="campMedia"
+            ></div>
+          </transition>
+          <transition name="fade">
+            <div
+              v-show="!cardsExpanded && activeLayer === 'memory'"
+              class="media"
+              v-html="memoryMedia"
+            ></div>
+          </transition>
+        </div>
       </transition>
     </div>
     <div class="info-container">
@@ -88,25 +110,6 @@ import InfoBoxCard from "./InfoBoxCard";
 import ExpandCollapseButton from "./ExpandCollapseButton";
 import ZoomButton from "./ZoomButton";
 
-// const directusRoomNames = {
-//   Outside: "",
-//   Hallway: "1_Entrance/hallway",
-//   "Dining Room": "2_Dining room",
-//   Anteroom: "3_Anteroom",
-//   "Sitting Room": "4_Sitting room (fireplace)",
-//   Conservatory: "5_Conservatory",
-//   Kitchen: "6_Kitchen",
-//   Basement: "7_Basement",
-//   "Garden Shed": "8_Garden shed",
-//   "Bedroom Gemmeker": "9_Bedroom Gemmeker",
-//   "Bedroom Speck Obreen": "10_Bedroom Speck Obreen",
-//   "Guestroom 1": "11_Guestroom1",
-//   "Guestroom 2": "12_Guestroom2",
-//   "Bedroom Elisabeth Hassel": "13_Bedroom Elisabeth Hassel",
-//   Bathroom: "14_Bathroom",
-//   Attic: "15_Attic"
-// };
-
 export default {
   name: "InfoBox",
   components: {
@@ -114,14 +117,42 @@ export default {
     ExpandCollapseButton,
     ZoomButton
   },
+  props: {
+    houseMedia: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    houseContent: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    campMedia: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    campContent: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    memoryMedia: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    memoryContent: {
+      type: String,
+      required: false,
+      default: ""
+    }
+  },
   data() {
     return {
       visible: true,
       cardOrder: ["house", "camp", "memory"],
-      media: `<img src="${require("../assets/tmp/media.png")}" alt="media">`,
-      houseContent: `<p>The recent debate on the locus of the refugees in the memory culture of Westerbork suggests the restrictions that this canonical perspective on the site brings to the prewar history of the site. Rather than an open historical perspective, discussions on its relevance for ethics of humanitarianism often result in memorial conflicts.</p>`,
-      campContent: "",
-      memoryContent: `<p>The recent debate on the locus of the refugees in the memory culture of Westerbork suggests the restrictions that this canonical perspective on the site brings to the prewar history of the site. Rather than an open historical perspective, discussions on its relevance for ethics of humanitarianism often result in memorial conflicts. to the prewar history of the site. Rather than an open historical perspective, discussions on its relevance for ethics of humanitarianism often result in memorial conflicts. Rather than an open historical perspective, discussions on its relevance for ethics of humanitarianism.</p>`,
       cardsExpanded: false,
       cardsCollapsed: true
     };
@@ -144,6 +175,9 @@ export default {
     },
     memoryOffset: function() {
       return this.cardOrder.indexOf("memory") * 1.3 + "rem";
+    },
+    activeLayer: function() {
+      return this.cardOrder[0];
     }
   },
   methods: {
@@ -151,6 +185,15 @@ export default {
       this.cardOrder.splice(this.cardOrder.indexOf(card), 1);
       this.cardOrder.unshift(card);
       this.$refs[card].flipCard();
+
+      for (const element of this.$refs.media.children) {
+        const mediaElement = element.children[0];
+        if (mediaElement.nodeName === "VIDEO") {
+          mediaElement.pause();
+        }
+      }
+
+      this.$emit("layer-change", card);
     },
     collapse() {
       if (this.cardsExpanded) {
@@ -218,7 +261,7 @@ export default {
 
 .info-container {
   position: relative;
-  margin-top: -1.2rem;
+  margin-top: -0.4rem;
 }
 
 .cards-container {
@@ -255,7 +298,7 @@ export default {
 }
 
 .card-expand-2 {
-  animation: slide-left-2-card 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+  animation: slide-left-2-card 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
     forwards;
 }
 
@@ -283,7 +326,7 @@ export default {
 }
 
 .card-collapse-2 {
-  animation: slide-left-2-card-bck 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+  animation: slide-left-2-card-bck 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
     none;
 }
 
@@ -297,11 +340,27 @@ export default {
 .media-container button {
   position: absolute;
   left: -1rem;
-  bottom: 3rem;
+  bottom: 4.4rem;
+  z-index: 1;
+}
+
+.media {
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 #info-box >>> .media-container img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#info-box >>> .media-container video {
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
 }
 
 .expand-collapse-buttons {
@@ -317,9 +376,11 @@ export default {
   margin-bottom: 1rem;
 }
 
-.fade-enter-active,
+.fade-enter-active {
+  transition: opacity 0.3s ease-out;
+}
 .fade-leave-active {
-  transition: opacity 0.3s;
+  transition: opacity 0.2s ease-in;
 }
 .fade-enter,
 .fade-leave-to {
