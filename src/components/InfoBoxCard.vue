@@ -8,10 +8,7 @@
     }"
     @animationend="onAnimationEnd"
   >
-    <div
-      v-if="!expanded"
-      :class="{ 'nav-card-buttons': true, deactive: isDeactivated }"
-    >
+    <div v-show="!expanded && active" class="nav-card-buttons">
       <button :class="{ active: isHouse }" @click="switchCard('house')">
         HOUSE
       </button>
@@ -22,14 +19,14 @@
         MEMORY
       </button>
     </div>
-    <div v-if="expanded" class="nav-card-buttons">
-      <button v-if="category === 'house'" class="active">
+    <div v-show="expanded" class="nav-card-buttons">
+      <button v-if="isHouse" class="active">
         HOUSE
       </button>
-      <button v-if="category === 'camp'" class="active">
+      <button v-if="isCamp" class="active">
         CAMP
       </button>
-      <button v-if="category === 'memory'" class="active">
+      <button v-if="isMemory" class="active">
         MEMORY
       </button>
     </div>
@@ -65,7 +62,7 @@
 export default {
   name: "InfoBoxCard",
   props: {
-    category: {
+    layer: {
       type: String,
       required: true,
       validator: function(value) {
@@ -105,21 +102,18 @@ export default {
       return this.color === "white";
     },
     isHouse: function() {
-      return this.category === "house";
+      return this.layer === "house";
     },
     isCamp: function() {
-      return this.category === "camp";
+      return this.layer === "camp";
     },
     isMemory: function() {
-      return this.category === "memory";
-    },
-    isDeactivated: function() {
-      return !this.active;
+      return this.layer === "memory";
     }
   },
   methods: {
     switchCard(card) {
-      if (card !== this.category) {
+      if (card !== this.layer) {
         this.$emit("change-card", card);
       }
     },
@@ -158,10 +152,6 @@ export default {
 .card-white {
   background-image: url("../assets/background_images/whitepaper.png");
   color: #575757;
-}
-
-.card .deactive {
-  display: none;
 }
 
 .nav-card-buttons {

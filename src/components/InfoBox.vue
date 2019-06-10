@@ -33,7 +33,7 @@
       <div class="cards-container">
         <InfoBoxCard
           ref="house"
-          category="house"
+          layer="house"
           :content="houseContent"
           color="black"
           :active="cardOrder.indexOf('house') === 0"
@@ -44,7 +44,7 @@
         />
         <InfoBoxCard
           ref="camp"
-          category="camp"
+          layer="camp"
           :content="campContent"
           color="pink"
           :active="cardOrder.indexOf('camp') === 0"
@@ -60,7 +60,7 @@
         />
         <InfoBoxCard
           ref="memory"
-          category="memory"
+          layer="memory"
           :content="memoryContent"
           color="white"
           :active="cardOrder.indexOf('memory') === 0"
