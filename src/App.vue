@@ -25,7 +25,7 @@
         id="about-page-button"
         title="ABOUT"
         icon="about"
-        @click.native="toggleAboutPage"
+        @click.native="openAboutPage"
       />
       <div class="share-menu-container">
         <OptionsButton
@@ -122,8 +122,8 @@ export default {
     toggleSettingsMenu() {
       this.$refs.settingsMenu.toggleMenu();
     },
-    toggleAboutPage() {
-      this.$refs.aboutPage.togglePage();
+    openAboutPage() {
+      this.$refs.aboutPage.open();
     },
     toggleShareMenu() {
       this.$refs.shareMenu.toggleMenu();

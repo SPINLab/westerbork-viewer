@@ -1,5 +1,5 @@
 <template>
-  <div ref="page" class="about-page page-closed">
+  <div class="about-page page-closed">
     <div class="content">
       <header>
         <TheLogo
@@ -7,10 +7,7 @@
           subtitleColor="#4B4B4B"
           lineColor="#A8A8A8"
         />
-        <NavigationButton
-          title="Go back to the app"
-          @click.native="togglePage"
-        />
+        <NavigationButton title="Go back to the app" @click.native="close" />
       </header>
       <div>
         <section class="about">
@@ -129,14 +126,13 @@ export default {
     TeamMember
   },
   methods: {
-    togglePage() {
-      if (this.$refs.page.classList.contains("page-closed")) {
-        this.$refs.page.classList.remove("page-closed");
-        this.$refs.page.classList.add("page-open");
-      } else {
-        this.$refs.page.classList.remove("page-open");
-        this.$refs.page.classList.add("page-closed");
-      }
+    close() {
+      this.$el.classList.remove("page-open");
+      this.$el.classList.add("page-closed");
+    },
+    open() {
+      this.$el.classList.remove("page-closed");
+      this.$el.classList.add("page-open");
     }
   }
 };
