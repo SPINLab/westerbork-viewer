@@ -46,6 +46,15 @@
 
     <InfoBox />
 
+    <SourcePage
+      ref="sourcePage"
+      :narrative="narrative"
+      :room="room"
+      :layer="layer"
+      :media="sourceData[this.layer].media"
+      :content="sourceData[this.layer].content"
+    />
+
     <AboutPage ref="aboutPage" />
   </div>
 </template>
@@ -60,6 +69,7 @@ import OptionsButton from "./components/OptionsButton";
 import ProgressionBar from "./components/ProgressionBar";
 import NarrativeSelector from "./components/NarrativeSelector";
 import InfoBox from "./components/InfoBox";
+import SourcePage from "./components/SourcePage";
 
 export default {
   name: "app",
@@ -72,13 +82,31 @@ export default {
     OptionsButton,
     ProgressionBar,
     NarrativeSelector,
-    InfoBox
+    InfoBox,
+    SourcePage
   },
   data() {
     return {
       pointClouds: [],
       graphics: "medium",
-      points: 600000
+      points: 600000,
+      narrative: "",
+      room: "Outside",
+      layer: "house",
+      sourceData: {
+        house: {
+          media: "",
+          content: ""
+        },
+        camp: {
+          media: "",
+          content: ""
+        },
+        memory: {
+          media: "",
+          content: ""
+        }
+      }
     };
   },
   methods: {
@@ -99,6 +127,9 @@ export default {
     },
     toggleShareMenu() {
       this.$refs.shareMenu.toggleMenu();
+    },
+    openSourcePage() {
+      this.$refs.sourcePage.open();
     }
   }
 };

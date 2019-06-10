@@ -45,12 +45,17 @@
       ></div>
     </div>
     <button
-      v-if="!expanded"
-      :class="{ 'read-further-button': true, deactive: isDeactivated }"
+      v-show="!expanded && active && content.length > 100"
+      class="read-further-button"
+      @click="openSource"
     >
       READ FURTHER...
     </button>
-    <button v-if="expanded" class="read-further-button">
+    <button
+      v-show="expanded && content.length > 100"
+      class="read-further-button"
+      @click="openSource"
+    >
       READ FURTHER...
     </button>
   </div>
@@ -123,6 +128,9 @@ export default {
     },
     onAnimationEnd() {
       this.$el.classList.remove("flip-card");
+    },
+    openSource() {
+      this.$emit("open-source");
     }
   }
 };
@@ -271,6 +279,10 @@ export default {
   font-family: "Flaco-Mono", sans-serif;
   font-size: 0.875rem;
   cursor: pointer;
+}
+.read-further-button:focus {
+  outline: 0;
+  background-color: grey;
 }
 
 @keyframes flip-card {

@@ -4,11 +4,13 @@
     :class="{ 'info-box-expand': visible, 'info-box-collapse': !visible }"
   >
     <div class="media-container">
+      <transition name="delayed-fade">
       <ZoomButton
-        v-if="!cardsExpanded && visible"
+          v-show="!cardsExpanded && visible"
         iconColor="#333333"
-        @click.native="expandMedia"
+          @click.native="openSource"
       />
+      </transition>
       <transition name="fade">
         <div v-if="!cardsExpanded" class="media" v-html="media"></div>
       </transition>
@@ -38,6 +40,7 @@
           :expanded="cardsExpanded"
           :style="{ 'z-index': houseIndex, 'margin-top': houseOffset }"
           @change-card="switchCard"
+          @open-source="openSource"
         />
         <InfoBoxCard
           ref="camp"
@@ -52,6 +55,7 @@
           }"
           :style="{ 'z-index': campIndex, 'margin-top': campOffset }"
           @change-card="switchCard"
+          @open-source="openSource"
           @animationend.native="onAnimationEnd"
         />
         <InfoBoxCard
@@ -71,6 +75,7 @@
             'margin-left': '-0.4rem'
           }"
           @change-card="switchCard"
+          @open-source="openSource"
           @animationend.native="onAnimationEnd"
         />
       </div>
@@ -162,8 +167,8 @@ export default {
         this.visible = true;
       }
     },
-    zoomMedia() {
-      console.log("Expand media..");
+    openSource() {
+      this.$emit("open-source");
     },
     onAnimationEnd(e) {
       if (e.target.classList.contains("card-collapse-2")) {
@@ -318,6 +323,14 @@ export default {
 }
 .fade-enter,
 .fade-leave-to {
+  opacity: 0;
+}
+
+.delayed-fade-enter-active {
+  transition: opacity 0.3s;
+  transition-delay: 0.3s;
+}
+.delayed-fade-enter {
   opacity: 0;
 }
 </style>
