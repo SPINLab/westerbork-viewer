@@ -44,7 +44,17 @@
       <div id="bottom-fade" class="fade"></div>
     </div>
 
-    <InfoBox />
+    <InfoBox
+      ref="infoBox"
+      :houseMedia="sourceData.house.media"
+      :houseContent="sourceData.house.content"
+      :campMedia="sourceData.camp.media"
+      :campContent="sourceData.camp.content"
+      :memoryMedia="sourceData.memory.media"
+      :memoryContent="sourceData.memory.content"
+      @layer-change="changeLayer"
+      @open-source="openSourcePage"
+    />
 
     <SourcePage
       ref="sourcePage"
@@ -70,6 +80,25 @@ import ProgressionBar from "./components/ProgressionBar";
 import NarrativeSelector from "./components/NarrativeSelector";
 import InfoBox from "./components/InfoBox";
 import SourcePage from "./components/SourcePage";
+
+const directusRoomNames = {
+  Outside: "",
+  Hallway: "1_Entrance/hallway",
+  "Dining Room": "2_Dining room",
+  Anteroom: "3_Anteroom",
+  "Sitting Room": "4_Sitting room (fireplace)",
+  Conservatory: "5_Conservatory",
+  Kitchen: "6_Kitchen",
+  Basement: "7_Basement",
+  "Garden Shed": "8_Garden shed",
+  "Bedroom Gemmeker": "9_Bedroom Gemmeker",
+  "Bedroom Speck Obreen": "10_Bedroom Speck Obreen",
+  "Guestroom 1": "11_Guestroom1",
+  "Guestroom 2": "12_Guestroom2",
+  "Bedroom Elisabeth Hassel": "13_Bedroom Elisabeth Hassel",
+  Bathroom: "14_Bathroom",
+  Attic: "15_Attic"
+};
 
 export default {
   name: "app",
@@ -130,12 +159,85 @@ export default {
     },
     changeNarrative(narrative) {
       this.narrative = narrative;
+      this.getSourceData();
     },
     changeRoom(room) {
       this.room = room;
+      this.getSourceData();
+    },
+    changeLayer(layer) {
+      this.layer = layer;
     },
     openSourcePage() {
       this.$refs.sourcePage.open();
+    },
+    async getSourceData() {
+      const directusRoomName = directusRoomNames[this.room];
+      const response = await fetch(
+        `https://data.campscapes.org/api/1.1/tables/source/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5&filters[room.name][eq]=${encodeURIComponent(
+          directusRoomName
+        )}` //&filters[narratives.heading_dutch][eq]=${this.narrative}`
+      );
+      const json = await response.json();
+
+      const roomSources = {
+        house: [],
+        camp: [],
+        memory: []
+      };
+
+      for (let source of json.data) {
+        if (["house", "camp", "memory"].includes(source.layer)) {
+          roomSources[source.layer].push(source);
+        } else {
+          console.warn(`Source layer name: '${source.layer}' is not valid.`);
+        }
+      }
+
+      console.log(roomSources);
+
+      this.sourceData.house.content = this.parseContent(roomSources.house[0]);
+      this.sourceData.house.media = this.parseMedia(roomSources.house[0]);
+      this.sourceData.camp.content = this.parseContent(roomSources.camp[0]);
+      this.sourceData.camp.media = this.parseMedia(roomSources.camp[0]);
+      this.sourceData.memory.content = this.parseContent(roomSources.memory[0]);
+      this.sourceData.memory.media = this.parseMedia(roomSources.memory[0]);
+
+      if (
+        (roomSources.house.length !== 0 ||
+          roomSources.camp.length !== 0 ||
+          roomSources.memory.length !== 0) &&
+        !this.$refs.infoBox.visible
+      ) {
+        this.$refs.infoBox.expand();
+      }
+    },
+    parseContent(source) {
+      return source.content.data[0].description;
+    },
+    parseMedia(source) {
+      let html = "";
+      if (source.file !== null) {
+        if (source.file.data.type === "video/mp4") {
+          html += `
+            <video controls>
+            <source src="https://data.campscapes.org/${
+              source.file.data.url
+            }" type="video/mp4">
+            Your browser does not support the video tag.
+            </video>
+          `;
+        } else if (source.file.data.type === "image/jpeg") {
+          html += `
+            <img src="https://data.campscapes.org/${
+              source.file.data.url
+            }" alt="${source.file.data.title}" >
+          `;
+        } else {
+          console.warn(`File type: '${source.file.data.type}' not recognized.`);
+        }
+      }
+      return html;
     }
   }
 };
