@@ -1,5 +1,5 @@
 <template>
-  <div
+  <section
     :class="{
       card: true,
       'card-black': isBlack,
@@ -41,26 +41,24 @@
         }"
       ></div>
     </div>
-    <button
-      v-show="!expanded && active && content.length > 100"
-      class="read-further-button"
-      @click="openSource"
-    >
-      READ FURTHER...
-    </button>
-    <button
-      v-show="expanded && content.length > 100"
-      class="read-further-button"
-      @click="openSource"
-    >
-      READ FURTHER...
-    </button>
-  </div>
+    <ReadFurtherButton
+      v-show="
+        (!expanded && active && content.length > 100) ||
+          (expanded && content.length > 100)
+      "
+      @click.native="openSource"
+    />
+  </section>
 </template>
 
 <script>
+import ReadFurtherButton from "./ReadFurtherButton";
+
 export default {
   name: "InfoBoxCard",
+  components: {
+    ReadFurtherButton
+  },
   props: {
     layer: {
       type: String,
@@ -224,7 +222,8 @@ export default {
   overflow: hidden;
   font-size: 1rem;
   line-height: 1.6rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.1rem;
+  padding-bottom: 0.5rem;
 }
 
 .fade {
@@ -258,21 +257,6 @@ export default {
     rgba(235, 235, 235, 1) 5%,
     rgba(235, 235, 235, 0)
   );
-}
-
-.read-further-button {
-  background-color: #6e6e6e;
-  border-radius: 10rem;
-  border: 0;
-  color: #ffffff;
-  padding: 0.6rem 2rem;
-  font-family: "Flaco-Mono", sans-serif;
-  font-size: 0.875rem;
-  cursor: pointer;
-}
-.read-further-button:focus {
-  outline: 0;
-  background-color: grey;
 }
 
 @keyframes flip-card {

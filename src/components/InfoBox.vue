@@ -17,7 +17,7 @@
             <div
               v-show="!cardsExpanded && activeLayer === 'house'"
               class="media"
-              v-html="houseMedia"
+              v-html="houseMedia || ''"
             ></div>
           </transition>
           <transition name="fade">
@@ -188,7 +188,7 @@ export default {
 
       for (const element of this.$refs.media.children) {
         const mediaElement = element.children[0];
-        if (mediaElement.nodeName === "VIDEO") {
+        if (mediaElement && mediaElement.nodeName === "VIDEO") {
           mediaElement.pause();
         }
       }
@@ -251,12 +251,11 @@ export default {
 }
 
 .info-box-expand {
-  animation: expand-info-box 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: expand-info-box 0.3s ease-out forwards;
 }
 
 .info-box-collapse {
-  animation: collapse-info-box 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-    forwards;
+  animation: collapse-info-box 0.3s ease-out forwards;
 }
 
 .info-container {
@@ -335,6 +334,7 @@ export default {
   width: 100%;
   height: 22.6rem;
   border-radius: 5px;
+  background-color: #555555;
 }
 
 .media-container button {
@@ -374,17 +374,6 @@ export default {
 
 .expand-collapse-buttons button {
   margin-bottom: 1rem;
-}
-
-.fade-enter-active {
-  transition: opacity 0.3s ease-out;
-}
-.fade-leave-active {
-  transition: opacity 0.2s ease-in;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
 }
 
 .delayed-fade-enter-active {
