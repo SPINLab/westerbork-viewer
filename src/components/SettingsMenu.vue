@@ -1,6 +1,7 @@
 <template>
   <transition name="fade">
     <div v-show="menuOpen" ref="menu" id="settings-menu" class="menu">
+      <SettingsMenuGraphics :graphics="graphics" @change="onGraphicsChange" />
     <SettingsMenuPointClouds
       :point-clouds="pointClouds"
       @change="onPointCloudsChange"
@@ -22,6 +23,13 @@ export default {
     SettingsMenuPointClouds
   },
   props: {
+    graphics: {
+      type: String,
+      required: true,
+      validator: function(value) {
+        return ["low", "medium", "high"].includes(value);
+      }
+    },
     pointClouds: {
       type: Array,
       required: true

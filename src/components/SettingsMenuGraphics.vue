@@ -1,37 +1,36 @@
 <template>
   <div class="menu-item" id="graphics-settings">
     <h4>GRAPHICS</h4>
-    <div ref="selection" class="radio-select">
-      <label ref="low" class="radio-label">
+    <div class="radio-select">
+      <label class="radio-label" :class="{ selected: graphics === 'low' }">
         <input
           class="radio-input"
-          ref="low"
           type="radio"
           id="low"
           value="low"
-          v-model="graphics"
+          name="graphics"
           @change="onChange"
         />
         low
       </label>
-      <label ref="medium" class="radio-label selected">
+      <label class="radio-label" :class="{ selected: graphics === 'medium' }">
         <input
           class="radio-input"
           type="radio"
           id="medium"
           value="medium"
-          v-model="graphics"
+          name="graphics"
           @change="onChange"
         />
         medium
       </label>
-      <label ref="high" class="radio-label">
+      <label class="radio-label" :class="{ selected: graphics === 'high' }">
         <input
           class="radio-input"
           type="radio"
           id="high"
           value="high"
-          v-model="graphics"
+          name="graphics"
           @change="onChange"
         />
         high
@@ -43,20 +42,18 @@
 <script>
 export default {
   name: "SettingsMenuGraphics",
-  data() {
-    return {
-      graphics: "medium"
-    };
+  props: {
+    graphics: {
+      type: String,
+      required: true,
+      validator: function(value) {
+        return ["low", "medium", "high"].includes(value);
+      }
+    }
   },
   methods: {
-    onChange() {
-      const radioButtons = this.$refs.selection.children;
-      for (const button of radioButtons) {
-        button.classList.remove("selected");
-      }
-      this.$refs[this.graphics].classList.add("selected");
-
-      this.$emit("change", this.graphics);
+    onChange(e) {
+      this.$emit("change", e.target.value);
     }
   }
 };
