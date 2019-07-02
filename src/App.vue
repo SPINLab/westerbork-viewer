@@ -6,7 +6,7 @@
       ref="PotreeViewer"
       :graphics="graphics"
       :num-points="points"
-      @point-cloud-loaded="onPointCloudLoaded"
+      :pointClouds="pointClouds"
     />
     <div class="options-buttons">
       <div class="settings-menu-container">
@@ -20,6 +20,7 @@
           :point-clouds="pointClouds"
           @graphics-change="onGraphicsChange"
           @points-change="onPointsChange"
+            @point-clouds-change="onPointCloudsChange"
         />
       </div>
       <OptionsButton
@@ -121,8 +122,12 @@ export default {
   },
   data() {
     return {
-      pointClouds: [],
+      pointClouds: [
+        { name: "AHN2", visible: true },
+        { name: "Commandantshuis", visible: true }
+      ],
       graphics: "medium",
+      points: 4000000,
       narrative: { id: 0, title: "", description: "" },
       narratives: [],
       room: "Outside",
@@ -147,14 +152,14 @@ export default {
     this.getNarratives();
   },
   methods: {
-    onPointCloudLoaded(pointCloud) {
-      this.pointClouds = [...this.pointClouds, pointCloud];
-    },
     onGraphicsChange(graphics) {
       this.graphics = graphics;
     },
     onPointsChange(points) {
       this.points = points;
+    },
+    onPointCloudsChange(pointClouds) {
+      this.pointClouds = pointClouds;
     },
     async getNarratives() {
       const response = await fetch(

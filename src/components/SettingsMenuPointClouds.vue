@@ -6,19 +6,15 @@
   >
     <h4>POINT CLOUDS</h4>
     <ul class="menu-list" ref="selection">
-      <li v-for="pc in pointClouds" :key="pc.uuid" class="list-item">
+      <li v-for="(pc, index) in pointClouds" :key="index" class="list-item">
         <label>
           <input
             type="checkbox"
             :id="pc.name.toLowerCase() + '-switch'"
-            :value="pc"
-            v-model="selectedPointClouds"
+            :value="pc.name"
             @change="onChange"
           />
-          <span v-show="selectedPointClouds.includes(pc)" class="selected">{{
-            pc.name
-          }}</span>
-          <span v-show="!selectedPointClouds.includes(pc)">{{ pc.name }}</span>
+          <span :class="{ selected: pc.visible }">{{ pc.name }}</span>
         </label>
       </li>
     </ul>
@@ -34,26 +30,13 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      selectedPointClouds: []
-    };
-  },
-  watch: {
-    pointClouds: function(pointClouds) {
-      for (const pc of pointClouds) {
-        if (pc.visible && !this.selectedPointClouds.includes(pc)) {
-          this.selectedPointClouds = [...this.selectedPointClouds, pc];
-        }
-      }
-    }
-  },
   methods: {
     onChange(e) {
-      if (e.target.checked) {
-        e.target._value.visible = true;
-      } else {
-        e.target._value.visible = false;
+      const pcName = e.target.value;
+      const pc = this.pointClouds.filter(v => v.name === pcName)[0];
+      if (pc) {
+        pc.visible = !pc.visible;
+        this.$emit("change", this.pointClouds);
       }
     }
   }

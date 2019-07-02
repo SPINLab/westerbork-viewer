@@ -2,7 +2,10 @@
   <div ref="menu" id="settings-menu" class="menu menu-closed">
     <SettingsMenuGraphics @change="onGraphicsChange" />
     <SettingsMenuPoints @change="onPointsChange" />
-    <SettingsMenuPointClouds :point-clouds="pointClouds" />
+    <SettingsMenuPointClouds
+      :point-clouds="pointClouds"
+      @change="onPointCloudsChange"
+    />
   </div>
 </template>
 
@@ -51,6 +54,9 @@ export default {
     },
     onPointsChange(points) {
       this.$emit("points-change", points);
+    },
+    onPointCloudsChange(pointClouds) {
+      this.$emit("point-clouds-change", pointClouds);
     },
     documentClick(e) {
       if (!this.$el.parentElement.contains(e.target)) {

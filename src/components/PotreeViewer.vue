@@ -25,6 +25,10 @@ export default {
       validator: function(value) {
         return value > 0 && value < 50000000;
       }
+    },
+    pointClouds: {
+      type: Array,
+      required: true
     }
   },
   watch: {
@@ -48,24 +52,34 @@ export default {
     },
     numPoints: function(value) {
       this.$viewer.setPointBudget(value);
+    },
+    pointClouds: {
+      handler: function(pointClouds) {
+        for (const pc of pointClouds) {
+          const pcPotree = this.$viewer.scene.pointclouds.filter(
+            v => v.name === pc.name
+          )[0];
+          if (pcPotree) pcPotree.visible = pc.visible;
+        }
+      },
+      deep: true
     }
   },
   mounted() {
     Vue.prototype.$viewer = new Potree.Viewer(this.$el);
     this.$viewer.setFOV(80);
-    this.$viewer.pathControls.loop = false;
 
     switch (this.graphics) {
       case "low":
-        this.$viewer.setEDLEnabled(false);
+        this.$viewer.useEDL = false;
         this.$viewer.useHQ = false;
         break;
       case "medium":
-        this.$viewer.setEDLEnabled(true);
+        this.$viewer.useEDL = true;
         this.$viewer.useHQ = false;
         break;
       case "high":
-        this.$viewer.setEDLEnabled(true);
+        this.$viewer.useEDL = true;
         this.$viewer.useHQ = true;
         break;
       default:
@@ -74,26 +88,16 @@ export default {
 
     this.$viewer.setPointBudget(this.numPoints);
 
-    Potree.loadPointCloud(
-      //   "data/ahn2/ept.json",
-      "http://localhost:8081/ahn2/ept/ept.json",
-      "AHN2",
-      e => {
-        this.onPointCloudLoaded(e.pointcloud, 0.65);
-        this.$viewer.fitToScreen();
-      }
-    );
-
-    Potree.loadPointCloud(
-      //   "data/westerbork/ept.json",
-      "http://localhost:8081/westerbork-cleaned-entwine/ept.json",
-      "Commandantshuis",
-      e => {
-        this.onPointCloudLoaded(e.pointcloud, 0.65);
-        this.$viewer.setMoveSpeed(2);
-        // viewer.fitToScreen();
-      }
-    );
+    for (const pc of this.pointClouds) {
+      Potree.loadPointCloud(
+        // `data/${pc.name.toLowerCase()}/ept.json`,
+        `http://localhost:8081/${pc.name.toLowerCase()}/ept.json`,
+        pc.name,
+        e => {
+          this.onPointCloudLoaded(e.pointcloud, 0.65);
+        }
+      );
+    }
   },
   methods: {
     onPointCloudLoaded(pointcloud, size) {
@@ -102,8 +106,6 @@ export default {
       const material = pointcloud.material;
       material.size = size;
       material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-
-      this.$emit("point-cloud-loaded", pointcloud);
     }
   }
 };
