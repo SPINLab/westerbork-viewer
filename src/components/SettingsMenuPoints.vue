@@ -4,7 +4,7 @@
     <div class="slider" id="points-slider">
       <vue-slider
         ref="pointsSlider"
-        v-model="points"
+        :value="points"
         v-bind="pointsOptions"
         @change="onChange"
       ></vue-slider>
@@ -21,15 +21,22 @@ export default {
   components: {
     VueSlider
   },
+  props: {
+    points: {
+      type: Number,
+      required: true,
+      validator: function(value) {
+        return value > 200000 && value < 10000000;
+      }
+    }
+  },
   data() {
     return {
-      points: 6000000,
       pointsOptions: {
         min: 200000,
         max: 10000000,
         tooltip: "always",
         tooltipPlacement: "bottom",
-        // lazy: true,
         dotStyle: {
           backgroundColor: "#B5B5B5"
         },
@@ -49,8 +56,8 @@ export default {
     };
   },
   methods: {
-    onChange() {
-      this.$emit("change", this.points);
+    onChange(e) {
+      this.$emit("change", e);
     }
   }
 };

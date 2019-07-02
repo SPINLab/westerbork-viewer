@@ -2,11 +2,12 @@
   <transition name="fade">
     <div v-show="menuOpen" ref="menu" id="settings-menu" class="menu">
       <SettingsMenuGraphics :graphics="graphics" @change="onGraphicsChange" />
-    <SettingsMenuPointClouds
-      :point-clouds="pointClouds"
-      @change="onPointCloudsChange"
-    />
-  </div>
+      <SettingsMenuPoints :points="points" @change="onPointsChange" />
+      <SettingsMenuPointClouds
+        :point-clouds="pointClouds"
+        @change="onPointCloudsChange"
+      />
+    </div>
   </transition>
 </template>
 
@@ -28,6 +29,13 @@ export default {
       required: true,
       validator: function(value) {
         return ["low", "medium", "high"].includes(value);
+      }
+    },
+    points: {
+      type: Number,
+      required: true,
+      validator: function(value) {
+        return value > 200000 && value < 10000000;
       }
     },
     pointClouds: {

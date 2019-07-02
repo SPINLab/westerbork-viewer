@@ -18,6 +18,7 @@
         <SettingsMenu
           ref="settingsMenu"
             :graphics="graphics"
+            :points="points"
           :point-clouds="pointClouds"
           @graphics-change="onGraphicsChange"
           @points-change="onPointsChange"
