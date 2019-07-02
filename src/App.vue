@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div id="top-left-fade"></div>
     <TheLogo titleColor="#FFFFFF" subtitleColor="#FFFFFF" lineColor="#FFFFFF" />
     <PotreeViewer
       ref="PotreeViewer"
@@ -327,6 +328,7 @@ h4 {
   position: absolute;
   top: 5rem;
   left: 2rem;
+  z-index: 2;
 }
 
 .options-buttons button {
@@ -366,11 +368,18 @@ h4 {
   pointer-events: none;
 }
 
-#bottom-fade {
+#top-left-fade {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
-  width: 100%;
-  height: 70%;
+  width: 30rem;
+  height: 20rem;
+  background: linear-gradient(
+    to bottom right,
+    rgba(0, 0, 0, 0.9),
+    rgba(0, 0, 0, 0) 50%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 </style>
