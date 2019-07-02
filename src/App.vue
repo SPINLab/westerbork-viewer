@@ -8,39 +8,51 @@
       :num-points="points"
       :pointClouds="pointClouds"
     />
-    <div class="options-buttons">
-      <div class="settings-menu-container">
-        <OptionsButton
-          title="SETTINGS"
-          icon="settings"
-          @click.native="toggleSettingsMenu"
-        />
-        <SettingsMenu
-          ref="settingsMenu"
+
+    <TheIntroduction
+      :narratives="narratives"
+      @next-step="nextStep"
+      @hide-point-cloud="hidePointCloud"
+      @narrative-picked="changeNarrative"
+      @start-progression="startProgression"
+    />
+
+    <div v-show="step >= 4">
+      <div class="options-buttons">
+        <div class="settings-menu-container">
+          <OptionsButton
+            id="settings-button"
+            title="SETTINGS"
+            icon="settings"
+            @click.native="toggleSettingsMenu"
+          />
+          <SettingsMenu
+            id="settings-menu"
+            ref="settingsMenu"
             :graphics="graphics"
             :points="points"
-          :point-clouds="pointClouds"
-          @graphics-change="onGraphicsChange"
-          @points-change="onPointsChange"
+            :point-clouds="pointClouds"
+            @graphics-change="onGraphicsChange"
+            @points-change="onPointsChange"
             @point-clouds-change="onPointCloudsChange"
-        />
-      </div>
-      <OptionsButton
-        id="about-page-button"
-        title="ABOUT"
-        icon="about"
-        @click.native="openAboutPage"
-      />
-      <div class="share-menu-container">
+          />
+        </div>
         <OptionsButton
-          id="share-button"
-          title="share"
-          icon="share"
-          @click.native="toggleShareMenu"
+          id="about-page-button"
+          title="ABOUT"
+          icon="about"
+          @click.native="openAboutPage"
         />
-        <ShareMenu ref="shareMenu" />
+        <div class="share-menu-container">
+          <OptionsButton
+            id="share-button"
+            title="share"
+            icon="share"
+            @click.native="toggleShareMenu"
+          />
+          <ShareMenu ref="shareMenu" />
+        </div>
       </div>
-    </div>
 
       <div class="narrative-progression-container">
         <NarrativeSelector
@@ -50,36 +62,38 @@
         />
         <ProgressionBar ref="progression" @room-change="changeRoom" />
         <div id="bottom-fade"></div>
+      </div>
+
+      <InfoBox
+        ref="infoBox"
+        :houseMedia="sourceData.house.media"
+        :houseContent="sourceData.house.content"
+        :campMedia="sourceData.camp.media"
+        :campContent="sourceData.camp.content"
+        :memoryMedia="sourceData.memory.media"
+        :memoryContent="sourceData.memory.content"
+        @layer-change="changeLayer"
+        @open-source="openSourcePage"
+      />
+
+      <SourcePage
+        ref="sourcePage"
+        :narrative="narrative"
+        :room="room"
+        :layer="layer"
+        :media="sourceData[this.layer].media"
+        :content="sourceData[this.layer].content"
+      />
+
+      <AboutPage ref="aboutPage" />
     </div>
-
-    <InfoBox
-      ref="infoBox"
-      :houseMedia="sourceData.house.media"
-      :houseContent="sourceData.house.content"
-      :campMedia="sourceData.camp.media"
-      :campContent="sourceData.camp.content"
-      :memoryMedia="sourceData.memory.media"
-      :memoryContent="sourceData.memory.content"
-      @layer-change="changeLayer"
-      @open-source="openSourcePage"
-    />
-
-    <SourcePage
-      ref="sourcePage"
-      :narrative="narrative"
-      :room="room"
-      :layer="layer"
-      :media="sourceData[this.layer].media"
-      :content="sourceData[this.layer].content"
-    />
-
-    <AboutPage ref="aboutPage" />
   </div>
 </template>
 
 <script>
 import TheLogo from "./components/TheLogo";
 import PotreeViewer from "./components/PotreeViewer";
+import TheIntroduction from "./components/TheIntroduction";
 import SettingsMenu from "./components/SettingsMenu";
 import AboutPage from "./components/AboutPage";
 import ShareMenu from "./components/ShareMenu";
@@ -93,9 +107,9 @@ const directusRoomNames = {
   Outside: "",
   Hallway: "1_Entrance/hallway",
   "Dining Room": "2_Dining room",
-  Anteroom: "3_Anteroom",
-  "Sitting Room": "4_Sitting room (fireplace)",
-  Conservatory: "5_Conservatory",
+  Anteroom: "3_Living room",
+  "Sitting Room": "4_sitting room",
+  Conservatory: "5_conservatory",
   Kitchen: "6_Kitchen",
   Basement: "7_Basement",
   "Garden Shed": "8_Garden shed",
@@ -113,6 +127,7 @@ export default {
   components: {
     TheLogo,
     PotreeViewer,
+    TheIntroduction,
     SettingsMenu,
     AboutPage,
     ShareMenu,
@@ -124,6 +139,7 @@ export default {
   },
   data() {
     return {
+      step: 0,
       pointClouds: [
         { name: "AHN2", visible: true },
         { name: "Commandantshuis", visible: true }
@@ -163,6 +179,12 @@ export default {
     onPointCloudsChange(pointClouds) {
       this.pointClouds = pointClouds;
     },
+    nextStep() {
+      this.step += 1;
+    },
+    startProgression() {
+      this.$refs.progression.startProgression();
+    },
     async getNarratives() {
       const response = await fetch(
         `https://data.campscapes.org/api/1.1/tables/wch_intro_texts_narratives/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5`
@@ -178,6 +200,10 @@ export default {
           description: v.summary_dutch
         };
       });
+    },
+    hidePointCloud(pcName) {
+      const pc = this.pointClouds.filter(v => v.name === pcName)[0];
+      if (pc) pc.visible = false;
     },
     toggleSettingsMenu() {
       this.$refs.settingsMenu.toggleMenu();
@@ -207,7 +233,7 @@ export default {
       const response = await fetch(
         `https://data.campscapes.org/api/1.1/tables/source/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5&filters[room.name][eq]=${encodeURIComponent(
           directusRoomName
-        )}` //&filters[narratives.heading_dutch][eq]=${this.narrative}`
+        )}&filters[narratives.heading_dutch][eq]=${this.narrative.title}`
       );
       const json = await response.json();
 
@@ -224,8 +250,6 @@ export default {
           console.warn(`Source layer name: '${source.layer}' is not valid.`);
         }
       }
-
-      console.log(roomSources);
 
       this.sourceData.house.content = this.parseContent(roomSources.house[0]);
       this.sourceData.house.media = this.parseMedia(roomSources.house[0]);
@@ -244,9 +268,13 @@ export default {
       }
     },
     parseContent(source) {
+      if (!source) return "";
+
       return source.content.data[0].description;
     },
     parseMedia(source) {
+      if (!source) return "";
+
       let html = "";
       if (source.file !== null) {
         if (source.file.data.type === "video/mp4") {
@@ -275,6 +303,8 @@ export default {
 </script>
 
 <style>
+@import url("./components/AppTour/tour.css");
+
 @font-face {
   font-family: "CamphorPro-Regular";
   src: url("assets/fonts/CamphorPro-Regular.woff") format("woff");
@@ -311,9 +341,11 @@ h4 {
 }
 
 #app {
-  position: relative;
+  position: absolute;
   width: 100vw;
   height: 100vh;
+  top: 0;
+  right: 0;
 }
 
 #potree-viewer {

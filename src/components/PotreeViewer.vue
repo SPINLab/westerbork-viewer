@@ -5,6 +5,8 @@
 <script>
 import Vue from "vue";
 
+import { pathOverview } from "./path";
+
 const Potree = window.Potree;
 
 export default {
@@ -98,6 +100,16 @@ export default {
         }
       );
     }
+
+    this.$viewer.setNavigationMode(Potree.PathControls);
+    this.$viewer.setMoveSpeed(2);
+    this.$viewer.pathControls.setPath(pathOverview);
+    this.$viewer.pathControls.position = 0;
+    this.$viewer.pathControls.loop = false;
+    this.$viewer.pathControls.lockViewToPath = "moving";
+    this.$viewer.scene.view.direction = this.$viewer.pathControls.path.getTangentAt(
+      this.$viewer.pathControls.position
+    );
   },
   methods: {
     onPointCloudLoaded(pointcloud, size) {

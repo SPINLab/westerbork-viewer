@@ -41,12 +41,14 @@
       <div class="expand-collapse-buttons">
         <ExpandCollapseButton
           v-show="!cardsExpanded"
+          id="expand-info-button"
           direction="left"
           arrowColor="#333333"
           @click.native="expand"
         />
         <ExpandCollapseButton
           v-show="visible"
+          id="collapse-info-button"
           direction="right"
           arrowColor="#333333"
           @click.native="collapse"
@@ -151,7 +153,7 @@ export default {
   },
   data() {
     return {
-      visible: true,
+      visible: false,
       cardOrder: ["house", "camp", "memory"],
       cardsExpanded: false,
       cardsCollapsed: true
