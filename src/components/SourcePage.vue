@@ -1,18 +1,24 @@
 <template>
-  <article class="page-closed">
-    <CloseButton id="close-button" iconColor="#333333" @click.native="close" />
-    <div class="content">
-      <div class="media-container" v-html="media"></div>
-      <section class="text-container">
-        <h2>
-          {{
-            `${narrative.toUpperCase()} > ${room.toUpperCase()} > ${layer.toUpperCase()}`
-          }}
-        </h2>
-        <div class="text" v-html="content"></div>
-      </section>
-    </div>
-  </article>
+  <transition name="fade">
+    <article v-show="isOpen">
+      <CloseButton
+        id="close-button"
+        iconColor="#333333"
+        @click.native="close"
+      />
+      <div class="content">
+        <div class="media-container" v-html="media"></div>
+        <section class="text-container">
+          <h2>
+            {{
+              `${narrative.title.toUpperCase()} > ${room.toUpperCase()} > ${layer.toUpperCase()}`
+            }}
+          </h2>
+          <div class="text" v-html="content"></div>
+        </section>
+      </div>
+    </article>
+  </transition>
 </template>
 
 <script>
@@ -25,7 +31,7 @@ export default {
   },
   props: {
     narrative: {
-      type: String,
+      type: Object,
       required: true
     },
     room: {
@@ -45,14 +51,17 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      isOpen: false
+    };
+  },
   methods: {
     close() {
-      this.$el.classList.remove("page-open");
-      this.$el.classList.add("page-closed");
+      this.isOpen = false;
     },
     open() {
-      this.$el.classList.remove("page-closed");
-      this.$el.classList.add("page-open");
+      this.isOpen = true;
     }
   }
 };
@@ -88,18 +97,6 @@ h2 {
   width: 90%;
   padding: 1rem;
   display: flex;
-}
-
-.page-open {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 0.1s ease-out;
-}
-
-.page-closed {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s 0.1s, opacity 0.1s ease-out;
 }
 
 .media-container {
