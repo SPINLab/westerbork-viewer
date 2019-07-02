@@ -38,10 +38,14 @@
       </div>
     </div>
 
-    <div ref="narrativeAndProgression" class="narrative-progression-container">
-      <NarrativeSelector @narrative-change="changeNarrative" />
-      <ProgressionBar @room-change="changeRoom" />
-      <div id="bottom-fade" class="fade"></div>
+      <div class="narrative-progression-container">
+        <NarrativeSelector
+          :narrative="narrative"
+          :narratives="narratives"
+          @narrative-change="changeNarrative"
+        />
+        <ProgressionBar ref="progression" @room-change="changeRoom" />
+        <div id="bottom-fade"></div>
     </div>
 
     <InfoBox
@@ -118,8 +122,8 @@ export default {
     return {
       pointClouds: [],
       graphics: "medium",
-      points: 600000,
-      narrative: "",
+      narrative: { id: 0, title: "", description: "" },
+      narratives: [],
       room: "Outside",
       layer: "house",
       sourceData: {
@@ -138,6 +142,9 @@ export default {
       }
     };
   },
+  mounted() {
+    this.getNarratives();
+  },
   methods: {
     onPointCloudLoaded(pointCloud) {
       this.pointClouds = [...this.pointClouds, pointCloud];
@@ -147,6 +154,22 @@ export default {
     },
     onPointsChange(points) {
       this.points = points;
+    },
+    async getNarratives() {
+      const response = await fetch(
+        `https://data.campscapes.org/api/1.1/tables/wch_intro_texts_narratives/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5`
+      );
+      const json = await response.json();
+      let data = json.data;
+      data = data.filter(v => v.sort !== null);
+      data = data.sort((a, b) => a.sort > b.sort);
+      this.narratives = data.map(v => {
+        return {
+          id: v.sort,
+          title: v.heading_dutch,
+          description: v.summary_dutch
+        };
+      });
     },
     toggleSettingsMenu() {
       this.$refs.settingsMenu.toggleMenu();
@@ -333,8 +356,13 @@ h4 {
   padding: 0.2rem 0;
 }
 
-.fade {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+#bottom-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
   pointer-events: none;
 }
 

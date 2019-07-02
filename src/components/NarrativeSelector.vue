@@ -1,26 +1,29 @@
 <template>
   <div id="narrative-selector">
     <div class="selected-narrative-container">
-      <button
-        class="narrative-selection-button"
-        @click="toggleNarrativeSelection"
-      >
+      <button id="narrative-selection-button" @click="toggleNarrativeSelection">
         <NarrativeSelectorIcon color="#ffffff" />
       </button>
       <div class="selected-narrative" ref="selectedNarrative">
         <span ref="selectedNarrativeText">
-          <b> {{ parseInt(narrative.split(".")[0]) || 0 }} </b>
+          <b> {{ narrative.id || 0 }} </b>
         </span>
       </div>
     </div>
     <ol class="narrative-selection" ref="narrativeSelection">
       <li
-        v-for="(narrative, index) in narratives.slice().reverse()"
-        :key="index"
+        v-for="narrativeItem in narratives.slice().reverse()"
+        :key="narrativeItem.id"
         class="narrative-item narrative-item-hide"
-        @click="selectNarrative(narrative, $event)"
+        @click="selectNarrative(narrativeItem, $event)"
       >
-        <button>{{ narrative }}</button>
+        <button
+          :class="{
+            'narrative-item-highlight': narrativeItem.id === narrative.id
+          }"
+        >
+          {{ narrativeItem.id }}. {{ narrativeItem.title }}
+        </button>
       </li>
     </ol>
   </div>
@@ -34,26 +37,21 @@ export default {
   components: {
     NarrativeSelectorIcon
   },
+  props: {
+    narrative: {
+      type: Object,
+      required: true
+    },
+    narratives: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
-      narrative: "",
-      narratives: [],
       narrativeSelectionOpen: false,
       narrativeSelectionOpening: false
     };
-  },
-  mounted() {
-    // Grab narratives
-    fetch(
-      `https://data.campscapes.org/api/1.1/tables/wch_intro_texts_narratives/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5`
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        let data = responseJson.data;
-        data = data.filter(v => v.sort !== null);
-        data = data.sort((a, b) => a.sort > b.sort);
-        this.narratives = data.map(v => `${v.sort}. ${v.heading_dutch}`);
-      });
   },
   methods: {
     setNarrativeItem(narrativeItem, visible) {
@@ -66,13 +64,6 @@ export default {
       }
     },
     toggleNarrativeSelection() {
-      //   if (
-      //     typeof e !== "undefined" &&
-      //     introduction.$tours.navTour.currentStep === 3
-      //   ) {
-      //     introduction.$tours.navTour.nextStep();
-      //   }
-
       this.$refs.narrativeSelection.style.pointerEvents = this
         .narrativeSelectionOpen
         ? "none"
@@ -93,18 +84,10 @@ export default {
         }, 40);
       }
     },
-    selectNarrative(narrative, e) {
-      //   if (introduction.$tours.navTour.currentStep === 5) {
-      //     introduction.$tours.navTour.nextStep();
-      //   }
+    selectNarrative(narrative) {
+      this.$emit("narrative-change", narrative);
 
-      this.narrative = narrative.split(". ")[1];
       this.toggleNarrativeSelection();
-
-      for (const item of this.$refs.narrativeSelection.children) {
-        item.children[0].classList.remove("narrative-item-highlight");
-      }
-      e.target.classList.add("narrative-item-highlight");
 
       this.$refs.selectedNarrativeText.classList.add(
         "narrative-icon-grow-shrink"
@@ -114,7 +97,6 @@ export default {
           "narrative-icon-grow-shrink"
         );
       }, 300);
-      this.$emit("narrative-change", this.narrative);
     },
     documentClick(e) {
       if (!this.$el.parentElement.contains(e.target)) {
@@ -144,7 +126,7 @@ export default {
   padding: 2rem;
 }
 
-.narrative-selection-button {
+#narrative-selection-button {
   position: relative;
   background-color: #454545;
   border-radius: 25rem;
@@ -154,14 +136,14 @@ export default {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
-.narrative-selection-button svg {
+#narrative-selection-button svg {
   width: 1.3rem;
   position: absolute;
   top: 33%;
   left: 37%;
 }
 
-.narrative-selection-button:focus {
+#narrative-selection-button:focus {
   outline: 0;
   background-color: grey;
 }
