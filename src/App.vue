@@ -321,6 +321,17 @@ h4 {
   top: 0;
   left: 0;
 }
+
+.fade-enter-active {
+  transition: opacity 0.2s ease-out;
+}
+.fade-leave-active {
+  transition: opacity 0.2s ease-in;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
 
 <style scoped>

@@ -1,37 +1,35 @@
 <template>
-  <div ref="menu" id="share-menu" class="menu menu-closed">
-    <div class="menu-item">
-      <h4>SEND TO A FRIEND</h4>
-      <input type="email" placeholder="email@example.com" />
+  <transition name="fade">
+    <div v-show="menuOpen" ref="menu" id="share-menu" class="menu">
+      <div class="menu-item">
+        <h4>SEND TO A FRIEND</h4>
+        <input type="email" placeholder="email@example.com" />
+      </div>
+      <div class="menu-item">
+        <h4>SHARE ON SOCIAL MEDIA</h4>
+        <button>Twitter</button>
+        <button>Facebook</button>
+        <button>LinkedIn</button>
+      </div>
     </div>
-    <div class="menu-item">
-      <h4>SHARE ON SOCIAL MEDIA</h4>
-      <button>Twitter</button>
-      <button>Facebook</button>
-      <button>LinkedIn</button>
-    </div>
-  </div>
+  </transition>
 </template>
 
 <script>
 export default {
   name: "ShareMenu",
+  data() {
+    return {
+      menuOpen: false
+    };
+  },
   methods: {
     toggleMenu() {
-      if (this.$refs.menu.classList.contains("menu-closed")) {
-        this.$refs.menu.classList.remove("menu-closed");
-        this.$refs.menu.classList.add("menu-open");
-      } else {
-        this.$refs.menu.classList.remove("menu-open");
-        this.$refs.menu.classList.add("menu-closed");
-      }
+      this.menuOpen = !this.menuOpen;
     },
     documentClick(e) {
       if (!this.$el.parentElement.contains(e.target)) {
-        if (this.$refs.menu.classList.contains("menu-open")) {
-          this.$refs.menu.classList.remove("menu-open");
-          this.$refs.menu.classList.add("menu-closed");
-        }
+        if (this.menuOpen) this.menuOpen = false;
       }
     }
   },
@@ -71,18 +69,6 @@ export default {
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
   left: -20px;
-}
-
-.menu-closed {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s 0.1s, opacity 0.1s ease-out;
-}
-
-.menu-open {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 0.1s ease-out;
 }
 
 .menu-item {
