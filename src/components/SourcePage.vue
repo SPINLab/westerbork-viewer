@@ -11,7 +11,9 @@
         <section class="text-container">
           <h2>
             {{
-              `${narrative.title.toUpperCase()} > ${room.toUpperCase()} > ${layer.toUpperCase()}`
+              `${narrative.title.toUpperCase()} > ${room.toUpperCase()} > ${translation[
+                layer
+              ].toUpperCase()}`
             }}
           </h2>
           <div class="text" v-html="content"></div>
@@ -53,7 +55,12 @@ export default {
   },
   data() {
     return {
-      isOpen: false
+      isOpen: false,
+      translation: {
+        house: "huis",
+        camp: "kamp",
+        memory: "herinnering"
+      }
     };
   },
   methods: {

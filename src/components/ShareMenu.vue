@@ -2,11 +2,11 @@
   <transition name="fade">
     <div v-show="menuOpen" ref="menu" id="share-menu" class="menu">
       <div class="menu-item">
-        <h4>SEND TO A FRIEND</h4>
+        <h4>STUUR NAAR EEN VRIEND</h4>
         <input type="email" placeholder="email@example.com" />
       </div>
       <div class="menu-item">
-        <h4>SHARE ON SOCIAL MEDIA</h4>
+        <h4>DEEL OP SOCIAL MEDIA</h4>
         <button>Twitter</button>
         <button>Facebook</button>
         <button>LinkedIn</button>

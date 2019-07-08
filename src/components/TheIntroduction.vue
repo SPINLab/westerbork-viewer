@@ -14,7 +14,7 @@
     <transition name="fade">
       <IntroductionCard
         v-if="step === 2"
-        title="Intro Scan Data"
+        title="3D laserscan data"
         :content="dataIntroContent"
         position="right"
       />
@@ -35,7 +35,7 @@
       />
     </transition>
     <transition name="fade">
-      <div v-if="[0, 2, 3].includes(step)" class="fade"></div>
+      <div v-show="[0, 2, 3].includes(step)" class="fade"></div>
     </transition>
   </div>
 </template>
@@ -68,7 +68,7 @@ export default {
       step: 0,
       gridColor: "#000000",
       histIntroContent: `Toen in 1933 Adolf Hitler in Duitsland aan de macht kwam, begon de jacht op politieke tegenstanders. Voor de Joden werd het leven steeds moeilijker: stap voor stap werden zij geïsoleerd. Niet ieder wachtte af en vluchtte naar het buitenland, zoals naar Nederland. Vooral na de eerste openlijke vervolging van de Joden, de Reichskristallnacht op 9 november 1938, kwam een grote stroom vluchtelingen naar ons land. Met de Nederlandse gastvrijheid hield het echter niet over. Tot aan het begin van de oorlog werden 10.000 Duitse vluchtelingen toegelaten, anderen kwamen illegaal het land binnen. De Nederlandse regering was niet van plan voor de opvang van deze mensen geld uit te geven; alle initiatieven waren afkomstig van particulieren. De vluchtelingen gingen van kamp naar kamp, hun koffers moesten constant gepakt staan. De regering zag in dat het zo niet langer kon en meende de oplossing te zien in de bouw van een centraal vluchtelingenkamp op de Veluwe, in de omgeving van Elspeet. Er kwamen protesten van omwonenden en van de ANWB maar doorslaggevend was die van koningin Wilhelmina. Haar secretaris liet minister van Binnenlandse Zaken Van Boeyen weten dat een vluchtelingenkamp dicht bij paleis ‘t Loo de Koninklijke goedkeuring niet kon wegdragen. Het kabinet richtte vervolgens de blik op Drenthe, waar bij Westerbork een flinke lap onontgonnen grond lag. Eenzaam, wild en woest en ledig. Ideaal voor het Centraal Vluchtelingenkamp.`,
-      dataIntroContent: `A laser is a device that emits light through a process of optical amplification based on the stimulated emission of electromagnetic radiation. The term “laser” originated as an acronym for “Light Amplification by Stimulated Emission of Radiation”.[1][2] The first laser was built in 1960 by Theodore H. Maiman at Hughes Research Laboratories, based on theoretical work by Charles Hard Townes and Arthur Leonard Schawlow. A laser differs from other sources of light in that it emits light coherently. Spatial coherence allows a laser to be focused to a tight spot, enabling applications such as laser cutting and lithography. Spatial coherence also allows a laser beam to stay narrow over great distances (collimation), enabling applications such as laser pointers and lidar. Lasers can also have high temporal coherence, which allows them to emit light with a very narrow spectrum, i.e., they can emit a single color of light. Alternatively, temporal coherence can be used to produce pulses of light with a broad spectrum but durations as short as a femtosecond (“ultrashort pulses”).`
+      dataIntroContent: `LIDAR (LIght Detection And Ranging of Laser Imaging Detection And Ranging) is een technologie die de afstand tot een object of oppervlak bepaalt door middel van het gebruik van laserpulsen. Lidar werkt volgens hetzelfde principe als radar: een signaal wordt uitgezonden en zal enige tijd later door reflectie weer worden opgevangen. De afstand tot het object of oppervlak wordt bepaald door de tijd te meten die verstrijkt tussen het uitzenden van een puls en het opvangen van een reflectie van die puls. Het verschil tussen lidar en radar is dat lidar gebruikmaakt van laserlicht terwijl radar gebruikmaakt van radiogolven.`
     };
   },
   methods: {

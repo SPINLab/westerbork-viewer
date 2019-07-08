@@ -22,7 +22,7 @@
         <div class="settings-menu-container">
           <OptionsButton
             id="settings-button"
-            title="SETTINGS"
+            title="Instellingen"
             icon="settings"
             @click.native="toggleSettingsMenu"
           />
@@ -39,14 +39,14 @@
         </div>
         <OptionsButton
           id="about-page-button"
-          title="ABOUT"
+          title="Over ons"
           icon="about"
           @click.native="openAboutPage"
         />
         <div class="share-menu-container">
           <OptionsButton
             id="share-button"
-            title="share"
+            title="Delen"
             icon="share"
             @click.native="toggleShareMenu"
           />
@@ -104,22 +104,22 @@ import InfoBox from "./components/InfoBox";
 import SourcePage from "./components/SourcePage";
 
 const directusRoomNames = {
-  Outside: "",
-  Hallway: "1_Entrance/hallway",
-  "Dining Room": "2_Dining room",
-  Anteroom: "3_Living room",
-  "Sitting Room": "4_sitting room",
-  Conservatory: "5_conservatory",
-  Kitchen: "6_Kitchen",
-  Basement: "7_Basement",
-  "Garden Shed": "8_Garden shed",
-  "Bedroom Gemmeker": "9_Bedroom Gemmeker",
-  "Bedroom Speck Obreen": "10_Bedroom Speck Obreen",
-  "Guestroom 1": "11_Guestroom1",
-  "Guestroom 2": "12_Guestroom2",
-  "Bedroom Elisabeth Hassel": "13_Bedroom Elisabeth Hassel",
-  Bathroom: "14_Bathroom",
-  Attic: "15_Attic"
+  Buiten: "",
+  Hal: "1_Entrance/hallway",
+  Eetkamer: "2_Dining room",
+  Woonkamer: "3_Living room",
+  Zitkamer: "4_sitting room",
+  Serre: "5_conservatory",
+  Keuken: "6_Kitchen",
+  Kelder: "7_Basement",
+  Tuinhuis: "8_Garden shed",
+  "Slaapkamer Gemmeker": "9_Bedroom Gemmeker",
+  "Slaapkamer Speck Obreen": "10_Bedroom Speck Obreen",
+  "Logeerkamer 1": "11_Guestroom1",
+  "Logeerkamer 2": "12_Guestroom2",
+  "Slaapkamer Elisabeth Hassel": "13_Bedroom Elisabeth Hassel",
+  Badkamer: "14_Bathroom",
+  Zolder: "15_Attic"
 };
 
 export default {
@@ -148,7 +148,7 @@ export default {
       points: 4000000,
       narrative: { id: 0, title: "", description: "" },
       narratives: [],
-      room: "Outside",
+      room: "Buiten",
       layer: "house",
       sourceData: {
         house: {

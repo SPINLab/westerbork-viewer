@@ -8,11 +8,14 @@
             subtitleColor="#4B4B4B"
             lineColor="#A8A8A8"
           />
-          <NavigationButton title="Go back to the app" @click.native="close" />
+          <NavigationButton
+            title="Ga terug naar de app"
+            @click.native="close"
+          />
         </header>
         <div>
           <section class="about">
-            <h3>ABOUT THIS APPLICATION</h3>
+            <h3>OVER DEZE APPLCIATIE</h3>
             <p>
               Accessing Campscapes: Inclusive Strategies for Using European
               Conflicted Heritage’ (iC-ACCESS) looks at traces of the 20th
@@ -86,6 +89,12 @@
               <li>
                 <img
                   :src="require('../assets/logo_partners/uva.png')"
+                  alt="Universiteit van Amsterdam"
+                />
+              </li>
+              <li>
+                <img
+                  :src="require('../assets/logo_partners/vu-spinlab-logo.png')"
                   alt="Universiteit van Amsterdam"
                 />
               </li>

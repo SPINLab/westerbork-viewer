@@ -118,6 +118,7 @@ export default {
 <style scoped>
 #narrative-selector {
   width: 10vw;
+  z-index: 1;
 }
 
 .selected-narrative-container {

@@ -10,24 +10,24 @@
   >
     <div v-show="!expanded && active" class="nav-card-buttons">
       <button :class="{ active: isHouse }" @click="switchCard('house')">
-        HOUSE
+        HUIS
       </button>
       <button :class="{ active: isCamp }" @click="switchCard('camp')">
-        CAMP
+        KAMP
       </button>
       <button :class="{ active: isMemory }" @click="switchCard('memory')">
-        MEMORY
+        HERINNERING
       </button>
     </div>
     <div v-show="expanded" class="nav-card-buttons">
       <button v-show="isHouse" class="active">
-        HOUSE
+        HUIS
       </button>
       <button v-show="isCamp" class="active">
-        CAMP
+        KAMP
       </button>
       <button v-show="isMemory" class="active">
-        MEMORY
+        HERINNERING
       </button>
     </div>
     <div class="card-text">

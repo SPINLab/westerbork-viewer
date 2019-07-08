@@ -11,7 +11,7 @@
           name="graphics"
           @change="onChange"
         />
-        low
+        laag
       </label>
       <label class="radio-label" :class="{ selected: graphics === 'medium' }">
         <input
@@ -22,7 +22,7 @@
           name="graphics"
           @change="onChange"
         />
-        medium
+        gemiddeld
       </label>
       <label class="radio-label" :class="{ selected: graphics === 'high' }">
         <input
@@ -33,7 +33,7 @@
           name="graphics"
           @change="onChange"
         />
-        high
+        hoog
       </label>
     </div>
   </div>
