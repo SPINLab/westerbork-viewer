@@ -226,6 +226,10 @@ export default {
   width: 90vw;
 }
 
+#progression-bar:focus {
+  outline: 0;
+}
+
 .labels {
   color: #f0f0f0;
   display: flex;

@@ -121,6 +121,10 @@ export default {
   z-index: 1;
 }
 
+#narrative-selector:focus {
+  outline: 0;
+}
+
 .selected-narrative-container {
   display: flex;
   align-items: center;

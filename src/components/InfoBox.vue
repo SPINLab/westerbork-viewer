@@ -234,6 +234,10 @@ export default {
   width: 40rem;
 }
 
+#info-box:focus {
+  outline: 0;
+}
+
 @keyframes expand-info-box {
   from {
     transform: translateX(98%);
