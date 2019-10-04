@@ -405,6 +405,7 @@ h4 {
   width: 100vw;
   display: flex;
   align-items: flex-end;
+  flex-wrap: wrap;
   padding: 0.2rem 0;
 }
 
@@ -413,7 +414,7 @@ h4 {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 80%;
+  height: 30%;
   background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
   pointer-events: none;
 }

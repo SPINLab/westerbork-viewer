@@ -119,6 +119,8 @@ export default {
 #narrative-selector {
   width: 10vw;
   z-index: 1;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 #narrative-selector:focus {
@@ -170,10 +172,7 @@ export default {
 
 .narrative-selection {
   list-style-type: none;
-  padding: 0;
-  position: absolute;
-  bottom: 6.4rem;
-  left: 1rem;
+  width: max-content;
 }
 
 .narrative-item button {

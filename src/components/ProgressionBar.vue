@@ -15,8 +15,12 @@
       >
         <div v-show="room == step" class="highlight"></div>
         <br />
-        <button v-show="room == step" class="selected">{{ room }}</button>
-        <button v-show="room != step">{{ room }}</button>
+        <button v-show="room == step" class="selected">
+          <span>{{ room }}</span>
+        </button>
+        <button v-show="room != step">
+          <span>{{ room }}</span>
+        </button>
       </li>
     </ol>
   </div>
@@ -223,7 +227,8 @@ export default {
 #progression-bar {
   display: flex;
   flex-direction: column;
-  width: 90vw;
+  width: 88vw;
+  margin-left: 2rem;
 }
 
 #progression-bar:focus {
@@ -278,5 +283,15 @@ export default {
 .selected {
   z-index: 5;
   position: relative;
+}
+
+@media only screen and (max-width: 1100px) {
+  .labels span {
+    display: flex;
+    writing-mode: vertical-rl;
+    height: 5rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 </style>
