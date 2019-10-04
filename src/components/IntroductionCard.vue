@@ -10,9 +10,7 @@
   >
     <div class="content" :class="{ 'content-expanded': cardExpanded }">
       <h2>{{ title.toUpperCase() }}</h2>
-      <p>
-        {{ content }}
-      </p>
+      <p v-html="content"></p>
       <div v-show="!cardExpanded" class="fade"></div>
     </div>
     <ReadFurtherButton v-show="!cardExpanded" @click.native="expandCard" />

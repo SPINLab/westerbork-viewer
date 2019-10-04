@@ -1,19 +1,27 @@
 <template>
   <div class="introduction-container">
     <transition name="fade">
-      <TheGrid v-show="step !== 1 && step < 5" ref="grid" :color="gridColor" />
+      <TheGrid v-show="step !== 2 && step < 6" ref="grid" :color="gridColor" />
     </transition>
     <transition name="fade">
       <IntroductionCard
         v-if="step === 0"
-        title="Introductie en historische context"
+        title="Introductie"
+        :content="introContent"
+        position="center"
+      />
+    </transition>
+    <transition name="fade">
+      <IntroductionCard
+        v-if="step === 1"
+        title="Historische context"
         :content="histIntroContent"
         position="center"
       />
     </transition>
     <transition name="fade">
       <IntroductionCard
-        v-if="step === 2"
+        v-if="step === 3"
         title="3D laserscan data"
         :content="dataIntroContent"
         position="right"
@@ -21,7 +29,7 @@
     </transition>
     <transition name="fade">
       <NavigationButton
-        v-if="[0, 2].includes(step)"
+        v-if="[0, 1, 3].includes(step)"
         class="next-button center"
         title="Ga verder"
         @click.native="next"
@@ -29,13 +37,13 @@
     </transition>
     <transition name="fade">
       <NarrativeCardSelector
-        v-if="step === 3"
+        v-if="step === 4"
         :narratives="narratives"
         @narrative-picked="pickNarrative"
       />
     </transition>
     <transition name="fade">
-      <div v-show="[0, 2, 3].includes(step)" class="fade"></div>
+      <div v-show="[0, 1, 3, 4].includes(step)" class="fade"></div>
     </transition>
   </div>
 </template>
@@ -67,6 +75,7 @@ export default {
     return {
       step: 0,
       gridColor: "#000000",
+      introContent: `Welkom bij de Campscapes Commander's House app. Deze app leid je digitaal rond door het huis van de kampscommandant en geeft je informatie over het kamp en het huis door de jaren heen. <br><br> De app werkt het beste in een moderne browser met GPU hardware acceleratie aangezet. Dit is belangrijk omdat de app 3D data weergeeft en daardoor grafisch vrij zwaar is. Dit staat normaal gesproken standaard bij moderne browsers al aan, maar dit is niet altijd het geval. Bij twijfel zie bijvoorbeeld <a href="https://www.google.com/search?q=chrome+enable+hardware+acceleration" target="_blank">hier voor Chrome</a> of <a href="https://www.google.com/search?q=firefox+enable+hardware+acceleration" target="_blank">hier voor Firefox</a>. De app is ook bruikbaar zonder dit geactiveerd te hebben, maar dan kan de ervaring tegenvallen.`,
       histIntroContent: `Toen in 1933 Adolf Hitler in Duitsland aan de macht kwam, begon de jacht op politieke tegenstanders. Voor de Joden werd het leven steeds moeilijker: stap voor stap werden zij geïsoleerd. Niet ieder wachtte af en vluchtte naar het buitenland, zoals naar Nederland. Vooral na de eerste openlijke vervolging van de Joden, de Reichskristallnacht op 9 november 1938, kwam een grote stroom vluchtelingen naar ons land. Met de Nederlandse gastvrijheid hield het echter niet over. Tot aan het begin van de oorlog werden 10.000 Duitse vluchtelingen toegelaten, anderen kwamen illegaal het land binnen. De Nederlandse regering was niet van plan voor de opvang van deze mensen geld uit te geven; alle initiatieven waren afkomstig van particulieren. De vluchtelingen gingen van kamp naar kamp, hun koffers moesten constant gepakt staan. De regering zag in dat het zo niet langer kon en meende de oplossing te zien in de bouw van een centraal vluchtelingenkamp op de Veluwe, in de omgeving van Elspeet. Er kwamen protesten van omwonenden en van de ANWB maar doorslaggevend was die van koningin Wilhelmina. Haar secretaris liet minister van Binnenlandse Zaken Van Boeyen weten dat een vluchtelingenkamp dicht bij paleis ‘t Loo de Koninklijke goedkeuring niet kon wegdragen. Het kabinet richtte vervolgens de blik op Drenthe, waar bij Westerbork een flinke lap onontgonnen grond lag. Eenzaam, wild en woest en ledig. Ideaal voor het Centraal Vluchtelingenkamp.`,
       dataIntroContent: `LIDAR (LIght Detection And Ranging of Laser Imaging Detection And Ranging) is een technologie die de afstand tot een object of oppervlak bepaalt door middel van het gebruik van laserpulsen. Lidar werkt volgens hetzelfde principe als radar: een signaal wordt uitgezonden en zal enige tijd later door reflectie weer worden opgevangen. De afstand tot het object of oppervlak wordt bepaald door de tijd te meten die verstrijkt tussen het uitzenden van een puls en het opvangen van een reflectie van die puls. Het verschil tussen lidar en radar is dat lidar gebruikmaakt van laserlicht terwijl radar gebruikmaakt van radiogolven.`
     };
@@ -77,29 +86,29 @@ export default {
       this.$emit("next-step");
 
       switch (this.step) {
-        case 1:
+        case 2:
           this.flyToHouse();
           break;
-        case 2:
+        case 3:
           this.gridColor = "#FFD27C";
           break;
-        case 3:
+        case 4:
           this.$viewer.pathControls.setPath(pathHouse);
           this.$viewer.setMoveSpeed(2);
           this.$viewer.pathControls.position = 0;
           this.$viewer.pathControls.lockViewToPath = "moving";
           this.$viewer.pathControls.userInputCancels = true;
           break;
-        case 4:
+        case 5:
           this.$refs.grid.$el.style = "z-index: 3;";
           this.gridColor = "#000000";
           tour.on("complete", () => {
-            this.$refs.grid.$el.style = "z-index: unset;";
             this.next();
           });
           tour.start();
           break;
-        case 5:
+        case 6:
+          this.$refs.grid.$el.style = "z-index: unset;";
           this.$emit("start-progression");
           break;
         default:

@@ -46,11 +46,11 @@ tour.addStep("about-page-button", {
   }
 });
 
-tour.addStep("share-button", {
-  attachTo: "#share-button right",
-  text: "Via dit menu kan je de app delen via email, of op social media.",
-  buttons: [skipButton, nextButton]
-});
+// tour.addStep("share-button", {
+//   attachTo: "#share-button right",
+//   text: "Via dit menu kan je de app delen via email, of op social media.",
+//   buttons: [skipButton, nextButton]
+// });
 
 tour.addStep("narrative-selector", {
   attachTo: "#narrative-selector top",

@@ -17,7 +17,7 @@
       @start-progression="startProgression"
     />
 
-    <div v-show="step >= 4">
+    <div v-show="step >= 5">
       <div class="options-buttons">
         <div class="settings-menu-container">
           <OptionsButton

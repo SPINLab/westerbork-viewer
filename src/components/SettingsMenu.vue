@@ -62,7 +62,11 @@ export default {
       this.$emit("point-clouds-change", pointClouds);
     },
     documentClick(e) {
-      if (!this.$el.parentElement.contains(e.target)) {
+      if (
+        !this.$el.parentElement.contains(e.target) &&
+        !e.target.classList.contains("shepherd-button") &&
+        !e.target.classList.contains("shepherd-modal-target")
+      ) {
         if (this.menuOpen) this.menuOpen = false;
       }
     }
@@ -102,6 +106,10 @@ export default {
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
   left: -20px;
+}
+
+.menu:focus {
+  outline: 0;
 }
 
 .menu-item {
