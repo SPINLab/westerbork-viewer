@@ -10,6 +10,7 @@
           />
           <NavigationButton
             title="Ga terug naar de app"
+            class="back-button"
             @click.native="close"
           />
         </header>
@@ -170,6 +171,7 @@ export default {
 
 .content {
   max-width: 97.625rem;
+  width: 90vw;
   padding: 1rem;
 }
 
@@ -177,8 +179,13 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   width: 100%;
   padding: 2rem 0;
+}
+
+.back-button {
+  margin-top: 1rem;
 }
 
 section {
@@ -187,12 +194,13 @@ section {
 
 .about p {
   column-count: 2;
+  column-width: 30rem;
   font-size: 1.3125rem;
 }
 
 .team ul {
-  column-count: 3;
-  max-width: 65rem;
+  column-count: 4;
+  column-width: 20rem;
   padding: 0;
 }
 
@@ -207,11 +215,9 @@ section {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  max-width: 50rem;
 }
 
 .partners li {
-  padding: 1rem 2rem 1rem 0;
-  width: 22rem;
+  padding: 1rem 8rem 1rem 0;
 }
 </style>
