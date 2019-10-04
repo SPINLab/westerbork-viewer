@@ -43,7 +43,7 @@
           icon="about"
           @click.native="openAboutPage"
         />
-        <div class="share-menu-container">
+        <!-- <div class="share-menu-container">
           <OptionsButton
             id="share-button"
             title="Delen"
@@ -51,8 +51,8 @@
             @click.native="toggleShareMenu"
           />
           <ShareMenu ref="shareMenu" />
+        </div> -->
         </div>
-      </div>
 
       <div class="narrative-progression-container">
         <NarrativeSelector
@@ -96,7 +96,7 @@ import PotreeViewer from "./components/PotreeViewer";
 import TheIntroduction from "./components/TheIntroduction";
 import SettingsMenu from "./components/SettingsMenu";
 import AboutPage from "./components/AboutPage";
-import ShareMenu from "./components/ShareMenu";
+// import ShareMenu from "./components/ShareMenu";
 import OptionsButton from "./components/OptionsButton";
 import ProgressionBar from "./components/ProgressionBar";
 import NarrativeSelector from "./components/NarrativeSelector";
@@ -130,7 +130,7 @@ export default {
     TheIntroduction,
     SettingsMenu,
     AboutPage,
-    ShareMenu,
+    // ShareMenu,
     OptionsButton,
     ProgressionBar,
     NarrativeSelector,
