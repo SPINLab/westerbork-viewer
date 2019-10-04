@@ -191,11 +191,11 @@ export default {
       );
       const json = await response.json();
       let data = json.data;
-      data = data.filter(v => v.sort !== null);
-      data = data.sort((a, b) => a.sort > b.sort);
+      data = data.filter(v => v.sort_number !== null);
+      data = data.sort((a, b) => a.sort_number - b.sort_number);
       this.narratives = data.map(v => {
         return {
-          id: v.sort,
+          id: v.sort_number,
           title: v.heading_dutch,
           description: v.summary_dutch
         };
