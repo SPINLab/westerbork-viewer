@@ -229,6 +229,7 @@ export default {
   flex-direction: column;
   width: 88vw;
   margin-left: 2rem;
+  pointer-events: auto;
 }
 
 #progression-bar:focus {

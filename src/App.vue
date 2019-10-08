@@ -407,6 +407,7 @@ h4 {
   align-items: flex-end;
   flex-wrap: wrap;
   padding: 0.2rem 0;
+  pointer-events: none;
 }
 
 #bottom-fade {

@@ -131,6 +131,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 2rem;
+  pointer-events: auto;
 }
 
 #narrative-selection-button {
