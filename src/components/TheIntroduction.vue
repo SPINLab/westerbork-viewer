@@ -53,6 +53,12 @@
     <transition name="fade">
       <div v-show="[0, 1, 3, 4, 5].includes(step)" class="fade"></div>
     </transition>
+    <NavigationButton
+      v-if="step < 7"
+      class="skip-button"
+      title="Sla introductie over"
+      @click.native="skip"
+    />
   </div>
 </template>
 
@@ -166,6 +172,24 @@ export default {
       }
 
       this.intros = [...this.intros, ...data];
+    },
+    skip() {
+      tour.complete();
+      if (this.$viewer.pathControls.tweens[0]) {
+        this.$viewer.pathControls.tweens[0].stop();
+      }
+      this.$emit("hide-point-cloud", "AHN2");
+      this.$viewer.pathControls.setPath(pathHouse);
+      this.$viewer.setMoveSpeed(2);
+      this.$viewer.pathControls.position = 0;
+      this.$viewer.pathControls.lockViewToPath = "moving";
+      this.$viewer.pathControls.userInputCancels = true;
+      this.$viewer.scene.view.yaw = 1.485;
+      this.$viewer.scene.view.pitch = 0;
+      this.step = 7;
+      this.$emit("narrative-picked", this.narratives[0]);
+      this.$emit("start-progression");
+      this.$emit("skip-intro");
     }
   },
   mounted() {
@@ -186,6 +210,15 @@ export default {
   bottom: 10%;
   padding: 1rem 3rem;
   z-index: 1;
+}
+
+.skip-button {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+  padding: 0.5rem 0.5rem;
+  z-index: 3;
+  transform: scale(0.7);
 }
 
 .fade {
