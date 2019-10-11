@@ -38,33 +38,18 @@
             <h3>TEAM</h3>
             <ul>
               <TeamMember
-                name="Rob van der Laarse"
-                position="Coordinator"
-                organization="Universiteit van Amsterdam"
-              />
-              <TeamMember
-                name="Dana Dolghin"
-                position="Content"
-                organization="Universiteit van Amsterdam"
-              />
-              <TeamMember
-                name="Tijm Lanjouw"
-                position="3D Modeller"
-                organization="4DLab"
-              />
-              <TeamMember
-                name="Maurice de Kleijn"
-                position="Coordinator"
-                organization="SPINLab"
-              />
-              <TeamMember
                 name="Jitte Waagen"
                 position="Project Lead"
                 organization="4DLab"
               />
               <TeamMember
-                name="Chris Lucas"
-                position="Front-end"
+                name="Rob van der Laarse"
+                position="Coordinator"
+                organization="Universiteit van Amsterdam"
+              />
+              <TeamMember
+                name="Maurice de Kleijn"
+                position="Coordinator"
                 organization="SPINLab"
               />
               <TeamMember
@@ -73,9 +58,24 @@
                 organization="Herinneringscentrum Westerbork"
               />
               <TeamMember
+                name="Dana Dolghin"
+                position="Content"
+                organization="Universiteit van Amsterdam"
+              />
+              <TeamMember
+                name="Chris Lucas"
+                position="Front-end & Data Processing"
+                organization="SPINLab"
+              />
+              <TeamMember
+                name="Tijm Lanjouw"
+                position="3D Modeller"
+                organization="4DLab"
+              />
+              <TeamMember
                 name="Erik van Zummeren"
-                position="UI-Design"
-                organization="."
+                position="Design"
+                organization=" "
               />
               <TeamMember
                 name="Ivan Kisjes"
@@ -199,14 +199,14 @@ section {
 }
 
 .team ul {
-  column-count: 4;
-  column-width: 20rem;
+  display: flex;
+  flex-wrap: wrap;
   padding: 0;
 }
 
 .team li {
   display: inline-block;
-  width: 100%;
+  width: 20rem;
 }
 
 .partners ul {
