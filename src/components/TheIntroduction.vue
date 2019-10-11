@@ -118,7 +118,7 @@ export default {
     flyToHouse() {
       this.$viewer.pathControls.lockViewToPath = "always";
       this.$viewer.pathControls.userInputCancels = false;
-      this.$viewer.pathControls.moveTo(1, 18000, () => {
+      this.$viewer.pathControls.moveTo(1, 20000, () => {
         const ahn2pc = this.$viewer.scene.pointclouds.filter(
           v => v.name === "AHN2"
         )[0];
