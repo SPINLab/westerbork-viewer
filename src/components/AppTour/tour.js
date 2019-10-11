@@ -53,7 +53,7 @@ tour.addStep("about-page-button", {
 // });
 
 tour.addStep("narrative-selector", {
-  attachTo: "#narrative-selector top",
+  attachTo: "#narrative-selection-button top",
   text:
     "Om het huidige narratief te veranderen kan je op deze knop klikken. Dit zal een selectiemenu openen.",
   buttons: [skipButton, nextButton]
