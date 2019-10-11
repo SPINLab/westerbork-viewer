@@ -118,22 +118,20 @@ export default {
     flyToHouse() {
       this.$viewer.pathControls.lockViewToPath = "always";
       this.$viewer.pathControls.userInputCancels = false;
-      this.$viewer.pathControls.moveTo(0.97, 13000, () => {
-        this.$viewer.pathControls.moveTo(1, 8000, () => {
-          const ahn2pc = this.$viewer.scene.pointclouds.filter(
-            v => v.name === "AHN2"
-          )[0];
-          const t = setInterval(() => {
-            ahn2pc.material.size -= 0.005;
-            if (ahn2pc.material.size < 0.002) {
-              clearInterval(t);
-              this.$emit("hide-point-cloud", "AHN2");
-              ahn2pc.material.size = 0.65;
-              this.$viewer.pathControls.lockViewToPath = "moving";
-              this.next();
-            }
-          }, 8);
-        });
+      this.$viewer.pathControls.moveTo(1, 18000, () => {
+        const ahn2pc = this.$viewer.scene.pointclouds.filter(
+          v => v.name === "AHN2"
+        )[0];
+        const t = setInterval(() => {
+          ahn2pc.material.size -= 0.005;
+          if (ahn2pc.material.size < 0.002) {
+            clearInterval(t);
+            this.$emit("hide-point-cloud", "AHN2");
+            ahn2pc.material.size = 0.65;
+            this.$viewer.pathControls.lockViewToPath = "moving";
+            this.next();
+          }
+        }, 8);
       });
     },
     pickNarrative(narrative) {
