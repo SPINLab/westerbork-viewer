@@ -406,7 +406,6 @@ h4 {
   width: 100vw;
   display: flex;
   align-items: flex-end;
-  flex-wrap: wrap;
   padding: 0.2rem 0;
   pointer-events: none;
 }
@@ -434,5 +433,11 @@ h4 {
   );
   pointer-events: none;
   z-index: 1;
+}
+
+@media only screen and (max-width: 1400px) {
+  .narrative-progression-container {
+    flex-wrap: wrap;
+  }
 }
 </style>

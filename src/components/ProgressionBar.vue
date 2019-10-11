@@ -286,6 +286,12 @@ export default {
   position: relative;
 }
 
+@media only screen and (max-width: 1400px) {
+  #progression-bar {
+    width: 100vw;
+  }
+}
+
 @media only screen and (max-width: 1100px) {
   .labels span {
     display: flex;
