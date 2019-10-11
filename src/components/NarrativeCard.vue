@@ -1,11 +1,7 @@
 <template>
   <div class="narrative-card">
     <h3>{{ narrative.title.toUpperCase() }}</h3>
-    <p>
-      Toen in 1933 Adolf Hitler in Duitsland aan de macht kwam, begon de jacht
-      op politieke tegenstanders. Voor de Joden werd het leven steeds
-      moeilijker: stap voor stap werden zij geïsoleerd.
-    </p>
+    <div v-html="narrative.description"></div>
     <NavigationButton title="Verder" @click.native="pickNarrative" />
   </div>
 </template>
