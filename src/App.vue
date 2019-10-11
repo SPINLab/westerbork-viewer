@@ -346,6 +346,7 @@ h4 {
   height: 100vh;
   top: 0;
   right: 0;
+  overflow: hidden;
 }
 
 #potree-viewer {

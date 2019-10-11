@@ -40,8 +40,15 @@
     <div class="info-container">
       <div class="expand-collapse-buttons">
         <ExpandCollapseButton
-          v-show="!cardsExpanded"
+          v-show="!cardsExpanded && !visible"
           id="expand-info-button"
+          direction="left"
+          arrowColor="#333333"
+          @click.native="expand"
+        />
+        <ExpandCollapseButton
+          v-show="!cardsExpanded && visible"
+          id="expand-cards-button"
           direction="left"
           arrowColor="#333333"
           @click.native="expand"
@@ -232,6 +239,7 @@ export default {
   top: 0;
   right: 0;
   width: 40rem;
+  z-index: 5;
 }
 
 #info-box:focus {
@@ -389,4 +397,27 @@ export default {
 .delayed-fade-enter {
   opacity: 0;
 }
+
+@media only screen and (max-width: 1850px) {
+  #expand-cards-button {
+    display: none;
+  }
+}
+
+/* @media only screen and (max-width: 650px) {
+  #info-box {
+    width: 100vw;
+  }
+
+  .media-container {
+    width: 100vw;
+    height: 50vh;
+  }
+
+  .card {
+    width: 100vw;
+    height: 50vh;
+    padding: 0;
+  }
+} */
 </style>

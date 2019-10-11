@@ -124,4 +124,19 @@ article >>> .media-container video {
   width: 30%;
   line-height: 1.6rem;
 }
+
+@media only screen and (max-width: 1400px) {
+  .content {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .text-container {
+    width: 70%;
+  }
+
+  .media-container {
+    width: 90%;
+  }
+}
 </style>
