@@ -286,7 +286,10 @@ export default {
             Your browser does not support the video tag.
             </video>
           `;
-        } else if (source.file.data.type === "image/jpeg") {
+        } else if (
+          source.file.data.type === "image/jpeg" ||
+          source.file.data.type === "image/png"
+        ) {
           html += `
             <img src="https://data.campscapes.org/${
               source.file.data.url
