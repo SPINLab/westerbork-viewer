@@ -102,8 +102,9 @@ export default {
 }
 
 p {
-  line-height: 1.6rem;
+  line-height: 1.8rem;
   font-size: 1.25rem;
+  text-align: start;
 }
 
 .fade {
