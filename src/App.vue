@@ -15,6 +15,7 @@
       @hide-point-cloud="hidePointCloud"
       @narrative-picked="changeNarrative"
       @start-progression="startProgression"
+      @skip-intro="skipIntro"
     />
 
     <div v-show="step >= 6">
@@ -184,6 +185,9 @@ export default {
     },
     startProgression() {
       this.$refs.progression.startProgression();
+    },
+    skipIntro() {
+      this.step = 7;
     },
     async getNarratives() {
       const response = await fetch(
