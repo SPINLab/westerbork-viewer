@@ -119,6 +119,15 @@
               </li>
             </ul>
           </section>
+          <section class="software">
+            <h3>SOFTWARE</h3>
+            <span>
+              The application was build using
+              <a href="https://vuejs.org/">Vue</a> for the UI and
+              <a href="http://potree.org/">Potree</a> for the visualization of
+              point clouds.
+            </span>
+          </section>
         </div>
       </div>
     </div>
