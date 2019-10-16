@@ -1,29 +1,34 @@
-# westerbork-viewer-vue
+# Westerbork Commander's House App
 
-## Project setup
+A virtual tour through the commander's house at Camp Westerbork. Build using [Vue](https://vuejs.org/) for the UI and [Potree](http://potree.org/) for the visualization of the point clouds.
+
+![App screenshot](screenshot.png)
+
+## Prerequisites
+
+- npm
+
+## Install
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Develop
+
+Run:
+
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+Browse to http://localhost:8080
+
+### Deploy
+
+Run:
+
 ```
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Serve the created `dist` folder using a webserver.
