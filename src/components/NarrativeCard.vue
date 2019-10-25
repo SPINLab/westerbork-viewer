@@ -32,6 +32,7 @@ export default {
 .narrative-card {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   padding: 2rem 3rem 0rem 3rem;
   background-repeat: no-repeat;
