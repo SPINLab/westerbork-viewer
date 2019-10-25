@@ -1,7 +1,7 @@
 <template>
   <div class="introduction-container">
     <transition name="fade">
-      <TheGrid v-show="step !== 2 && step < 7" ref="grid" :color="gridColor" />
+      <TheGrid v-show="step !== 2 && step < 8" ref="grid" :color="gridColor" />
     </transition>
     <transition name="fade">
       <IntroductionCard
@@ -51,10 +51,17 @@
       />
     </transition>
     <transition name="fade">
-      <div v-show="[0, 1, 3, 4, 5].includes(step)" class="fade"></div>
+      <NarrativeIntroCard
+        v-if="step === 6"
+        :narrativeIntro="pickedNarrativeIntro"
+        @next-step="next"
+      />
+    </transition>
+    <transition name="fade">
+      <div v-show="[0, 1, 3, 4, 5, 6].includes(step)" class="fade"></div>
     </transition>
     <NavigationButton
-      v-if="step < 7"
+      v-if="step < 8"
       class="skip-button"
       title="Sla introductie over"
       @click.native="skip"
@@ -67,6 +74,7 @@ import TheGrid from "./TheGrid";
 import IntroductionCard from "./IntroductionCard";
 import NavigationButton from "./NavigationButton";
 import NarrativeCardSelector from "./NarrativeCardSelector";
+import NarrativeIntroCard from "./NarrativeIntroCard";
 
 import { pathHouse } from "./path";
 import { tour } from "./AppTour/tour";
@@ -77,7 +85,8 @@ export default {
     TheGrid,
     IntroductionCard,
     NavigationButton,
-    NarrativeCardSelector
+    NarrativeCardSelector,
+    NarrativeIntroCard
   },
   props: {
     narratives: {
@@ -94,7 +103,9 @@ export default {
           heading_dutch: "Campscapes Commander's House app",
           summary_dutch: `Welkom bij de Campscapes Commander's House app. Deze app leid je digitaal rond door het huis van de kampscommandant en geeft je informatie over het kamp en het huis door de jaren heen. <br><br> De app werkt het beste in een moderne browser met GPU hardware acceleratie aangezet. Dit is belangrijk omdat de app 3D data weergeeft en daardoor grafisch vrij zwaar is. Dit staat normaal gesproken standaard bij moderne browsers al aan, maar dit is niet altijd het geval. Bij twijfel zie bijvoorbeeld <a href="https://www.google.com/search?q=chrome+enable+hardware+acceleration" target="_blank">hier voor Chrome</a> of <a href="https://www.google.com/search?q=firefox+enable+hardware+acceleration" target="_blank">hier voor Firefox</a>. De app is ook bruikbaar zonder dit geactiveerd te hebben, maar dan kan de ervaring tegenvallen.`
         }
-      ]
+      ],
+      narrativeIntros: [],
+      pickedNarrativeIntro: {}
     };
   },
   methods: {
@@ -116,7 +127,7 @@ export default {
           this.$viewer.pathControls.lockViewToPath = "moving";
           this.$viewer.pathControls.userInputCancels = true;
           break;
-        case 6:
+        case 7:
           this.$refs.grid.$el.style = "z-index: 3;";
           this.gridColor = "#000000";
           tour.on("complete", () => {
@@ -124,7 +135,7 @@ export default {
           });
           tour.start();
           break;
-        case 7:
+        case 8:
           this.$refs.grid.$el.style = "z-index: unset;";
           this.$emit("start-progression");
           break;
@@ -152,6 +163,9 @@ export default {
       });
     },
     pickNarrative(narrative) {
+      this.pickedNarrativeIntro = this.narrativeIntros.filter(
+        v => v.heading_dutch === narrative.question
+      )[0];
       this.next();
       this.$emit("narrative-picked", narrative);
     },
@@ -161,17 +175,21 @@ export default {
       );
       const json = await response.json();
       let data = json.data;
-      data = data.filter(v => v.order_in_app !== null && v.order_in_app !== 0);
-      data = data.sort((a, b) => a.order_in_app - b.order_in_app);
+      let introTexts = data.filter(
+        v => v.order_in_app !== null && v.order_in_app !== 0
+      );
+      introTexts = introTexts.sort((a, b) => a.order_in_app - b.order_in_app);
 
-      for (const intro of data) {
+      for (const intro of introTexts) {
         intro.summary_dutch = intro.summary_dutch.replace(
           /(?:\r\n|\r|\n)/g,
           "<br>"
         );
       }
 
-      this.intros = [...this.intros, ...data];
+      this.intros = [...this.intros, ...introTexts];
+
+      this.narrativeIntros = data.filter(v => v.order_in_app === null);
     },
     skip() {
       tour.complete();

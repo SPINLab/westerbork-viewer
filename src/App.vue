@@ -18,7 +18,7 @@
       @skip-intro="skipIntro"
     />
 
-    <div v-show="step >= 6">
+    <div v-show="step >= 7">
       <div class="options-buttons">
         <div class="settings-menu-container">
           <OptionsButton
@@ -187,7 +187,7 @@ export default {
       this.$refs.progression.startProgression();
     },
     skipIntro() {
-      this.step = 7;
+      this.step = 8;
     },
     async getNarratives() {
       const response = await fetch(
@@ -201,6 +201,7 @@ export default {
         return {
           id: v.sort_number,
           title: v.heading_dutch,
+          question: v.question_dutch,
           description: v.summary_dutch
         };
       });
