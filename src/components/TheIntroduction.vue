@@ -204,7 +204,7 @@ export default {
       this.$viewer.pathControls.userInputCancels = true;
       this.$viewer.scene.view.yaw = 1.485;
       this.$viewer.scene.view.pitch = 0;
-      this.step = 7;
+      this.step = 8;
       this.$emit("narrative-picked", this.narratives[0]);
       this.$emit("start-progression");
       this.$emit("skip-intro");
