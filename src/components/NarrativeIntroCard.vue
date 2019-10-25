@@ -1,7 +1,7 @@
 <template>
   <div class="narrative-card">
     <h3>{{ narrativeIntro.heading_dutch.toUpperCase() }}</h3>
-    <div v-html="narrativeIntro.summary_dutch"></div>
+    <div class="narrative-text" v-html="narrativeIntro.summary_dutch"></div>
     <NavigationButton title="Verder" @click.native="nextStep" />
   </div>
 </template>
@@ -55,12 +55,10 @@ h3 {
   font-size: 1.375rem;
 }
 
-p {
-  height: 28rem;
-  overflow: hidden;
+.narrative-text {
+  overflow-y: scroll;
   color: #212121;
-  line-height: 1.6rem;
-  font-size: 1.25rem;
+  line-height: 1.4rem;
 }
 
 button {
