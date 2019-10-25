@@ -85,7 +85,7 @@ export default {
 .card-expanded {
   margin-top: 0;
   height: 70%;
-  top: 4%;
+  top: 8%;
 }
 
 .content {
