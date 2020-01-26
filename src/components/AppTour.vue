@@ -32,14 +32,16 @@ export default {
         action: this.tour.complete
       };
 
-      this.tour.addStep("settings-button", {
-        attachTo: "#settings-button right",
+      this.tour.addStep({
+        id: "settings-button",
+        attachTo: { element: "#settings-button", on: "right" },
         text: this.$t("settingsButtonHint"),
         buttons: [skipButton, nextButton]
       });
 
-      this.tour.addStep("settings-menu", {
-        attachTo: "#settings-menu right",
+      this.tour.addStep({
+        id: "settings-menu",
+        attachTo: { element: "#settings-menu", on: "right" },
         text: this.$t("settingsMenuHint"),
         buttons: [skipButton, nextButton],
         beforeShowPromise: function() {
@@ -51,8 +53,9 @@ export default {
         }
       });
 
-      this.tour.addStep("about-page-button", {
-        attachTo: "#about-page-button right",
+      this.tour.addStep({
+        id: "about-page-button",
+        attachTo: { element: "#about-page-button", on: "right" },
         text: this.$t("aboutButtonHint"),
         buttons: [skipButton, nextButton],
         beforeShowPromise: function() {
@@ -64,14 +67,16 @@ export default {
         }
       });
 
-      this.tour.addStep("narrative-selector", {
-        attachTo: "#narrative-selection-button top",
+      this.tour.addStep({
+        id: "narrative-selector",
+        attachTo: { element: "#narrative-selection-button", on: "top" },
         text: this.$t("narrativeButtonHint"),
         buttons: [skipButton, nextButton]
       });
 
-      this.tour.addStep("narrative-selection", {
-        attachTo: ".narrative-selection right",
+      this.tour.addStep({
+        id: "narrative-selection",
+        attachTo: { element: ".narrative-selection", on: "right" },
         text: this.$t("narrativeSelectionHint"),
         buttons: [skipButton, nextButton],
         beforeShowPromise: function() {
@@ -85,20 +90,23 @@ export default {
         }
       });
 
-      this.tour.addStep("progression-bar", {
-        attachTo: "#progression-bar top",
+      this.tour.addStep({
+        id: "progression-bar",
+        attachTo: { element: "#progression-bar", on: "top" },
         text: this.$t("progressBarHint"),
         buttons: [skipButton, nextButton]
       });
 
-      this.tour.addStep("expand-info-button", {
-        attachTo: "#expand-info-button left",
+      this.tour.addStep({
+        id: "expand-info-button",
+        attachTo: { element: "#expand-info-button", on: "left" },
         text: this.$t("expandInfoButtonHint"),
         buttons: [skipButton, nextButton]
       });
 
-      this.tour.addStep("info-box", {
-        attachTo: "#info-box left",
+      this.tour.addStep({
+        id: "info-box",
+        attachTo: { element: "#info-box", on: "left" },
         text: this.$t("infoBoxHint"),
         buttons: [skipButton, nextButton],
         beforeShowPromise: function() {
@@ -114,7 +122,8 @@ export default {
         }
       });
 
-      this.tour.addStep("controls", {
+      this.tour.addStep({
+        id: "controls",
         text: this.$t("controlsHint"),
         buttons: [
           {
@@ -140,18 +149,37 @@ export default {
 </script>
 
 <style>
+@import "~shepherd.js/dist/css/shepherd.css";
+
 .shepherd-element:focus,
 .shepherd-content:focus,
 .shepherd-text:focus {
   outline: none;
 }
 
+.shepherd-element {
+  background-color: #2b2b2b !important;
+}
+.shepherd-element-attached-left .shepherd-arrow {
+  border-right-color: #2b2b2b !important;
+}
+.shepherd-element-attached-right .shepherd-arrow {
+  border-left-color: #2b2b2b !important;
+}
+.shepherd-element-attached-top .shepherd-arrow {
+  border-bottom-color: #2b2b2b !important;
+}
+.shepherd-element-attached-bottom .shepherd-arrow {
+  border-top-color: #2b2b2b !important;
+}
+
 .shepherd-text {
   font-size: 1.1rem;
   line-height: 1.6rem;
+  color: #fff;
 }
 
-.shepherd-button {
+.shepherd-footer .shepherd-button {
   background-color: #ffd27c;
   color: #212121;
   cursor: pointer;
@@ -160,5 +188,10 @@ export default {
   padding: 0.6rem 1rem;
   margin: 0.6rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.shepherd-footer .shepherd-button:not(:disabled):hover {
+  background: #ffd27c;
+  color: #212121;
 }
 </style>

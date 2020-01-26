@@ -157,7 +157,9 @@ export default {
           this.$refs.tour.tour.on("complete", () => {
             this.next();
           });
-          this.$refs.tour.tour.start();
+          this.$nextTick(() => {
+            this.$refs.tour.tour.start();
+          });
           break;
         case 8:
           this.$refs.grid.$el.style = "z-index: unset;";
