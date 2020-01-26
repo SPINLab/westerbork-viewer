@@ -23,7 +23,7 @@
         <div class="settings-menu-container">
           <OptionsButton
             id="settings-button"
-            title="Instellingen"
+            :title="$t('settings')"
             icon="settings"
             @click.native="toggleSettingsMenu"
           />
@@ -40,20 +40,11 @@
         </div>
         <OptionsButton
           id="about-page-button"
-          title="Over ons"
+          :title="$t('about')"
           icon="about"
           @click.native="openAboutPage"
         />
-        <!-- <div class="share-menu-container">
-          <OptionsButton
-            id="share-button"
-            title="Delen"
-            icon="share"
-            @click.native="toggleShareMenu"
-          />
-          <ShareMenu ref="shareMenu" />
-        </div> -->
-        </div>
+      </div>
 
       <div class="narrative-progression-container">
         <NarrativeSelector
@@ -67,12 +58,12 @@
 
       <InfoBox
         ref="infoBox"
-        :houseMedia="sourceData.house.media"
-        :houseContent="sourceData.house.content"
-        :campMedia="sourceData.camp.media"
-        :campContent="sourceData.camp.content"
-        :memoryMedia="sourceData.memory.media"
-        :memoryContent="sourceData.memory.content"
+        :houseMedia="sources.house.media"
+        :houseContent="sources.house.content"
+        :campMedia="sources.camp.media"
+        :campContent="sources.camp.content"
+        :memoryMedia="sources.memory.media"
+        :memoryContent="sources.memory.content"
         @layer-change="changeLayer"
         @open-source="openSourcePage"
       />
@@ -82,8 +73,8 @@
         :narrative="narrative"
         :room="room"
         :layer="layer"
-        :media="sourceData[this.layer].media"
-        :content="sourceData[this.layer].content"
+        :media="sources[this.layer].media"
+        :content="sources[this.layer].content"
       />
 
       <AboutPage ref="aboutPage" />
@@ -97,7 +88,6 @@ import PotreeViewer from "./components/PotreeViewer";
 import TheIntroduction from "./components/TheIntroduction";
 import SettingsMenu from "./components/SettingsMenu";
 import AboutPage from "./components/AboutPage";
-// import ShareMenu from "./components/ShareMenu";
 import OptionsButton from "./components/OptionsButton";
 import ProgressionBar from "./components/ProgressionBar";
 import NarrativeSelector from "./components/NarrativeSelector";
@@ -105,22 +95,22 @@ import InfoBox from "./components/InfoBox";
 import SourcePage from "./components/SourcePage";
 
 const directusRoomNames = {
-  Buiten: "",
-  Hal: "1_Entrance/hallway",
-  Eetkamer: "2_Dining room",
-  Woonkamer: "3_Living room",
-  Zitkamer: "4_sitting room",
-  Serre: "5_conservatory",
-  Keuken: "6_Kitchen",
-  Kelder: "7_Basement",
-  Tuinhuis: "8_Garden shed",
-  "Slaapkamer Gemmeker": "9_Bedroom Gemmeker",
-  "Slaapkamer Speck Obreen": "10_Bedroom Speck Obreen",
-  "Logeerkamer 1": "11_Guestroom1",
-  "Logeerkamer 2": "12_Guestroom2",
-  "Slaapkamer Elisabeth Hassel": "13_Bedroom Elisabeth Hassel",
-  Badkamer: "14_Bathroom",
-  Zolder: "15_Attic"
+  outside: "",
+  hallway: "1_Entrance/hallway",
+  diningRoom: "2_Dining room",
+  livingRoom: "3_Living room",
+  sittingRoom: "4_sitting room",
+  conservatory: "5_conservatory",
+  kitchen: "6_Kitchen",
+  basement: "7_Basement",
+  gardenShed: "8_Garden shed",
+  bedroomGemmeker: "9_Bedroom Gemmeker",
+  bedroomObreen: "10_Bedroom Speck Obreen",
+  guestroom1: "11_Guestroom1",
+  guestroom2: "12_Guestroom2",
+  bedroomHassel: "13_Bedroom Elisabeth Hassel",
+  bathroom: "14_Bathroom",
+  attic: "15_Attic"
 };
 
 export default {
@@ -131,7 +121,6 @@ export default {
     TheIntroduction,
     SettingsMenu,
     AboutPage,
-    // ShareMenu,
     OptionsButton,
     ProgressionBar,
     NarrativeSelector,
@@ -146,12 +135,12 @@ export default {
         { name: "Commandantshuis", visible: true }
       ],
       graphics: "medium",
-      points: 4000000,
-      narrative: { id: 0, title: "", description: "" },
+      points: 400000,
+      narrative: { id: null, title: "", description: "" },
       narratives: [],
-      room: "Buiten",
+      room: "outside",
       layer: "house",
-      sourceData: {
+      sources: {
         house: {
           media: "",
           content: ""
@@ -164,11 +153,17 @@ export default {
           media: "",
           content: ""
         }
-      }
+      },
+      sourceData: null,
+      narrativesData: null
     };
   },
   mounted() {
-    this.getNarratives();
+    this.setNarratives();
+    this.$watch("$i18n.locale", async function() {
+      await this.setNarratives();
+      this.parseContents(this.sourceData);
+    });
   },
   methods: {
     onGraphicsChange(graphics) {
@@ -189,6 +184,33 @@ export default {
     skipIntro() {
       this.step = 8;
     },
+    async setNarratives() {
+      if (!this.narrativesData) {
+        await this.getNarratives();
+      }
+      this.narratives = this.narrativesData.map(v => {
+        if (this.$i18n.locale === "nl") {
+          return {
+            id: v.sort_number,
+            title: v.heading_dutch,
+            question: v.question_dutch,
+            description: v.summary_dutch
+          };
+        } else if (this.$i18n.locale === "en") {
+          return {
+            id: v.sort_number,
+            title: v.heading_english,
+            question: v.question_english,
+            description: v.summary_english
+          };
+        }
+      });
+      if (this.narrative.id) {
+        this.narrative = this.narratives.find(
+          narrative => narrative.id === this.narrative.id
+        );
+      }
+    },
     async getNarratives() {
       const response = await fetch(
         `https://data.campscapes.org/api/1.1/tables/wch_intro_texts_narratives/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5`
@@ -197,14 +219,7 @@ export default {
       let data = json.data;
       data = data.filter(v => v.sort_number !== null);
       data = data.sort((a, b) => a.sort_number - b.sort_number);
-      this.narratives = data.map(v => {
-        return {
-          id: v.sort_number,
-          title: v.heading_dutch,
-          question: v.question_dutch,
-          description: v.summary_dutch
-        };
-      });
+      this.narrativesData = data;
     },
     hidePointCloud(pcName) {
       const pc = this.pointClouds.filter(v => v.name === pcName)[0];
@@ -216,16 +231,15 @@ export default {
     openAboutPage() {
       this.$refs.aboutPage.open();
     },
-    toggleShareMenu() {
-      this.$refs.shareMenu.toggleMenu();
-    },
-    changeNarrative(narrative) {
+    async changeNarrative(narrative) {
       this.narrative = narrative;
-      this.getSourceData();
+      this.sourceData = await this.getSourceData();
+      this.parseSourceData(this.sourceData);
     },
-    changeRoom(room) {
+    async changeRoom(room) {
       this.room = room;
-      this.getSourceData();
+      this.sourceData = await this.getSourceData();
+      this.parseSourceData(this.sourceData);
     },
     changeLayer(layer) {
       this.layer = layer;
@@ -238,11 +252,13 @@ export default {
       const response = await fetch(
         `https://data.campscapes.org/api/1.1/tables/source/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5&filters[room.name][eq]=${encodeURIComponent(
           directusRoomName
-        )}&filters[narratives.heading_dutch][eq]=${this.narrative.title}`
+        )}&filters[narratives.heading_${
+          this.$i18n.locale === "nl" ? "dutch" : "english"
+        }][eq]=${this.narrative.title}`
       );
       const json = await response.json();
 
-      const roomSources = {
+      const sourceData = {
         house: [],
         camp: [],
         memory: []
@@ -250,32 +266,40 @@ export default {
 
       for (let source of json.data) {
         if (["house", "camp", "memory"].includes(source.layer)) {
-          roomSources[source.layer].push(source);
+          sourceData[source.layer].push(source);
         } else {
           console.warn(`Source layer name: '${source.layer}' is not valid.`);
         }
       }
 
-      this.sourceData.house.content = this.parseContent(roomSources.house[0]);
-      this.sourceData.house.media = this.parseMedia(roomSources.house[0]);
-      this.sourceData.camp.content = this.parseContent(roomSources.camp[0]);
-      this.sourceData.camp.media = this.parseMedia(roomSources.camp[0]);
-      this.sourceData.memory.content = this.parseContent(roomSources.memory[0]);
-      this.sourceData.memory.media = this.parseMedia(roomSources.memory[0]);
+      return sourceData;
+    },
+    parseSourceData(sourceData) {
+      this.parseContents(sourceData);
+
+      this.sources.house.media = this.parseMedia(sourceData.house[0]);
+      this.sources.camp.media = this.parseMedia(sourceData.camp[0]);
+      this.sources.memory.media = this.parseMedia(sourceData.memory[0]);
 
       if (
-        (roomSources.house.length !== 0 ||
-          roomSources.camp.length !== 0 ||
-          roomSources.memory.length !== 0) &&
+        (sourceData.house.length !== 0 ||
+          sourceData.camp.length !== 0 ||
+          sourceData.memory.length !== 0) &&
         !this.$refs.infoBox.visible
       ) {
         this.$refs.infoBox.expand();
       }
     },
+    parseContents(sourceData) {
+      if (sourceData) {
+        this.sources.house.content = this.parseContent(sourceData.house[0]);
+        this.sources.camp.content = this.parseContent(sourceData.camp[0]);
+        this.sources.memory.content = this.parseContent(sourceData.memory[0]);
+      }
+    },
     parseContent(source) {
-      if (!source) return "";
-
-      return source.content.data[0].description;
+      // TODO: english/dutch version?
+      return source ? source.content.data[0].description : "";
     },
     parseMedia(source) {
       if (!source) return "";
@@ -311,8 +335,6 @@ export default {
 </script>
 
 <style>
-@import url("./components/AppTour/tour.css");
-
 @font-face {
   font-family: "CamphorPro-Regular";
   src: url("assets/fonts/CamphorPro-Regular.woff") format("woff");

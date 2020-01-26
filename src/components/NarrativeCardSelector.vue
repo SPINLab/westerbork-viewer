@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h2>Kies een narratief</h2>
+    <h2>{{ $t("chooseNarrative") }}</h2>
     <ol class="narrative-cards">
       <li
         v-for="narrative in narratives"
@@ -51,6 +51,7 @@ h2 {
   color: #ffffff;
   transform: rotate(-90deg);
   margin-right: -1rem;
+  text-align: center;
 }
 
 .narrative-cards {

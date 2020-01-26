@@ -2,6 +2,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   publicPath: "./",
+
   configureWebpack: {
     plugins: [
       new CopyWebpackPlugin([
@@ -56,5 +57,14 @@ module.exports = {
         }
       ])
     ]
+  },
+
+  pluginOptions: {
+    i18n: {
+      locale: "nl",
+      fallbackLocale: "en",
+      localeDir: "locales",
+      enableInSFC: false
+    }
   }
 };

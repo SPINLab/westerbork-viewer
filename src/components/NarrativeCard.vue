@@ -2,7 +2,7 @@
   <div class="narrative-card">
     <h3>{{ narrative.title.toUpperCase() }}</h3>
     <div class="narrative-text" v-html="narrative.description"></div>
-    <NavigationButton title="Verder" @click.native="pickNarrative" />
+    <NavigationButton :title="$t('continue')" @click.native="pickNarrative" />
   </div>
 </template>
 

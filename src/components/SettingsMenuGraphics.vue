@@ -11,7 +11,7 @@
           name="graphics"
           @change="onChange"
         />
-        laag
+        {{ $t("low") }}
       </label>
       <label class="radio-label" :class="{ selected: graphics === 'medium' }">
         <input
@@ -22,7 +22,7 @@
           name="graphics"
           @change="onChange"
         />
-        gemiddeld
+        {{ $t("medium") }}
       </label>
       <label class="radio-label" :class="{ selected: graphics === 'high' }">
         <input
@@ -33,7 +33,7 @@
           name="graphics"
           @change="onChange"
         />
-        hoog
+        {{ $t("high") }}
       </label>
     </div>
   </div>

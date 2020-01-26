@@ -1,8 +1,8 @@
 <template>
   <div class="narrative-card">
-    <h3>{{ narrativeIntro.heading_dutch.toUpperCase() }}</h3>
-    <div class="narrative-text" v-html="narrativeIntro.summary_dutch"></div>
-    <NavigationButton title="Verder" @click.native="nextStep" />
+    <h3>{{ cardHeading }}</h3>
+    <div class="narrative-text" v-html="cardText"></div>
+    <NavigationButton :title="$t('continue')" @click.native="nextStep" />
   </div>
 </template>
 
@@ -23,6 +23,18 @@ export default {
   methods: {
     nextStep() {
       this.$emit("next-step");
+    }
+  },
+  computed: {
+    cardHeading: function() {
+      return this.$i18n.locale === "nl"
+        ? this.narrativeIntro.heading_dutch.toUpperCase()
+        : this.narrativeIntro.heading_english.toUpperCase();
+    },
+    cardText: function() {
+      return this.$i18n.locale === "nl"
+        ? this.narrativeIntro.summary_dutch
+        : this.narrativeIntro.summaryenglish;
     }
   }
 };

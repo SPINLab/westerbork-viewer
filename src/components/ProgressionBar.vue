@@ -16,10 +16,10 @@
         <div v-show="room == step" class="highlight"></div>
         <br />
         <button v-show="room == step" class="selected">
-          <span>{{ room }}</span>
+          <span>{{ $t(room) }}</span>
         </button>
         <button v-show="room != step">
-          <span>{{ room }}</span>
+          <span>{{ $t(room) }}</span>
         </button>
       </li>
     </ol>
@@ -31,22 +31,22 @@ import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
 
 const rooms = [
-  "Buiten",
-  "Hal",
-  "Eetkamer",
-  "Woonkamer",
-  "Zitkamer",
-  "Serre",
-  "Keuken",
-  "Kelder",
-  "Tuinhuis",
-  "Slaapkamer Gemmeker",
-  "Slaapkamer Speck Obreen",
-  "Logeerkamer 1",
-  "Logeerkamer 2",
-  "Slaapkamer Elisabeth Hassel",
-  "Badkamer",
-  "Zolder"
+  "outside",
+  "hallway",
+  "diningRoom",
+  "livingRoom",
+  "sittingRoom",
+  "conservatory",
+  "kitchen",
+  "basement",
+  "gardenShed",
+  "bedroomGemmeker",
+  "bedroomObreen",
+  "guestroom1",
+  "guestroom2",
+  "bedroomHassel",
+  "bathroom",
+  "attic"
 ];
 
 const markStyle = {
@@ -102,40 +102,40 @@ export default {
         hideLabel: true
       },
       stepLocations: new Map([
-        ["Buiten", 0],
-        ["Hal", 0.1029],
-        ["Eetkamer", 0.1295],
-        ["Woonkamer", 0.1578],
-        ["Zitkamer", 0.1943],
-        ["Serre", 0.227],
-        ["Keuken", 0.3358],
-        ["Kelder", 0.385],
-        ["Tuinhuis", 0.465],
-        ["Slaapkamer Gemmeker", 0.6155],
-        ["Slaapkamer Speck Obreen", 0.68],
-        ["Logeerkamer 1", 0.7376],
-        ["Logeerkamer 2", 0.7877],
-        ["Slaapkamer Elisabeth Hassel", 0.8538],
-        ["Badkamer", 0.9167],
-        ["Zolder", 0.998]
+        ["outside", 0],
+        ["hallway", 0.1029],
+        ["diningRoom", 0.1295],
+        ["livingRoom", 0.1578],
+        ["sittingRoom", 0.1943],
+        ["conservatory", 0.227],
+        ["kitchen", 0.3358],
+        ["basement", 0.385],
+        ["gardenShed", 0.465],
+        ["bedroomGemmeker", 0.6155],
+        ["bedroomObreen", 0.68],
+        ["guestroom1", 0.7376],
+        ["guestroom2", 0.7877],
+        ["bedroomHassel", 0.8538],
+        ["bathroom", 0.9167],
+        ["attic", 0.998]
       ]),
       stepEntranceLocations: new Map([
-        ["Buiten", 0],
-        ["Hal", 0.0878],
-        ["Eetkamer", 0.1163],
-        ["Woonkamer", 0.14],
-        ["Zitkamer", 0.1668],
-        ["Serre", 0.2148],
-        ["Keuken", 0.325],
-        ["Kelder", 0.3774],
-        ["Tuinhuis", 0.4558],
-        ["Slaapkamer Gemmeker", 0.6043],
-        ["Slaapkamer Speck Obreen", 0.6619],
-        ["Logeerkamer 1", 0.7232],
-        ["Logeerkamer 2", 0.7698],
-        ["Slaapkamer Elisabeth Hassel", 0.839],
-        ["Badkamer", 0.9038],
-        ["Zolder", 0.9847]
+        ["outside", 0],
+        ["hallway", 0.0878],
+        ["diningRoom", 0.1163],
+        ["livingRoom", 0.14],
+        ["sittingRoom", 0.1668],
+        ["conservatory", 0.2148],
+        ["kitchen", 0.325],
+        ["basement", 0.3774],
+        ["gardenShed", 0.4558],
+        ["bedroomGemmeker", 0.6043],
+        ["bedroomObreen", 0.6619],
+        ["guestroom1", 0.7232],
+        ["guestroom2", 0.7698],
+        ["bedroomHassel", 0.839],
+        ["bathroom", 0.9038],
+        ["attic", 0.9847]
       ])
     };
   },
@@ -249,6 +249,7 @@ export default {
   border-left: 1px solid #ccc;
   text-align: center;
   cursor: pointer;
+  position: relative;
 }
 
 .labels li button {
@@ -275,7 +276,7 @@ export default {
     rgba(255, 242, 217, 0.05) 60%
   );
   pointer-events: none;
-  width: 5.6%;
+  width: 100%;
   height: 100%;
   position: absolute;
   transform: translate(0, -0.4rem);

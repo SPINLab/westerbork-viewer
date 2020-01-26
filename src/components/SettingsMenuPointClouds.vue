@@ -4,7 +4,7 @@
     id="point-cloud-selector"
     v-show="pointClouds.length > 0"
   >
-    <h4>PUNTENWOLKEN</h4>
+    <h4>{{ $t("pointClouds").toUpperCase() }}</h4>
     <ul class="menu-list" ref="selection">
       <li v-for="(pc, index) in pointClouds" :key="index" class="list-item">
         <label>

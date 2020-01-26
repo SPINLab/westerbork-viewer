@@ -1,6 +1,6 @@
 <template>
   <div class="menu-item" id="points-settings">
-    <h4>PUNTEN</h4>
+    <h4>{{ $t("points").toUpperCase() }}</h4>
     <div class="slider" id="points-slider">
       <vue-slider
         ref="pointsSlider"

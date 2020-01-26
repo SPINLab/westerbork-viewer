@@ -75,7 +75,7 @@ export default {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   overflow: hidden;
-  height: 44%;
+  height: fit-content;
   background-image: url("../assets/background_images/whitepaper.png");
   color: #212121;
   width: 33%;
@@ -84,20 +84,20 @@ export default {
 
 .card-expanded {
   margin-top: 0;
-  height: 70%;
   top: 8%;
+  padding: 2rem 3rem;
 }
 
 .content {
   position: relative;
-  height: 80%;
+  max-height: 40vh;
   overflow: hidden;
   margin-bottom: 0.1rem;
   padding-bottom: 0.5rem;
 }
 
 .content-expanded {
-  height: 90%;
+  max-height: 60vh;
   overflow-y: auto;
 }
 
@@ -105,6 +105,10 @@ p {
   line-height: 1.8rem;
   font-size: 1.25rem;
   text-align: start;
+}
+
+.read-further-button {
+  margin-bottom: 2rem;
 }
 
 .fade {

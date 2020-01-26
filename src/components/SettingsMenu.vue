@@ -1,6 +1,7 @@
 <template>
   <transition name="fade">
     <div v-show="menuOpen" ref="menu" id="settings-menu" class="menu">
+      <SettingsMenuLanguage />
       <SettingsMenuGraphics :graphics="graphics" @change="onGraphicsChange" />
       <SettingsMenuPoints :points="points" @change="onPointsChange" />
       <SettingsMenuPointClouds
@@ -15,13 +16,15 @@
 import SettingsMenuGraphics from "./SettingsMenuGraphics";
 import SettingsMenuPoints from "./SettingsMenuPoints";
 import SettingsMenuPointClouds from "./SettingsMenuPointClouds";
+import SettingsMenuLanguage from "./SettingsMenuLanguage";
 
 export default {
   name: "SettingsMenu",
   components: {
     SettingsMenuGraphics,
     SettingsMenuPoints,
-    SettingsMenuPointClouds
+    SettingsMenuPointClouds,
+    SettingsMenuLanguage
   },
   props: {
     graphics: {

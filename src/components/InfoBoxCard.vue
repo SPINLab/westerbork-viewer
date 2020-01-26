@@ -10,24 +10,24 @@
   >
     <div v-show="!expanded && active" class="nav-card-buttons">
       <button :class="{ active: isHouse }" @click="switchCard('house')">
-        HUIS
+        {{ $t("house").toUpperCase() }}
       </button>
       <button :class="{ active: isCamp }" @click="switchCard('camp')">
-        KAMP
+        {{ $t("camp").toUpperCase() }}
       </button>
       <button :class="{ active: isMemory }" @click="switchCard('memory')">
-        HERINNERING
+        {{ $t("memory").toUpperCase() }}
       </button>
     </div>
     <div v-show="expanded" class="nav-card-buttons">
       <button v-show="isHouse" class="active">
-        HUIS
+        {{ $t("house").toUpperCase() }}
       </button>
       <button v-show="isCamp" class="active">
-        KAMP
+        {{ $t("camp").toUpperCase() }}
       </button>
       <button v-show="isMemory" class="active">
-        HERINNERING
+        {{ $t("memory").toUpperCase() }}
       </button>
     </div>
     <div class="card-text">

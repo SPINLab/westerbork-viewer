@@ -9,30 +9,15 @@
             lineColor="#A8A8A8"
           />
           <NavigationButton
-            title="Ga terug naar de app"
+            :title="$t('backButtonText')"
             class="back-button"
             @click.native="close"
           />
         </header>
         <div>
           <section class="about">
-            <h3>OVER DEZE APPLCIATIE</h3>
-            <p>
-              Accessing Campscapes: Inclusive Strategies for Using European
-              Conflicted Heritage’ (iC-ACCESS) looks at traces of the 20th
-              century mass violence and terror, as tangible reminders of the
-              “age of extremes” and their present uses in (trans)national
-              contexts. In most post-war European countries former Nazi
-              internment camps have become icons of antifascist resistance and
-              the Holocaust, and they have played a consistent role in postwar
-              European memory of totalitarianism and genocide. In the Eastern
-              European centre of the Holocaust and Communist terror, many former
-              ‘terrorscapes’ are still contested spaces where consecutive
-              internments of prisoners by occupying powers and authoritarian
-              regimes transformed the victims of one event into the persecutors
-              of another. This entanglement of remembering with forgetting and
-              the silencing of competing narratives.
-            </p>
+            <h3>{{ $t("aboutSubtitle") }}</h3>
+            <p>{{ $t("aboutText") }}</p>
           </section>
           <section class="team">
             <h3>TEAM</h3>
@@ -121,12 +106,7 @@
           </section>
           <section class="software">
             <h3>SOFTWARE</h3>
-            <span>
-              The application was build using
-              <a href="https://vuejs.org/">Vue</a> for the UI and
-              <a href="http://potree.org/">Potree</a> for the visualization of
-              point clouds.
-            </span>
+            <p v-html="$t('softwareText')"></p>
           </section>
         </div>
       </div>

@@ -6,42 +6,56 @@
     <transition name="fade">
       <IntroductionCard
         v-if="step === 0"
-        :title="intros[0].heading_dutch"
-        :content="intros[0].summary_dutch"
+        :title="$t(intros[0].heading)"
+        :content="$t(intros[0].text)"
         position="center"
       />
     </transition>
     <transition name="fade">
       <IntroductionCard
         v-if="step === 1"
-        :title="intros[1].heading_dutch"
-        :content="intros[1].summary_dutch"
+        :title="intros[1][`heading_${language}`]"
+        :content="intros[1][`summary_${language}`]"
         position="center"
       />
     </transition>
     <transition name="fade">
       <IntroductionCard
         v-if="step === 3"
-        :title="intros[2].heading_dutch"
-        :content="intros[2].summary_dutch"
+        :title="intros[2][`heading_${language}`]"
+        :content="intros[2][`summary_${language}`]"
         position="right"
       />
     </transition>
     <transition name="fade">
       <IntroductionCard
         v-if="step === 4"
-        :title="intros[3].heading_dutch"
-        :content="intros[3].summary_dutch"
+        :title="intros[3][`heading_${language}`]"
+        :content="intros[3][`summary_${language}`]"
         position="right"
       />
     </transition>
     <transition name="fade">
-      <NavigationButton
-        v-if="[0, 1, 3, 4].includes(step)"
-        class="next-button center"
-        title="Ga verder"
-        @click.native="next"
-      />
+      <div class="next-buttons">
+        <NavigationButton
+          v-if="[0, 1, 3, 4].includes(step)"
+          class="next-button center"
+          :title="$t('continue')"
+          @click.native="next"
+        />
+        <AltNavigationButton
+          v-if="step === 0 && $i18n.locale === 'nl'"
+          class="next-button center"
+          title="or go further in English"
+          @click.native="switchLang"
+        />
+        <AltNavigationButton
+          v-if="step === 0 && $i18n.locale === 'en'"
+          class="next-button center"
+          title="of ga verder in Nederlands"
+          @click.native="switchLang"
+        />
+      </div>
     </transition>
     <transition name="fade">
       <NarrativeCardSelector
@@ -60,10 +74,11 @@
     <transition name="fade">
       <div v-show="[0, 1, 3, 4, 5, 6].includes(step)" class="fade"></div>
     </transition>
+    <AppTour ref="tour" />
     <NavigationButton
       v-if="step < 8"
       class="skip-button"
-      title="Sla introductie over"
+      :title="$t('skipIntroText')"
       @click.native="skip"
     />
   </div>
@@ -73,11 +88,13 @@
 import TheGrid from "./TheGrid";
 import IntroductionCard from "./IntroductionCard";
 import NavigationButton from "./NavigationButton";
+import AltNavigationButton from "./AltNavigationButton";
 import NarrativeCardSelector from "./NarrativeCardSelector";
 import NarrativeIntroCard from "./NarrativeIntroCard";
+import AppTour from "./AppTour";
 
 import { pathHouse } from "./path";
-import { tour } from "./AppTour/tour";
+// import { tour } from "./AppTour/tour";
 
 export default {
   name: "TheIntroduction",
@@ -85,8 +102,10 @@ export default {
     TheGrid,
     IntroductionCard,
     NavigationButton,
+    AltNavigationButton,
     NarrativeCardSelector,
-    NarrativeIntroCard
+    NarrativeIntroCard,
+    AppTour
   },
   props: {
     narratives: {
@@ -100,13 +119,18 @@ export default {
       gridColor: "#000000",
       intros: [
         {
-          heading_dutch: "Campscapes Commander's House app",
-          summary_dutch: `Welkom bij de Campscapes Commander's House app. Deze app leid je digitaal rond door het huis van de kampscommandant en geeft je informatie over het kamp en het huis door de jaren heen. <br><br> De app werkt het beste in een moderne browser met GPU hardware acceleratie aangezet. Dit is belangrijk omdat de app 3D data weergeeft en daardoor grafisch vrij zwaar is. Dit staat normaal gesproken standaard bij moderne browsers al aan, maar dit is niet altijd het geval. Bij twijfel zie bijvoorbeeld <a href="https://www.google.com/search?q=chrome+enable+hardware+acceleration" target="_blank">hier voor Chrome</a> of <a href="https://www.google.com/search?q=firefox+enable+hardware+acceleration" target="_blank">hier voor Firefox</a>. De app is ook bruikbaar zonder dit geactiveerd te hebben, maar dan kan de ervaring tegenvallen.`
+          heading: "appIntroHeading",
+          text: "appIntroText"
         }
       ],
       narrativeIntros: [],
       pickedNarrativeIntro: {}
     };
+  },
+  computed: {
+    language: function() {
+      return this.$i18n.locale === "nl" ? "dutch" : "english";
+    }
   },
   methods: {
     next() {
@@ -130,10 +154,10 @@ export default {
         case 7:
           this.$refs.grid.$el.style = "z-index: 3;";
           this.gridColor = "#000000";
-          tour.on("complete", () => {
+          this.$refs.tour.tour.on("complete", () => {
             this.next();
           });
-          tour.start();
+          this.$refs.tour.tour.start();
           break;
         case 8:
           this.$refs.grid.$el.style = "z-index: unset;";
@@ -142,6 +166,9 @@ export default {
         default:
           break;
       }
+    },
+    switchLang() {
+      this.$i18n.locale = this.$i18n.locale === "nl" ? "en" : "nl";
     },
     flyToHouse() {
       this.$viewer.pathControls.lockViewToPath = "always";
@@ -192,7 +219,7 @@ export default {
       this.narrativeIntros = data.filter(v => v.order_in_app === null);
     },
     skip() {
-      tour.complete();
+      this.$refs.tour.tour.complete();
       if (this.$viewer.pathControls.tweens[0]) {
         this.$viewer.pathControls.tweens[0].stop();
       }
@@ -221,13 +248,20 @@ export default {
   z-index: 1;
 }
 
-.next-button {
+.next-buttons {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   bottom: 10%;
-  padding: 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   z-index: 1;
+}
+
+.next-button {
+  padding: 1rem 3rem;
+  margin-top: 1rem;
 }
 
 .skip-button {

@@ -1,7 +1,5 @@
 <template>
-  <button class="read-further-button">
-    LEES VERDER...
-  </button>
+  <button class="read-further-button">{{ $t("readFurther") }}...</button>
 </template>
 
 <script>
