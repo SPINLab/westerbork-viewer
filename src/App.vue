@@ -18,7 +18,7 @@
       @skip-intro="skipIntro"
     />
 
-    <div v-show="step >= 7">
+    <div v-show="step >= 8">
       <div class="options-buttons">
         <div class="settings-menu-container">
           <OptionsButton
@@ -182,7 +182,7 @@ export default {
       this.$refs.progression.startProgression();
     },
     skipIntro() {
-      this.step = 8;
+      this.step = 9;
     },
     async setNarratives() {
       if (!this.narrativesData) {

@@ -1,7 +1,11 @@
 <template>
   <div class="introduction-container">
     <transition name="fade">
-      <TheGrid v-show="step !== 2 && step < 8" ref="grid" :color="gridColor" />
+      <TheGrid
+        v-show="step !== 2 && step !== 3 && step < 9"
+        ref="grid"
+        :color="gridColor"
+      />
     </transition>
     <transition name="fade">
       <IntroductionCard
@@ -20,8 +24,13 @@
       />
     </transition>
     <transition name="fade">
+      <div v-if="step === 2" class="hint-text">
+        {{ $t("lookAroundHint") }}
+      </div>
+    </transition>
+    <transition name="fade">
       <IntroductionCard
-        v-if="step === 3"
+        v-if="step === 4"
         :title="intros[2][`heading_${language}`]"
         :content="intros[2][`summary_${language}`]"
         position="right"
@@ -29,7 +38,7 @@
     </transition>
     <transition name="fade">
       <IntroductionCard
-        v-if="step === 4"
+        v-if="step === 5"
         :title="intros[3][`heading_${language}`]"
         :content="intros[3][`summary_${language}`]"
         position="right"
@@ -38,7 +47,7 @@
     <transition name="fade">
       <div class="next-buttons">
         <NavigationButton
-          v-if="[0, 1, 3, 4].includes(step)"
+          v-if="[0, 1, 2, 4, 5].includes(step)"
           class="next-button center"
           :title="$t('continue')"
           @click.native="next"
@@ -59,24 +68,24 @@
     </transition>
     <transition name="fade">
       <NarrativeCardSelector
-        v-if="step === 5"
+        v-if="step === 6"
         :narratives="narratives"
         @narrative-picked="pickNarrative"
       />
     </transition>
     <transition name="fade">
       <NarrativeIntroCard
-        v-if="step === 6"
+        v-if="step === 7"
         :narrativeIntro="pickedNarrativeIntro"
         @next-step="next"
       />
     </transition>
     <transition name="fade">
-      <div v-show="[0, 1, 3, 4, 5, 6].includes(step)" class="fade"></div>
+      <div v-show="[0, 1, 2, 4, 5, 6, 7].includes(step)" class="fade"></div>
     </transition>
     <AppTour ref="tour" />
     <NavigationButton
-      v-if="step < 8"
+      v-if="step < 9"
       class="skip-button"
       :title="$t('skipIntroText')"
       @click.native="skip"
@@ -139,19 +148,24 @@ export default {
 
       switch (this.step) {
         case 2:
-          this.flyToHouse();
+          this.$viewer.controls.lockPosition = true;
           break;
         case 3:
+          this.$viewer.controls.lockPosition = false;
+          this.flyToHouse();
+          break;
+        case 4:
+          this.$viewer.scene.annotations.children = [];
           this.gridColor = "#FFD27C";
           break;
-        case 5:
+        case 6:
           this.$viewer.pathControls.setPath(pathHouse);
           this.$viewer.setMoveSpeed(2);
           this.$viewer.pathControls.position = 0;
           this.$viewer.pathControls.lockViewToPath = "moving";
           this.$viewer.pathControls.userInputCancels = true;
           break;
-        case 7:
+        case 8:
           this.$refs.grid.$el.style = "z-index: 3;";
           this.gridColor = "#000000";
           this.$refs.tour.tour.on("complete", () => {
@@ -161,7 +175,7 @@ export default {
             this.$refs.tour.tour.start();
           });
           break;
-        case 8:
+        case 9:
           this.$refs.grid.$el.style = "z-index: unset;";
           this.$emit("start-progression");
           break;
@@ -233,7 +247,7 @@ export default {
       this.$viewer.pathControls.userInputCancels = true;
       this.$viewer.scene.view.yaw = 1.485;
       this.$viewer.scene.view.pitch = 0;
-      this.step = 8;
+      this.step = 9;
       this.$emit("narrative-picked", this.narratives[0]);
       this.$emit("start-progression");
       this.$emit("skip-intro");
@@ -283,5 +297,18 @@ export default {
   height: 50%;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0) 80%);
   pointer-events: none;
+}
+
+.hint-text {
+  position: absolute;
+  top: 6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  background-color: #454545;
+  color: #fff;
+  border-radius: 8rem;
+  padding: 1rem;
+  opacity: 0.8;
 }
 </style>
