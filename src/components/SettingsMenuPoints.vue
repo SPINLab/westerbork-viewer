@@ -26,15 +26,27 @@ export default {
       type: Number,
       required: true,
       validator: function(value) {
-        return value > 200000 && value < 10000000;
+        return value >= 200000 && value <= 10000000;
       }
     }
   },
   data() {
     return {
       pointsOptions: {
-        min: 200000,
-        max: 10000000,
+        adsorb: true,
+        data: [
+          200000,
+          1000000,
+          2000000,
+          3000000,
+          4000000,
+          5000000,
+          6000000,
+          7000000,
+          8000000,
+          9000000,
+          10000000
+        ],
         tooltip: "always",
         tooltipPlacement: "bottom",
         dotStyle: {

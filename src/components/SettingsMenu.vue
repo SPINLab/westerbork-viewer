@@ -38,7 +38,7 @@ export default {
       type: Number,
       required: true,
       validator: function(value) {
-        return value > 200000 && value < 10000000;
+        return value >= 200000 && value <= 10000000;
       }
     },
     pointClouds: {
