@@ -39,6 +39,7 @@ export default {
 section {
   position: relative;
   display: flex;
+  flex-direction: column;
   height: 100vh;
   align-items: center;
   z-index: 1;
@@ -49,20 +50,18 @@ h2 {
   font-size: 3.4375rem;
   font-weight: normal;
   color: #ffffff;
-  transform: rotate(-90deg);
-  margin-right: -1rem;
-  text-align: center;
+  margin: 1rem;
 }
 
 .narrative-cards {
   position: relative;
   display: flex;
-  overflow-x: auto;
-  overflow-y: visible;
-  align-items: center;
+  overflow-y: auto;
   margin: 0;
   padding: 0;
   list-style-type: none;
   height: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 </style>

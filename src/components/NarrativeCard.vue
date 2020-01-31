@@ -34,15 +34,14 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 3rem 0rem 3rem;
+  padding: 1rem 2rem 0rem 2rem;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  height: 30rem;
+  height: 22rem;
   background-image: url("../assets/background_images/whitepaper.png");
   color: #212121;
   width: 16rem;
-  margin-left: 3rem;
-  margin-right: 3rem;
+  margin: 1rem 1rem 2rem 1rem;
 }
 
 h3 {
