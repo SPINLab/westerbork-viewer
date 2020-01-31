@@ -182,7 +182,7 @@ export default {
       this.$refs.progression.startProgression();
     },
     skipIntro() {
-      this.step = 9;
+      this.step = 6;
     },
     async setNarratives() {
       if (!this.narrativesData) {

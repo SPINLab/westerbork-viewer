@@ -85,7 +85,7 @@
     </transition>
     <AppTour ref="tour" />
     <NavigationButton
-      v-if="step < 9"
+      v-if="step < 6"
       class="skip-button"
       :title="$t('skipIntroText')"
       @click.native="skip"
@@ -235,7 +235,6 @@ export default {
       this.narrativeIntros = data.filter(v => v.order_in_app === null);
     },
     skip() {
-      this.$refs.tour.tour.complete();
       if (this.$viewer.pathControls.tweens[0]) {
         this.$viewer.pathControls.tweens[0].stop();
       }
@@ -247,9 +246,7 @@ export default {
       this.$viewer.pathControls.userInputCancels = true;
       this.$viewer.scene.view.yaw = 1.485;
       this.$viewer.scene.view.pitch = 0;
-      this.step = 9;
-      this.$emit("narrative-picked", this.narratives[0]);
-      this.$emit("start-progression");
+      this.step = 6;
       this.$emit("skip-intro");
     }
   },
