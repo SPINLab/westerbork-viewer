@@ -207,8 +207,10 @@ export default {
     },
     pickNarrative(narrative) {
       this.pickedNarrativeIntro = this.narrativeIntros.filter(
-        v => v.heading_dutch === narrative.question
-      )[0];
+        v =>
+          v.heading_english === narrative.question ||
+          v.heading_dutch === narrative.question
+      )[0] || { heading_dutch: "", heading_english: "" };
       this.next();
       this.$emit("narrative-picked", narrative);
     },
@@ -232,7 +234,9 @@ export default {
 
       this.intros = [...this.intros, ...introTexts];
 
-      this.narrativeIntros = data.filter(v => v.order_in_app === null);
+      this.narrativeIntros = data.filter(v =>
+        v.panel_in_app.startsWith("Buiten")
+      );
     },
     skip() {
       if (this.$viewer.pathControls.tweens[0]) {
