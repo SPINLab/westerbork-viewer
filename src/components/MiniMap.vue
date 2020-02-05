@@ -8,6 +8,7 @@
   >
     <canvas ref="canvas" id="mini-map-canvas"> </canvas>
     <ExpandCollapseButton
+      id="mini-map-collapse-button"
       class="expand-collapse-button"
       v-show="minimapExpanded"
       direction="left"
@@ -15,6 +16,7 @@
       @click.native="toggleMinimap"
     />
     <ExpandCollapseButton
+      id="mini-map-expand-button"
       class="expand-collapse-button"
       v-show="!minimapExpanded"
       direction="right"

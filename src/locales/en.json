@@ -23,6 +23,8 @@
   "settingsButtonHint": "You can click here to open the settings menu.",
   "settingsMenuHint": "In this menu you can change the graphical settings, choose the number of visualised points, and toggle the visibility of the point clouds.",
   "aboutButtonHint": "Here you van find information about the app and the people who created it.",
+  "minimapButtonHint": "If you click here a map will appear.",
+  "minimapHint": "This map will show you where in the house you are.",
   "narrativeButtonHint": "To change the current narrative you can press this button. This will open a selection menu.",
   "narrativeSelectionHint": "In this menu you can choose the narrative.",
   "progressBarHint": "This bar shows the progression through the tour of the house. You can jump forwards and backwards by clicking on a room.",

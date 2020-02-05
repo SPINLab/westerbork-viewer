@@ -14,7 +14,7 @@ export default {
   },
   mounted() {
     this.createTour();
-    this.$watch("$i18n.locale", async function() {
+    this.$watch("$i18n.locale", function() {
       this.createTour();
     });
   },
@@ -68,10 +68,44 @@ export default {
       });
 
       this.tour.addStep({
+        id: "mini-map-expand-button",
+        attachTo: { element: "#mini-map-expand-button", on: "right" },
+        text: this.$t("minimapButtonHint"),
+        buttons: [skipButton, nextButton]
+      });
+
+      this.tour.addStep({
+        id: "mini-map",
+        attachTo: { element: "#mini-map", on: "right" },
+        text: this.$t("minimapHint"),
+        buttons: [skipButton, nextButton],
+        beforeShowPromise: function() {
+          return new Promise(function(resolve) {
+            const minimapExpandButton = document.getElementById(
+              "mini-map-expand-button"
+            );
+            minimapExpandButton.click();
+            setTimeout(() => {
+              resolve();
+            }, 300);
+          });
+        }
+      });
+
+      this.tour.addStep({
         id: "narrative-selector",
         attachTo: { element: "#narrative-selection-button", on: "top" },
         text: this.$t("narrativeButtonHint"),
-        buttons: [skipButton, nextButton]
+        buttons: [skipButton, nextButton],
+        beforeShowPromise: function() {
+          return new Promise(function(resolve) {
+            const minimapCollapseButton = document.getElementById(
+              "mini-map-collapse-button"
+            );
+            minimapCollapseButton.click();
+            resolve();
+          });
+        }
       });
 
       this.tour.addStep({
