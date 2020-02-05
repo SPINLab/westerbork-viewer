@@ -68,6 +68,8 @@
         @open-source="openSourcePage"
       />
 
+      <MiniMap />
+
       <SourcePage
         ref="sourcePage"
         :narrative="narrative"
@@ -93,6 +95,7 @@ import ProgressionBar from "./components/ProgressionBar";
 import NarrativeSelector from "./components/NarrativeSelector";
 import InfoBox from "./components/InfoBox";
 import SourcePage from "./components/SourcePage";
+import MiniMap from "./components/MiniMap";
 
 const directusRoomNames = {
   outside: "",
@@ -125,7 +128,8 @@ export default {
     ProgressionBar,
     NarrativeSelector,
     InfoBox,
-    SourcePage
+    SourcePage,
+    MiniMap
   },
   data() {
     return {
@@ -135,7 +139,7 @@ export default {
         { name: "Commandantshuis", visible: true }
       ],
       graphics: "medium",
-      points: 4000000,
+      points: 200000,
       narrative: { id: null, title: "", description: "" },
       narratives: [],
       room: "outside",
