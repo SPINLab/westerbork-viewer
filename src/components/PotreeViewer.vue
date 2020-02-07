@@ -92,8 +92,7 @@ export default {
 
     for (const pc of this.pointClouds) {
       Potree.loadPointCloud(
-        // `data/${pc.name.toLowerCase()}/ept.json`,
-        `http://localhost:8081/${pc.name.toLowerCase()}/ept.json`,
+        `data/${pc.name.toLowerCase()}/ept.json`,
         pc.name,
         e => {
           this.onPointCloudLoaded(e.pointcloud, 0.65);
