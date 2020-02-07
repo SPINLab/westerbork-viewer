@@ -4,10 +4,6 @@
       <SettingsMenuLanguage />
       <SettingsMenuGraphics :graphics="graphics" @change="onGraphicsChange" />
       <SettingsMenuPoints :points="points" @change="onPointsChange" />
-      <SettingsMenuPointClouds
-        :point-clouds="pointClouds"
-        @change="onPointCloudsChange"
-      />
     </div>
   </transition>
 </template>
@@ -15,7 +11,6 @@
 <script>
 import SettingsMenuGraphics from "./SettingsMenuGraphics";
 import SettingsMenuPoints from "./SettingsMenuPoints";
-import SettingsMenuPointClouds from "./SettingsMenuPointClouds";
 import SettingsMenuLanguage from "./SettingsMenuLanguage";
 
 export default {
@@ -23,7 +18,6 @@ export default {
   components: {
     SettingsMenuGraphics,
     SettingsMenuPoints,
-    SettingsMenuPointClouds,
     SettingsMenuLanguage
   },
   props: {
@@ -40,10 +34,6 @@ export default {
       validator: function(value) {
         return value >= 200000 && value <= 10000000;
       }
-    },
-    pointClouds: {
-      type: Array,
-      required: true
     }
   },
   data() {
@@ -60,9 +50,6 @@ export default {
     },
     onPointsChange(points) {
       this.$emit("points-change", points);
-    },
-    onPointCloudsChange(pointClouds) {
-      this.$emit("point-clouds-change", pointClouds);
     },
     documentClick(e) {
       if (

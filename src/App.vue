@@ -32,10 +32,8 @@
             ref="settingsMenu"
             :graphics="graphics"
             :points="points"
-            :point-clouds="pointClouds"
             @graphics-change="onGraphicsChange"
             @points-change="onPointsChange"
-            @point-clouds-change="onPointCloudsChange"
           />
         </div>
         <OptionsButton
@@ -175,9 +173,6 @@ export default {
     },
     onPointsChange(points) {
       this.points = points;
-    },
-    onPointCloudsChange(pointClouds) {
-      this.pointClouds = pointClouds;
     },
     nextStep() {
       this.step += 1;
