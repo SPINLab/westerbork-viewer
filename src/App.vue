@@ -137,7 +137,7 @@ export default {
         { name: "Commandantshuis", visible: true }
       ],
       graphics: "medium",
-      points: 200000,
+      points: 5000000,
       narrative: { id: null, title: "", description: "" },
       narratives: [],
       room: "outside",
