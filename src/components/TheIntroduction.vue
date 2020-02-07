@@ -103,7 +103,6 @@ import NarrativeIntroCard from "./NarrativeIntroCard";
 import AppTour from "./AppTour";
 
 import { pathHouse } from "./path";
-// import { tour } from "./AppTour/tour";
 
 export default {
   name: "TheIntroduction",
@@ -243,6 +242,7 @@ export default {
         this.$viewer.pathControls.tweens[0].stop();
       }
       this.$emit("hide-point-cloud", "AHN2");
+      this.$viewer.scene.annotations.children = [];
       this.$viewer.pathControls.setPath(pathHouse);
       this.$viewer.setMoveSpeed(2);
       this.$viewer.pathControls.position = 0;
