@@ -147,7 +147,9 @@ export default {
   data() {
     return {
       currentFloor: 1,
-      minimapExpanded: false
+      minimapExpanded: false,
+      updateInterval: null,
+      canvasContext: null
     };
   },
   methods: {
@@ -184,7 +186,7 @@ export default {
       const rectangle = floorMapExtentRD[floor];
       return pointInRectangle({ x, y }, rectangle);
     },
-    updateFloor() {
+    updateFloor(force) {
       const z = this.$viewer.scene.view.position.z;
       let floor;
       if (z < floorHeights[0]) {
@@ -194,7 +196,7 @@ export default {
       } else {
         floor = 1;
       }
-      if (floor !== this.currentFloor) {
+      if (force || floor !== this.currentFloor) {
         this.currentFloor = floor;
         this.$refs.canvas.setAttribute("class", "");
         if (this.currentFloor === 0) {
@@ -258,15 +260,20 @@ export default {
     },
     toggleMinimap() {
       this.minimapExpanded = !this.minimapExpanded;
+      if (this.minimapExpanded) {
+        this.updateInterval = setInterval(() => {
+          this.updateCanvas(this.canvasContext);
+        }, 10);
+      } else {
+        clearInterval(this.updateInterval);
+      }
     }
   },
   mounted() {
-    const ctx = this.$refs.canvas.getContext("2d");
-    ctx.fillStyle = "#fff";
-
-    setInterval(() => {
-      this.updateCanvas(ctx);
-    }, 10);
+    this.canvasContext = this.$refs.canvas.getContext("2d");
+    this.canvasContext.fillStyle = "#fff";
+    this.updateFloor(true);
+    this.updateCanvas(this.canvasContext);
   }
 };
 </script>
