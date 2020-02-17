@@ -191,6 +191,9 @@ export default {
       } else {
         this.$viewer.renderArea.classList.add("warp");
         setTimeout(() => {
+          this.$viewer.scene.view.direction = this.$viewer.pathControls.path.getTangentAt(
+            stepLoc
+          );
           this.$viewer.pathControls.position = stepLoc;
           this.$emit("room-change", this.step);
           setTimeout(() => {
