@@ -8,6 +8,7 @@ import Vue from "vue";
 import { pathOverview } from "./path";
 
 const Potree = window.Potree;
+const THREE = window.THREE;
 
 export default {
   name: "PotreeViewer",
@@ -70,6 +71,7 @@ export default {
   mounted() {
     Vue.prototype.$viewer = new Potree.Viewer(this.$el);
     this.$viewer.setFOV(80);
+    this.$viewer.setBackground("skybox");
 
     switch (this.graphics) {
       case "low":
@@ -122,6 +124,26 @@ export default {
       const material = pointcloud.material;
       material.size = size;
       material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+
+      if (pointcloud.name === "AHN2") {
+        const offset = pointcloud.pcoGeometry.offset;
+        const center = pointcloud.boundingSphere.center;
+        const bbox = pointcloud.boundingBox;
+
+        const lengthX = bbox.max.x + offset.x - (bbox.min.x + offset.x);
+        const lengthY = bbox.max.y + offset.y - (bbox.min.y + offset.y);
+
+        const meshGeometry = new THREE.PlaneGeometry(lengthX, lengthY);
+        const meshMaterial = new THREE.MeshBasicMaterial({
+          color: 0x4b433b,
+          side: THREE.DoubleSide
+        });
+        const meshPlane = new THREE.Mesh(meshGeometry, meshMaterial);
+
+        meshPlane.position.set(center.x + offset.x, center.y + offset.y, 0);
+
+        this.$viewer.scene.scene.add(meshPlane);
+      }
     },
     createAnnotations() {
       this.$viewer.scene.annotations.children = [];
