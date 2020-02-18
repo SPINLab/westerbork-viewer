@@ -19,8 +19,14 @@ export default {
     });
   },
   methods: {
+    clearTour() {
+      while (this.$el.firstChild) {
+        this.$el.firstChild.remove();
+      }
+    },
     createTour() {
-      this.tour = new Shepherd.Tour();
+      this.clearTour();
+      this.tour = new Shepherd.Tour({ modalContainer: this.$el });
 
       const nextButton = {
         text: this.$t("next"),
