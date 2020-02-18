@@ -19,7 +19,7 @@
     />
 
     <div v-show="step >= 8">
-      <div class="options-buttons">
+      <div class="options-buttons" v-if="this.appMode !== 'onpremise'">
         <div class="settings-menu-container">
           <OptionsButton
             id="settings-button"
@@ -49,6 +49,7 @@
           :narrative="narrative"
           :narratives="narratives"
           @narrative-change="changeNarrative"
+          v-if="this.appMode !== 'onpremise'"
         />
         <ProgressionBar ref="progression" @room-change="changeRoom" />
         <div id="bottom-fade"></div>
@@ -75,7 +76,20 @@
         :sources="sources"
       />
 
-      <AboutPage ref="aboutPage" />
+      <AboutPage ref="aboutPage" v-if="this.appMode !== 'onpremise'" />
+
+      <NavigationButton
+        v-if="appMode === 'onpremise'"
+        class="to-start-button"
+        :title="$t('toStartText')"
+        @click.native="backToStart"
+      />
+
+      <LanguageSwitchButton
+        v-if="this.appMode === 'onpremise'"
+        id="language-switch"
+        @click.native="switchLanguage"
+      />
     </div>
   </div>
 </template>
@@ -92,6 +106,8 @@ import NarrativeSelector from "./components/NarrativeSelector";
 import InfoBox from "./components/InfoBox";
 import SourcePage from "./components/SourcePage";
 import MiniMap from "./components/MiniMap";
+import NavigationButton from "./components/NavigationButton";
+import LanguageSwitchButton from "./components/LanguageSwitchButton";
 
 const directusRoomNames = {
   outside: "",
@@ -125,17 +141,20 @@ export default {
     NarrativeSelector,
     InfoBox,
     SourcePage,
-    MiniMap
+    MiniMap,
+    NavigationButton,
+    LanguageSwitchButton
   },
   data() {
     return {
+      appMode: process.env.VUE_APP_MODE,
       step: 0,
       pointClouds: [
         { name: "AHN2", visible: true },
         { name: "Commandantshuis", visible: true }
       ],
-      graphics: "medium",
-      points: 5000000,
+      graphics: process.env.VUE_APP_MODE === "onpremise" ? "high" : "medium",
+      points: process.env.VUE_APP_MODE === "onpremise" ? 7000000 : 5000000,
       narrative: { id: null, title: "", description: "" },
       narratives: [],
       room: "outside",
@@ -164,8 +183,30 @@ export default {
       await this.setNarratives();
       this.parseContents(this.sourceData);
     });
+    if (process.env.VUE_APP_MODE === "onpremise") {
+      let lastActivity = new Date().getTime();
+      const resetTimer = () => {
+        lastActivity = new Date().getTime();
+      };
+      document.onkeypress = resetTimer;
+      document.onmousemove = resetTimer;
+      document.onmousedown = resetTimer;
+      document.ontouchstart = resetTimer;
+      document.onclick = resetTimer;
+      document.onscroll = resetTimer;
+      document.onkeypress = resetTimer;
+
+      setInterval(() => {
+        if (new Date().getTime() - lastActivity >= 120000) {
+          location.reload();
+        }
+      }, 1000);
+    }
   },
   methods: {
+    switchLanguage() {
+      this.$i18n.locale = this.$i18n.locale === "nl" ? "en" : "nl";
+    },
     onGraphicsChange(graphics) {
       this.graphics = graphics;
     },
@@ -326,6 +367,9 @@ export default {
         }
       }
       return html;
+    },
+    backToStart() {
+      location.reload();
     }
   }
 };
@@ -402,6 +446,13 @@ h4 {
   z-index: 9;
 }
 
+#language-switch {
+  position: absolute;
+  top: 7rem;
+  left: 3rem;
+  z-index: 2;
+}
+
 .options-buttons {
   position: absolute;
   top: 5rem;
@@ -442,7 +493,7 @@ h4 {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 30%;
+  height: 7rem;
   background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
   pointer-events: none;
 }
@@ -460,6 +511,15 @@ h4 {
   );
   pointer-events: none;
   z-index: 1;
+}
+
+.to-start-button {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+  padding: 0.5rem 0.5rem;
+  z-index: 3;
+  transform: scale(0.7);
 }
 
 @media only screen and (max-width: 1400px) {

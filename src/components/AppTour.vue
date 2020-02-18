@@ -38,46 +38,59 @@ export default {
         action: this.tour.complete
       };
 
-      this.tour.addStep({
-        id: "settings-button",
-        attachTo: { element: "#settings-button", on: "right" },
-        text: this.$t("settingsButtonHint"),
-        buttons: [skipButton, nextButton]
-      });
+      if (process.env.VUE_APP_MODE !== "onpremise") {
+        this.tour.addStep({
+          id: "settings-button",
+          attachTo: { element: "#settings-button", on: "right" },
+          text: this.$t("settingsButtonHint"),
+          buttons: [skipButton, nextButton]
+        });
 
-      this.tour.addStep({
-        id: "settings-menu",
-        attachTo: { element: "#settings-menu", on: "right" },
-        text: this.$t("settingsMenuHint"),
-        buttons: [skipButton, nextButton],
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
-            const settingsButton = document.getElementById("settings-button");
-            settingsButton.click();
-            resolve();
-          });
-        }
-      });
+        this.tour.addStep({
+          id: "settings-menu",
+          attachTo: { element: "#settings-menu", on: "right" },
+          text: this.$t("settingsMenuHint"),
+          buttons: [skipButton, nextButton],
+          beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+              const settingsButton = document.getElementById("settings-button");
+              settingsButton.click();
+              resolve();
+            });
+          }
+        });
 
-      this.tour.addStep({
-        id: "about-page-button",
-        attachTo: { element: "#about-page-button", on: "right" },
-        text: this.$t("aboutButtonHint"),
-        buttons: [skipButton, nextButton],
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
-            const settingsButton = document.getElementById("settings-button");
-            settingsButton.click();
-            resolve();
-          });
-        }
-      });
+        this.tour.addStep({
+          id: "about-page-button",
+          attachTo: { element: "#about-page-button", on: "right" },
+          text: this.$t("aboutButtonHint"),
+          buttons: [skipButton, nextButton],
+          beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+              const settingsButton = document.getElementById("settings-button");
+              settingsButton.click();
+              resolve();
+            });
+          }
+        });
+      }
 
       this.tour.addStep({
         id: "mini-map-expand-button",
         attachTo: { element: "#mini-map-expand-button", on: "right" },
         text: this.$t("minimapButtonHint"),
-        buttons: [skipButton, nextButton]
+        buttons: [skipButton, nextButton],
+        beforeShowPromise: function() {
+          return new Promise(function(resolve) {
+            if (process.env.VUE_APP_MODE === "onpremise") {
+              setTimeout(() => {
+                resolve();
+              }, 300);
+            } else {
+              resolve();
+            }
+          });
+        }
       });
 
       this.tour.addStep({
@@ -98,43 +111,56 @@ export default {
         }
       });
 
-      this.tour.addStep({
-        id: "narrative-selector",
-        attachTo: { element: "#narrative-selection-button", on: "top" },
-        text: this.$t("narrativeButtonHint"),
-        buttons: [skipButton, nextButton],
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
-            const minimapCollapseButton = document.getElementById(
-              "mini-map-collapse-button"
-            );
-            minimapCollapseButton.click();
-            resolve();
-          });
-        }
-      });
+      if (process.env.VUE_APP_MODE !== "onpremise") {
+        this.tour.addStep({
+          id: "narrative-selector",
+          attachTo: { element: "#narrative-selection-button", on: "top" },
+          text: this.$t("narrativeButtonHint"),
+          buttons: [skipButton, nextButton],
+          beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+              const minimapCollapseButton = document.getElementById(
+                "mini-map-collapse-button"
+              );
+              minimapCollapseButton.click();
+              resolve();
+            });
+          }
+        });
 
-      this.tour.addStep({
-        id: "narrative-selection",
-        attachTo: { element: ".narrative-selection", on: "right" },
-        text: this.$t("narrativeSelectionHint"),
-        buttons: [skipButton, nextButton],
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
-            const narrativeSelectionButton = document.getElementById(
-              "narrative-selection-button"
-            );
-            narrativeSelectionButton.click();
-            resolve();
-          });
-        }
-      });
+        this.tour.addStep({
+          id: "narrative-selection",
+          attachTo: { element: ".narrative-selection", on: "right" },
+          text: this.$t("narrativeSelectionHint"),
+          buttons: [skipButton, nextButton],
+          beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+              const narrativeSelectionButton = document.getElementById(
+                "narrative-selection-button"
+              );
+              narrativeSelectionButton.click();
+              resolve();
+            });
+          }
+        });
+      }
 
       this.tour.addStep({
         id: "progression-bar",
         attachTo: { element: "#progression-bar", on: "top" },
         text: this.$t("progressBarHint"),
-        buttons: [skipButton, nextButton]
+        buttons: [skipButton, nextButton],
+        beforeShowPromise: function() {
+          return new Promise(function(resolve) {
+            if (process.env.VUE_APP_MODE === "onpremise") {
+              const minimapCollapseButton = document.getElementById(
+                "mini-map-collapse-button"
+              );
+              minimapCollapseButton.click();
+            }
+            resolve();
+          });
+        }
       });
 
       this.tour.addStep({

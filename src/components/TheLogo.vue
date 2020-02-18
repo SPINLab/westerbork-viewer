@@ -240,6 +240,10 @@
         />
       </g>
     </svg>
+    <span v-if="appMode === 'onpremise'">
+      A collaberation between 4D Research Lab (UvA) and SPINLab (VU)
+    </span>
+    <span v-if="appMode === 'onpremise'">Powered by Potree</span>
   </div>
 </template>
 
@@ -259,6 +263,11 @@ export default {
       type: String,
       required: true
     }
+  },
+  data() {
+    return {
+      appMode: process.env.VUE_APP_MODE
+    };
   }
 };
 </script>
@@ -266,5 +275,13 @@ export default {
 <style scoped>
 #logo {
   width: 20rem;
+  display: flex;
+  flex-direction: column;
+}
+
+span {
+  color: white;
+  font-size: x-small;
+  margin-top: 0.3rem;
 }
 </style>

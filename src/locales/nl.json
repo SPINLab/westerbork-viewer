@@ -47,8 +47,10 @@
   "about": "Over ons",
   "appIntroHeading": "Campscapes Commander's House app",
   "appIntroText": "Welkom bij de Campscapes Commander's House app. Deze app leidt u digitaal rond door het huis van de kampscommandant en geeft u informatie over het kamp en het huis door de jaren heen. <br><br> De app werkt het beste in een moderne browser met GPU hardware acceleratie aangezet. Dit is belangrijk omdat de app 3D data weergeeft en daardoor grafisch vrij zwaar is. Dit staat normaal gesproken standaard bij moderne browsers al aan, maar dit is niet altijd het geval. Bij twijfel zie bijvoorbeeld <a href='https://www.google.com/search?q=chrome+enable+hardware+acceleration' target='_blank'>hier voor Chrome</a> of <a href='https://www.google.com/search?q=firefox+enable+hardware+acceleration' target='_blank'>hier voor Firefox</a>. De app is ook bruikbaar zonder dit geactiveerd te hebben, maar dan kan de ervaring tegenvallen.",
+  "appIntroTextShort": "Welkom bij de Campscapes Commander's House app. Deze app leidt u digitaal rond door het huis van de kampscommandant en geeft u informatie over het kamp en het huis door de jaren heen.",
   "continue": "Ga verder",
   "language": "taal",
   "commanderHouse": "Het Commandantshuis",
-  "lookAroundHint": "U kunt nu even rondkijken door de linkermuisknop ingedrukt te houden en de muis te bewegen."
+  "lookAroundHint": "U kunt nu even rondkijken door de linkermuisknop ingedrukt te houden en de muis te bewegen.",
+  "toStartText": "Ga terug naar het begin"
 }

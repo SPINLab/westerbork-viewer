@@ -123,12 +123,16 @@ export default {
   },
   data() {
     return {
+      appMode: process.env.VUE_APP_MODE,
       step: 0,
       gridColor: "#000000",
       intros: [
         {
           heading: "appIntroHeading",
-          text: "appIntroText"
+          text:
+            process.env.VUE_APP_MODE === "onpremise"
+              ? "appIntroTextShort"
+              : "appIntroText"
         }
       ],
       narrativeIntros: [],
@@ -163,6 +167,10 @@ export default {
           this.$viewer.pathControls.position = 0;
           this.$viewer.pathControls.lockViewToPath = "moving";
           this.$viewer.pathControls.userInputCancels = true;
+          if (process.env.VUE_APP_MODE === "onpremise") {
+            this.next();
+            this.pickNarrative(this.narratives[0]);
+          }
           break;
         case 8:
           this.$refs.grid.$el.style = "z-index: 3;";
@@ -252,6 +260,10 @@ export default {
       this.$viewer.scene.view.pitch = 0;
       this.step = 6;
       this.$emit("skip-intro");
+      if (process.env.VUE_APP_MODE === "onpremise") {
+        this.next();
+        this.pickNarrative(this.narratives[0]);
+      }
     }
   },
   mounted() {

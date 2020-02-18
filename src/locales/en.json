@@ -47,8 +47,10 @@
   "about": "About",
   "appIntroHeading": "Campscapes Commander's House app",
   "appIntroText": "Welcome to the Campscapes Commander's House app. This app will take you on a digital tour through the house of the camp commander and gives you information on the camp and the house through the years. <br><br> The app works best on a modern browser with GPU hardware acceleration enabled. This is important since the app displays 3D data and is consequently quite heavy graphically. By default this should be enabled on modern browsers, however this is not always the case. If in doubt see <a href='https://www.google.com/search?q=chrome+enable+hardware+acceleration' target='_blank'>here for Chrome</a> or <a href='https://www.google.com/search?q=firefox+enable+hardware+acceleration' target='_blank'>here for Firefox</a>. The app might also be usable without having this enabled, however the experience could be disappointing.",
+  "appIntroTextShort": "Welcome to the Campscapes Commander's House app. This app will take you on a digital tour through the house of the camp commander and gives you information on the camp and the house through the years.",
   "continue": "Continue",
   "language": "language",
   "commanderHouse": "The Commander's House",
-  "lookAroundHint": "You can now look around by clicking and holding the left mouse button and moving the cursor."
+  "lookAroundHint": "You can now look around by clicking and holding the left mouse button and moving the cursor.",
+  "toStartText": "Go back to beginning"
 }
