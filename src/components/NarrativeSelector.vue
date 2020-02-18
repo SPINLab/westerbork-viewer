@@ -130,7 +130,7 @@ export default {
 .selected-narrative-container {
   display: flex;
   align-items: center;
-  padding: 2rem;
+  margin: 2rem;
   pointer-events: auto;
 }
 

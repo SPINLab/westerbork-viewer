@@ -230,9 +230,9 @@ export default {
 #progression-bar {
   display: flex;
   flex-direction: column;
-  width: 88vw;
   margin-left: 2rem;
   pointer-events: auto;
+  flex-grow: 1;
 }
 
 #progression-bar:focus {
