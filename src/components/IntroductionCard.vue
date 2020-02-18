@@ -8,12 +8,19 @@
       right: position === 'right'
     }"
   >
-    <div class="content" :class="{ 'content-expanded': cardExpanded }">
+    <div
+      ref="content"
+      class="content"
+      :class="{ 'content-expanded': cardExpanded }"
+    >
       <h2>{{ title.toUpperCase() }}</h2>
       <p v-html="content"></p>
-      <div v-show="!cardExpanded" class="fade"></div>
+      <div v-show="!cardExpanded && contentOverflown" class="fade"></div>
     </div>
-    <ReadFurtherButton v-show="!cardExpanded" @click.native="expandCard" />
+    <ReadFurtherButton
+      v-show="!cardExpanded && contentOverflown"
+      @click.native="expandCard"
+    />
   </section>
 </template>
 
@@ -45,13 +52,26 @@ export default {
   },
   data() {
     return {
-      cardExpanded: false
+      cardExpanded: false,
+      contentOverflown: false
     };
   },
   methods: {
     expandCard() {
       this.cardExpanded = true;
+    },
+    isContentOverflown() {
+      this.contentOverflown =
+        this.$refs.content.scrollHeight > this.$refs.content.clientHeight + 36;
     }
+  },
+  mounted() {
+    this.contentOverflown =
+      this.$refs.content.scrollHeight > this.$refs.content.clientHeight + 36;
+    window.addEventListener("resize", this.isContentOverflown);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.isContentOverflown);
   }
 };
 </script>
@@ -93,7 +113,7 @@ export default {
   max-height: 40vh;
   overflow: hidden;
   margin-bottom: 0.1rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 1rem;
 }
 
 .content-expanded {
