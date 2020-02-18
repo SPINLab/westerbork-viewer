@@ -76,7 +76,7 @@
     <transition name="fade">
       <NarrativeIntroCard
         v-if="step === 7"
-        :narrativeIntro="pickedNarrativeIntro"
+        :narrativeQuestion="pickedNarrativeQuestion"
         @next-step="next"
       />
     </transition>
@@ -135,8 +135,7 @@ export default {
               : "appIntroText"
         }
       ],
-      narrativeIntros: [],
-      pickedNarrativeIntro: {}
+      pickedNarrativeQuestion: {}
     };
   },
   computed: {
@@ -213,11 +212,7 @@ export default {
       });
     },
     pickNarrative(narrative) {
-      this.pickedNarrativeIntro = this.narrativeIntros.filter(
-        v =>
-          v.heading_english === narrative.question ||
-          v.heading_dutch === narrative.question
-      )[0] || { heading_dutch: "", heading_english: "" };
+      this.pickedNarrativeQuestion = narrative.question;
       this.next();
       this.$emit("narrative-picked", narrative);
     },
@@ -237,13 +232,13 @@ export default {
           /(?:\r\n|\r|\n)/g,
           "<br>"
         );
+        intro.summary_english = intro.summary_english.replace(
+          /(?:\r\n|\r|\n)/g,
+          "<br>"
+        );
       }
 
       this.intros = [...this.intros, ...introTexts];
-
-      this.narrativeIntros = data.filter(v =>
-        v.panel_in_app.startsWith("Buiten")
-      );
     },
     skip() {
       if (this.$viewer.pathControls.tweens[0]) {

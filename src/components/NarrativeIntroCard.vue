@@ -1,7 +1,6 @@
 <template>
   <div class="narrative-card">
-    <h3>{{ cardHeading }}</h3>
-    <div class="narrative-text" v-html="cardText"></div>
+    <h3>{{ narrativeQuestion }}</h3>
     <NavigationButton :title="$t('continue')" @click.native="nextStep" />
   </div>
 </template>
@@ -15,26 +14,14 @@ export default {
     NavigationButton
   },
   props: {
-    narrativeIntro: {
-      type: Object,
+    narrativeQuestion: {
+      type: String,
       required: true
     }
   },
   methods: {
     nextStep() {
       this.$emit("next-step");
-    }
-  },
-  computed: {
-    cardHeading: function() {
-      return this.$i18n.locale === "nl"
-        ? this.narrativeIntro.heading_dutch.toUpperCase()
-        : this.narrativeIntro.heading_english.toUpperCase();
-    },
-    cardText: function() {
-      return this.$i18n.locale === "nl"
-        ? this.narrativeIntro.summary_dutch
-        : this.narrativeIntro.summaryenglish;
     }
   }
 };
@@ -65,12 +52,6 @@ h3 {
   text-decoration: underline #90909086;
   margin-top: 2rem;
   font-size: 1.375rem;
-}
-
-.narrative-text {
-  overflow-y: scroll;
-  color: #212121;
-  line-height: 1.4rem;
 }
 
 button {
