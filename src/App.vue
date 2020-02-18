@@ -72,9 +72,7 @@
         ref="sourcePage"
         :narrative="narrative"
         :room="room"
-        :layer="layer"
-        :media="sources[this.layer].media"
-        :content="sources[this.layer].content"
+        :sources="sources"
       />
 
       <AboutPage ref="aboutPage" />
@@ -243,8 +241,8 @@ export default {
     changeLayer(layer) {
       this.layer = layer;
     },
-    openSourcePage() {
-      this.$refs.sourcePage.open();
+    openSourcePage(layer) {
+      this.$refs.sourcePage.open(layer);
     },
     async getSourceData() {
       const directusRoomName = directusRoomNames[this.room];

@@ -219,8 +219,8 @@ export default {
         this.visible = true;
       }
     },
-    openSource() {
-      this.$emit("open-source");
+    openSource(layer) {
+      this.$emit("open-source", layer);
     },
     onAnimationEnd(e) {
       if (e.target.classList.contains("card-collapse-2")) {

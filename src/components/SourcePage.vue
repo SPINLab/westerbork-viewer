@@ -40,29 +40,31 @@ export default {
       type: String,
       required: true
     },
-    layer: {
-      type: String,
-      required: true
-    },
-    media: {
-      type: String,
-      required: true
-    },
-    content: {
-      type: String,
+    sources: {
+      type: Object,
       required: true
     }
   },
   data() {
     return {
-      isOpen: false
+      isOpen: false,
+      layer: "house"
     };
+  },
+  computed: {
+    media: function() {
+      return this.sources[this.layer].media;
+    },
+    content: function() {
+      return this.sources[this.layer].content;
+    }
   },
   methods: {
     close() {
       this.isOpen = false;
     },
-    open() {
+    open(layer) {
+      this.layer = layer;
       this.isOpen = true;
     }
   }

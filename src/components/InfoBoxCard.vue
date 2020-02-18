@@ -122,7 +122,7 @@ export default {
       this.$el.classList.remove("flip-card");
     },
     openSource() {
-      this.$emit("open-source");
+      this.$emit("open-source", this.layer);
     }
   }
 };
