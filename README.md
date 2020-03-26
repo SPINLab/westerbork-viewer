@@ -40,7 +40,7 @@ In the project directory run:
 docker-compose up -d
 ```
 
-Wait until building is complete. When it is done the app is served on port 8000. Use a webserver like nginx or apache to serve this port to the web.
+Wait until building is complete. When it is done the app is served on port 8000 (can be configured in the `docker-compose.yml` file). Use a webserver like nginx or apache to serve this port to the web.
 
 ## Deploy manually
 
