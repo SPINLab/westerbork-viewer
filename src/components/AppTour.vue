@@ -260,4 +260,8 @@ export default {
   background: #ffd27c;
   color: #212121;
 }
+
+.shepherd-arrow:before {
+  background: #2b2b2b;
+}
 </style>
