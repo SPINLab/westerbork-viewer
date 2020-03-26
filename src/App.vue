@@ -229,14 +229,14 @@ export default {
       this.narratives = this.narrativesData.map(v => {
         if (this.$i18n.locale === "nl") {
           return {
-            id: v.id,
+            id: v.sort_number,
             title: v.heading_dutch,
             question: v.question_dutch,
             description: v.summary_dutch
           };
         } else if (this.$i18n.locale === "en") {
           return {
-            id: v.id,
+            id: v.sort_number,
             title: v.heading_english,
             question: v.question_english,
             description: v.summary_english
