@@ -6,30 +6,30 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "build:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service build --dest dist-on-premise",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
-    "serve:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service serve",
-    "build:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service build --dest dist-on-premise"
+    "serve:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service serve"
   },
   "dependencies": {
     "potree": "github:chrislcs/potree#westerbork",
-    "shepherd.js": "^7.0.4",
+    "shepherd.js": "^8.0.2",
     "vue": "^2.6.11",
-    "vue-i18n": "^8.15.7",
-    "vue-slider-component": "^3.1.1"
+    "vue-i18n": "^8.20.0",
+    "vue-slider-component": "^3.2.2"
   },
   "devDependencies": {
-    "@intlify/vue-i18n-loader": "^0.6.1",
-    "@vue/cli-plugin-babel": "~4.2.3",
-    "@vue/cli-plugin-eslint": "~4.2.3",
-    "@vue/cli-service": "~4.2.3",
-    "@vue/eslint-config-prettier": "^6.0.0",
+    "@intlify/vue-i18n-loader": "^1.0.0",
+    "@vue/cli-plugin-babel": "~4.4.6",
+    "@vue/cli-plugin-eslint": "~4.4.6",
+    "@vue/cli-service": "~4.4.6",
     "babel-eslint": "^10.1.0",
-    "cross-env": "^7.0.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-prettier": "^3.1.1",
+    "copy-webpack-plugin": "^6.0.3",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.6.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-vue": "^6.1.2",
-    "prettier": "^1.19.1",
-    "vue-cli-plugin-i18n": "^0.6.1",
+    "vue-cli-plugin-i18n": "^1.0.1",
     "vue-template-compiler": "^2.6.11"
   }
 }

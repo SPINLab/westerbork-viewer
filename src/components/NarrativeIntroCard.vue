@@ -1,29 +1,32 @@
 <template>
   <div class="narrative-card">
     <h3>{{ narrativeQuestion }}</h3>
-    <NavigationButton :title="$t('continue')" @click.native="nextStep" />
+    <NavigationButton
+      :title="$t('continue')"
+      @click.native="nextStep"
+    />
   </div>
 </template>
 
 <script>
-import NavigationButton from "./NavigationButton";
+import NavigationButton from './NavigationButton.vue';
 
 export default {
-  name: "NarrativeCard",
+  name: 'NarrativeCard',
   components: {
-    NavigationButton
+    NavigationButton,
   },
   props: {
     narrativeQuestion: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     nextStep() {
-      this.$emit("next-step");
-    }
-  }
+      this.$emit('next-step');
+    },
+  },
 };
 </script>
 
@@ -42,7 +45,7 @@ export default {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   height: 30rem;
-  background-image: url("../assets/background_images/whitepaper.png");
+  background-image: url('../assets/background_images/whitepaper.png');
   color: #212121;
   width: 16rem;
 }

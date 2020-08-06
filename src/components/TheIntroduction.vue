@@ -24,8 +24,11 @@
       />
     </transition>
     <transition name="fade">
-      <div v-if="step === 2" class="hint-text">
-        {{ $t("lookAroundHint") }}
+      <div
+        v-if="step === 2"
+        class="hint-text"
+      >
+        {{ $t('lookAroundHint') }}
       </div>
     </transition>
     <transition name="fade">
@@ -76,12 +79,15 @@
     <transition name="fade">
       <NarrativeIntroCard
         v-if="step === 7"
-        :narrativeQuestion="pickedNarrativeQuestion"
+        :narrative-question="pickedNarrativeQuestion"
         @next-step="next"
       />
     </transition>
     <transition name="fade">
-      <div v-show="[0, 1, 2, 4, 5, 6, 7].includes(step)" class="fade"></div>
+      <div
+        v-show="[0, 1, 2, 4, 5, 6, 7].includes(step)"
+        class="fade"
+      />
     </transition>
     <AppTour ref="tour" />
     <NavigationButton
@@ -94,18 +100,18 @@
 </template>
 
 <script>
-import TheGrid from "./TheGrid";
-import IntroductionCard from "./IntroductionCard";
-import NavigationButton from "./NavigationButton";
-import AltNavigationButton from "./AltNavigationButton";
-import NarrativeCardSelector from "./NarrativeCardSelector";
-import NarrativeIntroCard from "./NarrativeIntroCard";
-import AppTour from "./AppTour";
+import TheGrid from './TheGrid.vue';
+import IntroductionCard from './IntroductionCard.vue';
+import NavigationButton from './NavigationButton.vue';
+import AltNavigationButton from './AltNavigationButton.vue';
+import NarrativeCardSelector from './NarrativeCardSelector.vue';
+import NarrativeIntroCard from './NarrativeIntroCard.vue';
+import AppTour from './AppTour.vue';
 
-import { pathHouse } from "./path";
+import { pathHouse } from './path';
 
 export default {
-  name: "TheIntroduction",
+  name: 'TheIntroduction',
   components: {
     TheGrid,
     IntroductionCard,
@@ -113,40 +119,40 @@ export default {
     AltNavigationButton,
     NarrativeCardSelector,
     NarrativeIntroCard,
-    AppTour
+    AppTour,
   },
   props: {
     narratives: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       appMode: process.env.VUE_APP_MODE,
       step: 0,
-      gridColor: "#000000",
+      gridColor: '#000000',
       intros: [
         {
-          heading: "appIntroHeading",
-          text:
-            process.env.VUE_APP_MODE === "onpremise"
-              ? "appIntroTextShort"
-              : "appIntroText"
-        }
+          heading: 'appIntroHeading',
+          text: process.env.VUE_APP_MODE === 'onpremise' ? 'appIntroTextShort' : 'appIntroText',
+        },
       ],
-      pickedNarrativeQuestion: {}
+      pickedNarrativeQuestion: {},
     };
   },
   computed: {
-    language: function() {
-      return this.$i18n.locale === "nl" ? "dutch" : "english";
-    }
+    language() {
+      return this.$i18n.locale === 'nl' ? 'dutch' : 'english';
+    },
+  },
+  mounted() {
+    this.getIntroTexts();
   },
   methods: {
     next() {
       this.step += 1;
-      this.$emit("next-step");
+      this.$emit('next-step');
 
       switch (this.step) {
         case 2:
@@ -158,24 +164,24 @@ export default {
           break;
         case 4:
           this.$viewer.scene.annotations.children = [];
-          this.gridColor = "#FFD27C";
+          this.gridColor = '#FFD27C';
           break;
         case 6:
           this.$viewer.pathControls.setPath(pathHouse);
           this.$viewer.setMoveSpeed(2);
           this.$viewer.pathControls.position = 0;
-          this.$viewer.pathControls.lockViewToPath = "moving";
+          this.$viewer.pathControls.lockViewToPath = 'moving';
           this.$viewer.pathControls.userInputCancels = true;
           this.$viewer.pathControls.rotationSpeed = 100;
-          if (process.env.VUE_APP_MODE === "onpremise") {
+          if (process.env.VUE_APP_MODE === 'onpremise') {
             this.next();
             this.pickNarrative(this.narratives[0]);
           }
           break;
         case 8:
-          this.$refs.grid.$el.style = "z-index: 3;";
-          this.gridColor = "#000000";
-          this.$refs.tour.tour.on("complete", () => {
+          this.$refs.grid.$el.style = 'z-index: 3;';
+          this.gridColor = '#000000';
+          this.$refs.tour.tour.on('complete', () => {
             this.next();
           });
           this.$nextTick(() => {
@@ -183,30 +189,28 @@ export default {
           });
           break;
         case 9:
-          this.$refs.grid.$el.style = "z-index: unset;";
-          this.$emit("start-progression");
+          this.$refs.grid.$el.style = 'z-index: unset;';
+          this.$emit('start-progression');
           break;
         default:
           break;
       }
     },
     switchLang() {
-      this.$i18n.locale = this.$i18n.locale === "nl" ? "en" : "nl";
+      this.$i18n.locale = this.$i18n.locale === 'nl' ? 'en' : 'nl';
     },
     flyToHouse() {
-      this.$viewer.pathControls.lockViewToPath = "always";
+      this.$viewer.pathControls.lockViewToPath = 'always';
       this.$viewer.pathControls.userInputCancels = false;
       this.$viewer.pathControls.moveTo(1, 20000, () => {
-        const ahn2pc = this.$viewer.scene.pointclouds.filter(
-          v => v.name === "AHN2"
-        )[0];
+        const ahn2pc = this.$viewer.scene.pointclouds.filter((v) => v.name === 'AHN2')[0];
         const t = setInterval(() => {
           ahn2pc.material.size -= 0.005;
           if (ahn2pc.material.size < 0.002) {
             clearInterval(t);
-            this.$emit("hide-point-cloud", "AHN2");
+            this.$emit('hide-point-cloud', 'AHN2');
             ahn2pc.material.size = 0.65;
-            this.$viewer.pathControls.lockViewToPath = "moving";
+            this.$viewer.pathControls.lockViewToPath = 'moving';
             this.next();
           }
         }, 8);
@@ -215,29 +219,21 @@ export default {
     pickNarrative(narrative) {
       this.pickedNarrativeQuestion = narrative.question;
       this.next();
-      this.$emit("narrative-picked", narrative);
+      this.$emit('narrative-picked', narrative);
     },
     async getIntroTexts() {
       const response = await fetch(
-        "https://data.campscapes.org/api/1.1/tables/introduction_texts/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5"
+        'https://data.campscapes.org/api/1.1/tables/introduction_texts/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5',
       );
       const json = await response.json();
-      let data = json.data;
-      let introTexts = data.filter(
-        v => v.order_in_app !== null && v.order_in_app !== 0
-      );
+      const { data } = json;
+      let introTexts = data.filter((v) => v.order_in_app !== null && v.order_in_app !== 0);
       introTexts = introTexts.sort((a, b) => a.order_in_app - b.order_in_app);
 
-      for (const intro of introTexts) {
-        intro.summary_dutch = intro.summary_dutch.replace(
-          /(?:\r\n|\r|\n)/g,
-          "<br>"
-        );
-        intro.summary_english = intro.summary_english.replace(
-          /(?:\r\n|\r|\n)/g,
-          "<br>"
-        );
-      }
+      introTexts.forEach((intro) => {
+        intro.summary_dutch = intro.summary_dutch.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        intro.summary_english = intro.summary_english.replace(/(?:\r\n|\r|\n)/g, '<br>');
+      });
 
       this.intros = [...this.intros, ...introTexts];
     },
@@ -245,27 +241,24 @@ export default {
       if (this.$viewer.pathControls.tweens[0]) {
         this.$viewer.pathControls.tweens[0].stop();
       }
-      this.$emit("hide-point-cloud", "AHN2");
+      this.$emit('hide-point-cloud', 'AHN2');
       this.$viewer.scene.annotations.children = [];
       this.$viewer.pathControls.setPath(pathHouse);
       this.$viewer.setMoveSpeed(2);
       this.$viewer.pathControls.position = 0;
-      this.$viewer.pathControls.lockViewToPath = "moving";
+      this.$viewer.pathControls.lockViewToPath = 'moving';
       this.$viewer.pathControls.userInputCancels = true;
       this.$viewer.pathControls.rotationSpeed = 100;
       this.$viewer.scene.view.yaw = 1.485;
       this.$viewer.scene.view.pitch = 0;
       this.step = 6;
-      this.$emit("skip-intro");
-      if (process.env.VUE_APP_MODE === "onpremise") {
+      this.$emit('skip-intro');
+      if (process.env.VUE_APP_MODE === 'onpremise') {
         this.next();
         this.pickNarrative(this.narratives[0]);
       }
-    }
+    },
   },
-  mounted() {
-    this.getIntroTexts();
-  }
 };
 </script>
 

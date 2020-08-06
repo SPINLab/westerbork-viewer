@@ -1,34 +1,40 @@
 <template>
-  <div class="menu-item" id="points-settings">
-    <h4>{{ $t("points").toUpperCase() }}</h4>
-    <div class="slider" id="points-slider">
+  <div
+    id="points-settings"
+    class="menu-item"
+  >
+    <h4>{{ $t('points').toUpperCase() }}</h4>
+    <div
+      id="points-slider"
+      class="slider"
+    >
       <vue-slider
         ref="pointsSlider"
         :value="points"
         v-bind="pointsOptions"
         @change="onChange"
-      ></vue-slider>
+      />
     </div>
   </div>
 </template>
 
 <script>
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/default.css";
+import VueSlider from 'vue-slider-component';
+import 'vue-slider-component/theme/default.css';
 
 export default {
-  name: "SettingsMenuPoints",
+  name: 'SettingsMenuPoints',
   components: {
-    VueSlider
+    VueSlider,
   },
   props: {
     points: {
       type: Number,
       required: true,
-      validator: function(value) {
+      validator(value) {
         return value >= 200000 && value <= 10000000;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -45,33 +51,33 @@ export default {
           7000000,
           8000000,
           9000000,
-          10000000
+          10000000,
         ],
-        tooltip: "always",
-        tooltipPlacement: "bottom",
+        tooltip: 'always',
+        tooltipPlacement: 'bottom',
         dotStyle: {
-          backgroundColor: "#B5B5B5"
+          backgroundColor: '#B5B5B5',
         },
         railStyle: {
-          backgroundColor: "#707070"
+          backgroundColor: '#707070',
         },
         processStyle: {
-          backgroundColor: "#707070"
+          backgroundColor: '#707070',
         },
         tooltipStyle: {
-          color: "#454545",
-          backgroundColor: "#B5B5B5",
-          borderColor: "#707070",
-          fontSize: "0.5625rem"
-        }
-      }
+          color: '#454545',
+          backgroundColor: '#B5B5B5',
+          borderColor: '#707070',
+          fontSize: '0.5625rem',
+        },
+      },
     };
   },
   methods: {
     onChange(e) {
-      this.$emit("change", e);
-    }
-  }
+      this.$emit('change', e);
+    },
+  },
 };
 </script>
 

@@ -4,42 +4,69 @@
       card: true,
       'card-black': isBlack,
       'card-pink': isPink,
-      'card-white': isWhite
+      'card-white': isWhite,
     }"
     @animationend="onAnimationEnd"
   >
-    <div v-show="!expanded && active" class="nav-card-buttons">
-      <button :class="{ active: isHouse }" @click="switchCard('house')">
+    <div
+      v-show="!expanded && active"
+      class="nav-card-buttons"
+    >
+      <button
+        :class="{ active: isHouse }"
+        @click="switchCard('house')"
+      >
         {{ $t("house").toUpperCase() }}
       </button>
-      <button :class="{ active: isCamp }" @click="switchCard('camp')">
+      <button
+        :class="{ active: isCamp }"
+        @click="switchCard('camp')"
+      >
         {{ $t("camp").toUpperCase() }}
       </button>
-      <button :class="{ active: isMemory }" @click="switchCard('memory')">
+      <button
+        :class="{ active: isMemory }"
+        @click="switchCard('memory')"
+      >
         {{ $t("memory").toUpperCase() }}
       </button>
     </div>
-    <div v-show="expanded" class="nav-card-buttons">
-      <button v-show="isHouse" class="active">
+    <div
+      v-show="expanded"
+      class="nav-card-buttons"
+    >
+      <button
+        v-show="isHouse"
+        class="active"
+      >
         {{ $t("house").toUpperCase() }}
       </button>
-      <button v-show="isCamp" class="active">
+      <button
+        v-show="isCamp"
+        class="active"
+      >
         {{ $t("camp").toUpperCase() }}
       </button>
-      <button v-show="isMemory" class="active">
+      <button
+        v-show="isMemory"
+        class="active"
+      >
         {{ $t("memory").toUpperCase() }}
       </button>
     </div>
     <div class="card-text">
-      <div class="content" v-html="content"></div>
+      <div
+        class="content"
+        v-html="content"
+      />
       <div
         :class="{
           fade: true,
           'fade-black': isBlack,
           'fade-pink': isPink,
-          'fade-white': isWhite
+          'fade-white': isWhite,
         }"
-      ></div>
+      />
     </div>
     <ReadFurtherButton
       v-show="
@@ -52,79 +79,79 @@
 </template>
 
 <script>
-import ReadFurtherButton from "./ReadFurtherButton";
+import ReadFurtherButton from './ReadFurtherButton.vue';
 
 export default {
-  name: "InfoBoxCard",
+  name: 'InfoBoxCard',
   components: {
-    ReadFurtherButton
+    ReadFurtherButton,
   },
   props: {
     layer: {
       type: String,
       required: true,
-      validator: function(value) {
-        return ["house", "camp", "memory"].includes(value);
-      }
+      validator(value) {
+        return ['house', 'camp', 'memory'].includes(value);
+      },
     },
     content: {
       type: String,
-      required: true
+      required: true,
     },
     color: {
       type: String,
       required: true,
-      validator: function(value) {
-        return ["black", "pink", "white"].includes(value);
-      }
+      validator(value) {
+        return ['black', 'pink', 'white'].includes(value);
+      },
     },
     active: {
       type: Boolean,
       required: false,
-      default: true
+      default: true,
     },
     expanded: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
-    isBlack: function() {
-      return this.color === "black";
+    isBlack() {
+      return this.color === 'black';
     },
-    isPink: function() {
-      return this.color === "pink";
+    isPink() {
+      return this.color === 'pink';
     },
-    isWhite: function() {
-      return this.color === "white";
+    isWhite() {
+      return this.color === 'white';
     },
-    isHouse: function() {
-      return this.layer === "house";
+    isHouse() {
+      return this.layer === 'house';
     },
-    isCamp: function() {
-      return this.layer === "camp";
+    isCamp() {
+      return this.layer === 'camp';
     },
-    isMemory: function() {
-      return this.layer === "memory";
-    }
+    isMemory() {
+      return this.layer === 'memory';
+    },
   },
   methods: {
     switchCard(card) {
       if (card !== this.layer) {
-        this.$emit("change-card", card);
+        this.$emit('change-card', card);
       }
     },
     flipCard() {
-      this.$el.classList.add("flip-card");
+      this.$el.classList.add('flip-card');
     },
     onAnimationEnd() {
-      this.$el.classList.remove("flip-card");
+      this.$el.classList.remove('flip-card');
     },
     openSource() {
-      this.$emit("open-source", this.layer);
-    }
-  }
+      this.$emit('open-source', this.layer);
+    },
+  },
 };
 </script>
 

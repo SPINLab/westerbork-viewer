@@ -1,72 +1,83 @@
 <template>
   <transition name="fade">
-    <div v-show="menuOpen" ref="menu" id="settings-menu" class="menu">
+    <div
+      v-show="menuOpen"
+      id="settings-menu"
+      ref="menu"
+      class="menu"
+    >
       <SettingsMenuLanguage />
-      <SettingsMenuGraphics :graphics="graphics" @change="onGraphicsChange" />
-      <SettingsMenuPoints :points="points" @change="onPointsChange" />
+      <SettingsMenuGraphics
+        :graphics="graphics"
+        @change="onGraphicsChange"
+      />
+      <SettingsMenuPoints
+        :points="points"
+        @change="onPointsChange"
+      />
     </div>
   </transition>
 </template>
 
 <script>
-import SettingsMenuGraphics from "./SettingsMenuGraphics";
-import SettingsMenuPoints from "./SettingsMenuPoints";
-import SettingsMenuLanguage from "./SettingsMenuLanguage";
+import SettingsMenuGraphics from './SettingsMenuGraphics.vue';
+import SettingsMenuPoints from './SettingsMenuPoints.vue';
+import SettingsMenuLanguage from './SettingsMenuLanguage.vue';
 
 export default {
-  name: "SettingsMenu",
+  name: 'SettingsMenu',
   components: {
     SettingsMenuGraphics,
     SettingsMenuPoints,
-    SettingsMenuLanguage
+    SettingsMenuLanguage,
   },
   props: {
     graphics: {
       type: String,
       required: true,
-      validator: function(value) {
-        return ["low", "medium", "high"].includes(value);
-      }
+      validator(value) {
+        return ['low', 'medium', 'high'].includes(value);
+      },
     },
     points: {
       type: Number,
       required: true,
-      validator: function(value) {
+      validator(value) {
         return value >= 200000 && value <= 10000000;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
-      menuOpen: false
+      menuOpen: false,
     };
+  },
+  created() {
+    document.addEventListener('click', this.documentClick);
+  },
+  destroyed() {
+    document.removeEventListener('click', this.documentClick);
   },
   methods: {
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
     },
     onGraphicsChange(graphics) {
-      this.$emit("graphics-change", graphics);
+      this.$emit('graphics-change', graphics);
     },
     onPointsChange(points) {
-      this.$emit("points-change", points);
+      this.$emit('points-change', points);
     },
     documentClick(e) {
       if (
-        !this.$el.parentElement.contains(e.target) &&
-        !e.target.classList.contains("shepherd-button") &&
-        !e.target.classList.contains("shepherd-modal-target")
+        !this.$el.parentElement.contains(e.target)
+        && !e.target.classList.contains('shepherd-button')
+        && !e.target.classList.contains('shepherd-modal-target')
       ) {
         if (this.menuOpen) this.menuOpen = false;
       }
-    }
+    },
   },
-  created() {
-    document.addEventListener("click", this.documentClick);
-  },
-  destroyed() {
-    document.removeEventListener("click", this.documentClick);
-  }
 };
 </script>
 
@@ -87,7 +98,7 @@ export default {
 }
 
 .menu:before {
-  content: "";
+  content: '';
   width: 0px;
   height: 0px;
   position: absolute;

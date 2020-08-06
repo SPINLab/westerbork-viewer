@@ -5,7 +5,7 @@
       'card-expanded': cardExpanded,
       left: position === 'left',
       center: position === 'center',
-      right: position === 'right'
+      right: position === 'right',
     }"
   >
     <div
@@ -14,8 +14,11 @@
       :class="{ 'content-expanded': cardExpanded }"
     >
       <h2>{{ title.toUpperCase() }}</h2>
-      <p v-html="content"></p>
-      <div v-show="!cardExpanded && contentOverflown" class="fade"></div>
+      <p v-html="content" />
+      <div
+        v-show="!cardExpanded && contentOverflown"
+        class="fade"
+      />
     </div>
     <ReadFurtherButton
       v-show="!cardExpanded && contentOverflown"
@@ -25,54 +28,53 @@
 </template>
 
 <script>
-import ReadFurtherButton from "./ReadFurtherButton";
+import ReadFurtherButton from './ReadFurtherButton.vue';
 
 export default {
-  name: "IntroductionHistorical",
+  name: 'IntroductionHistorical',
   components: {
-    ReadFurtherButton
+    ReadFurtherButton,
   },
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     content: {
       type: String,
-      required: true
+      required: true,
     },
     position: {
       type: String,
       required: false,
-      default: "center",
-      validator: function(value) {
-        return ["left", "center", "right"].includes(value);
-      }
-    }
+      default: 'center',
+      validator(value) {
+        return ['left', 'center', 'right'].includes(value);
+      },
+    },
   },
   data() {
     return {
       cardExpanded: false,
-      contentOverflown: false
+      contentOverflown: false,
     };
+  },
+  mounted() {
+    this.contentOverflown = this.$refs.content.scrollHeight > this.$refs.content.clientHeight + 36;
+    window.addEventListener('resize', this.isContentOverflown);
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.isContentOverflown);
   },
   methods: {
     expandCard() {
       this.cardExpanded = true;
     },
     isContentOverflown() {
-      this.contentOverflown =
-        this.$refs.content.scrollHeight > this.$refs.content.clientHeight + 36;
-    }
+      this.contentOverflown = this.$refs.content.scrollHeight
+        > this.$refs.content.clientHeight + 36;
+    },
   },
-  mounted() {
-    this.contentOverflown =
-      this.$refs.content.scrollHeight > this.$refs.content.clientHeight + 36;
-    window.addEventListener("resize", this.isContentOverflown);
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.isContentOverflown);
-  }
 };
 </script>
 

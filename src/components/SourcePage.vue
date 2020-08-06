@@ -3,20 +3,26 @@
     <article v-show="isOpen">
       <CloseButton
         id="close-button"
-        iconColor="#333333"
+        icon-color="#333333"
         @click.native="close"
       />
       <div class="content">
-        <div class="media-container" v-html="media"></div>
+        <div
+          class="media-container"
+          v-html="media"
+        />
         <section class="text-container">
           <h2>
             {{
-              `${narrative.title.toUpperCase()} > ${$t(
-                room
-              ).toUpperCase()} > ${$t(layer).toUpperCase()}`
+              `${narrative.title.toUpperCase()} > ${$t(room).toUpperCase()} > ${$t(
+                layer
+              ).toUpperCase()}`
             }}
           </h2>
-          <div class="text" v-html="content"></div>
+          <div
+            class="text"
+            v-html="content"
+          />
         </section>
       </div>
     </article>
@@ -24,40 +30,40 @@
 </template>
 
 <script>
-import CloseButton from "./CloseButton";
+import CloseButton from './CloseButton.vue';
 
 export default {
-  name: "SourcePage",
+  name: 'SourcePage',
   components: {
-    CloseButton
+    CloseButton,
   },
   props: {
     narrative: {
       type: Object,
-      required: true
+      required: true,
     },
     room: {
       type: String,
-      required: true
+      required: true,
     },
     sources: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       isOpen: false,
-      layer: "house"
+      layer: 'house',
     };
   },
   computed: {
-    media: function() {
+    media() {
       return this.sources[this.layer].media;
     },
-    content: function() {
+    content() {
       return this.sources[this.layer].content;
-    }
+    },
   },
   methods: {
     close() {
@@ -66,8 +72,8 @@ export default {
     open(layer) {
       this.layer = layer;
       this.isOpen = true;
-    }
-  }
+    },
+  },
 };
 </script>
 

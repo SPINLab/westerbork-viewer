@@ -1,39 +1,51 @@
 <template>
-  <div class="menu-item" id="graphics-settings">
+  <div
+    id="graphics-settings"
+    class="menu-item"
+  >
     <h4>GRAPHICS</h4>
     <div class="radio-select">
-      <label class="radio-label" :class="{ selected: graphics === 'low' }">
+      <label
+        class="radio-label"
+        :class="{ selected: graphics === 'low' }"
+      >
         <input
+          id="low"
           class="radio-input"
           type="radio"
-          id="low"
           value="low"
           name="graphics"
           @change="onChange"
-        />
-        {{ $t("low") }}
+        >
+        {{ $t('low') }}
       </label>
-      <label class="radio-label" :class="{ selected: graphics === 'medium' }">
+      <label
+        class="radio-label"
+        :class="{ selected: graphics === 'medium' }"
+      >
         <input
+          id="medium"
           class="radio-input"
           type="radio"
-          id="medium"
           value="medium"
           name="graphics"
           @change="onChange"
-        />
-        {{ $t("medium") }}
+        >
+        {{ $t('medium') }}
       </label>
-      <label class="radio-label" :class="{ selected: graphics === 'high' }">
+      <label
+        class="radio-label"
+        :class="{ selected: graphics === 'high' }"
+      >
         <input
+          id="high"
           class="radio-input"
           type="radio"
-          id="high"
           value="high"
           name="graphics"
           @change="onChange"
-        />
-        {{ $t("high") }}
+        >
+        {{ $t('high') }}
       </label>
     </div>
   </div>
@@ -41,21 +53,21 @@
 
 <script>
 export default {
-  name: "SettingsMenuGraphics",
+  name: 'SettingsMenuGraphics',
   props: {
     graphics: {
       type: String,
       required: true,
-      validator: function(value) {
-        return ["low", "medium", "high"].includes(value);
-      }
-    }
+      validator(value) {
+        return ['low', 'medium', 'high'].includes(value);
+      },
+    },
   },
   methods: {
     onChange(e) {
-      this.$emit("change", e.target.value);
-    }
-  }
+      this.$emit('change', e.target.value);
+    },
+  },
 };
 </script>
 

@@ -1,20 +1,20 @@
 <template>
-  <div></div>
+  <div />
 </template>
 
 <script>
-import Shepherd from "shepherd.js";
+import Shepherd from 'shepherd.js';
 
 export default {
-  name: "AppTour",
+  name: 'AppTour',
   data() {
     return {
-      tour: null
+      tour: null,
     };
   },
   mounted() {
     this.createTour();
-    this.$watch("$i18n.locale", function() {
+    this.$watch('$i18n.locale', () => {
       this.createTour();
     });
   },
@@ -29,60 +29,60 @@ export default {
       this.tour = new Shepherd.Tour({ modalContainer: this.$el });
 
       const nextButton = {
-        text: this.$t("next"),
-        action: this.tour.next
+        text: this.$t('next'),
+        action: this.tour.next,
       };
 
       const skipButton = {
-        text: this.$t("skipTour"),
-        action: this.tour.complete
+        text: this.$t('skipTour'),
+        action: this.tour.complete,
       };
 
-      if (process.env.VUE_APP_MODE !== "onpremise") {
+      if (process.env.VUE_APP_MODE !== 'onpremise') {
         this.tour.addStep({
-          id: "settings-button",
-          attachTo: { element: "#settings-button", on: "right" },
-          text: this.$t("settingsButtonHint"),
-          buttons: [skipButton, nextButton]
+          id: 'settings-button',
+          attachTo: { element: '#settings-button', on: 'right' },
+          text: this.$t('settingsButtonHint'),
+          buttons: [skipButton, nextButton],
         });
 
         this.tour.addStep({
-          id: "settings-menu",
-          attachTo: { element: "#settings-menu", on: "right" },
-          text: this.$t("settingsMenuHint"),
+          id: 'settings-menu',
+          attachTo: { element: '#settings-menu', on: 'right' },
+          text: this.$t('settingsMenuHint'),
           buttons: [skipButton, nextButton],
-          beforeShowPromise: function() {
-            return new Promise(function(resolve) {
-              const settingsButton = document.getElementById("settings-button");
+          beforeShowPromise() {
+            return new Promise((resolve) => {
+              const settingsButton = document.getElementById('settings-button');
               settingsButton.click();
               resolve();
             });
-          }
+          },
         });
 
         this.tour.addStep({
-          id: "about-page-button",
-          attachTo: { element: "#about-page-button", on: "right" },
-          text: this.$t("aboutButtonHint"),
+          id: 'about-page-button',
+          attachTo: { element: '#about-page-button', on: 'right' },
+          text: this.$t('aboutButtonHint'),
           buttons: [skipButton, nextButton],
-          beforeShowPromise: function() {
-            return new Promise(function(resolve) {
-              const settingsButton = document.getElementById("settings-button");
+          beforeShowPromise() {
+            return new Promise((resolve) => {
+              const settingsButton = document.getElementById('settings-button');
               settingsButton.click();
               resolve();
             });
-          }
+          },
         });
       }
 
       this.tour.addStep({
-        id: "mini-map-expand-button",
-        attachTo: { element: "#mini-map-expand-button", on: "right" },
-        text: this.$t("minimapButtonHint"),
+        id: 'mini-map-expand-button',
+        attachTo: { element: '#mini-map-expand-button', on: 'right' },
+        text: this.$t('minimapButtonHint'),
         buttons: [skipButton, nextButton],
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
-            if (process.env.VUE_APP_MODE === "onpremise") {
+        beforeShowPromise() {
+          return new Promise((resolve) => {
+            if (process.env.VUE_APP_MODE === 'onpremise') {
               setTimeout(() => {
                 resolve();
               }, 300);
@@ -90,127 +90,127 @@ export default {
               resolve();
             }
           });
-        }
+        },
       });
 
       this.tour.addStep({
-        id: "mini-map",
-        attachTo: { element: "#mini-map", on: "right" },
-        text: this.$t("minimapHint"),
+        id: 'mini-map',
+        attachTo: { element: '#mini-map', on: 'right' },
+        text: this.$t('minimapHint'),
         buttons: [skipButton, nextButton],
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
+        beforeShowPromise() {
+          return new Promise((resolve) => {
             const minimapExpandButton = document.getElementById(
-              "mini-map-expand-button"
+              'mini-map-expand-button',
             );
             minimapExpandButton.click();
             setTimeout(() => {
               resolve();
             }, 300);
           });
-        }
+        },
       });
 
-      if (process.env.VUE_APP_MODE !== "onpremise") {
+      if (process.env.VUE_APP_MODE !== 'onpremise') {
         this.tour.addStep({
-          id: "narrative-selector",
-          attachTo: { element: "#narrative-selection-button", on: "top" },
-          text: this.$t("narrativeButtonHint"),
+          id: 'narrative-selector',
+          attachTo: { element: '#narrative-selection-button', on: 'top' },
+          text: this.$t('narrativeButtonHint'),
           buttons: [skipButton, nextButton],
-          beforeShowPromise: function() {
-            return new Promise(function(resolve) {
+          beforeShowPromise() {
+            return new Promise((resolve) => {
               const minimapCollapseButton = document.getElementById(
-                "mini-map-collapse-button"
+                'mini-map-collapse-button',
               );
               minimapCollapseButton.click();
               resolve();
             });
-          }
+          },
         });
 
         this.tour.addStep({
-          id: "narrative-selection",
-          attachTo: { element: ".narrative-selection", on: "right" },
-          text: this.$t("narrativeSelectionHint"),
+          id: 'narrative-selection',
+          attachTo: { element: '.narrative-selection', on: 'right' },
+          text: this.$t('narrativeSelectionHint'),
           buttons: [skipButton, nextButton],
-          beforeShowPromise: function() {
-            return new Promise(function(resolve) {
+          beforeShowPromise() {
+            return new Promise((resolve) => {
               const narrativeSelectionButton = document.getElementById(
-                "narrative-selection-button"
+                'narrative-selection-button',
               );
               narrativeSelectionButton.click();
               resolve();
             });
-          }
+          },
         });
       }
 
       this.tour.addStep({
-        id: "progression-bar",
-        attachTo: { element: "#progression-bar", on: "top" },
-        text: this.$t("progressBarHint"),
+        id: 'progression-bar',
+        attachTo: { element: '#progression-bar', on: 'top' },
+        text: this.$t('progressBarHint'),
         buttons: [skipButton, nextButton],
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
-            if (process.env.VUE_APP_MODE === "onpremise") {
+        beforeShowPromise() {
+          return new Promise((resolve) => {
+            if (process.env.VUE_APP_MODE === 'onpremise') {
               const minimapCollapseButton = document.getElementById(
-                "mini-map-collapse-button"
+                'mini-map-collapse-button',
               );
               minimapCollapseButton.click();
             }
             resolve();
           });
-        }
+        },
       });
 
       this.tour.addStep({
-        id: "expand-info-button",
-        attachTo: { element: "#expand-info-button", on: "left" },
-        text: this.$t("expandInfoButtonHint"),
-        buttons: [skipButton, nextButton]
-      });
-
-      this.tour.addStep({
-        id: "info-box",
-        attachTo: { element: "#info-box", on: "left" },
-        text: this.$t("infoBoxHint"),
+        id: 'expand-info-button',
+        attachTo: { element: '#expand-info-button', on: 'left' },
+        text: this.$t('expandInfoButtonHint'),
         buttons: [skipButton, nextButton],
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
+      });
+
+      this.tour.addStep({
+        id: 'info-box',
+        attachTo: { element: '#info-box', on: 'left' },
+        text: this.$t('infoBoxHint'),
+        buttons: [skipButton, nextButton],
+        beforeShowPromise() {
+          return new Promise((resolve) => {
             const expandInfoButton = document.getElementById(
-              "expand-info-button"
+              'expand-info-button',
             );
             expandInfoButton.click();
             setTimeout(() => {
               resolve();
             }, 300);
           });
-        }
+        },
       });
 
       this.tour.addStep({
-        id: "controls",
-        text: this.$t("controlsHint"),
+        id: 'controls',
+        text: this.$t('controlsHint'),
         buttons: [
           {
-            text: this.$t("finish"),
-            action: this.tour.complete
-          }
+            text: this.$t('finish'),
+            action: this.tour.complete,
+          },
         ],
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
+        beforeShowPromise() {
+          return new Promise((resolve) => {
             const collapseInfoButton = document.getElementById(
-              "collapse-info-button"
+              'collapse-info-button',
             );
             collapseInfoButton.click();
             setTimeout(() => {
               resolve();
             }, 300);
           });
-        }
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

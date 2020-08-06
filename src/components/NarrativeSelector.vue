@@ -1,16 +1,25 @@
 <template>
   <div id="narrative-selector">
     <div class="selected-narrative-container">
-      <button id="narrative-selection-button" @click="toggleNarrativeSelection">
+      <button
+        id="narrative-selection-button"
+        @click="toggleNarrativeSelection"
+      >
         <NarrativeSelectorIcon color="#ffffff" />
       </button>
-      <div class="selected-narrative" ref="selectedNarrative">
+      <div
+        ref="selectedNarrative"
+        class="selected-narrative"
+      >
         <span ref="selectedNarrativeText">
           <b> {{ narrative.id || 0 }} </b>
         </span>
       </div>
     </div>
-    <ol class="narrative-selection" ref="narrativeSelection">
+    <ol
+      ref="narrativeSelection"
+      class="narrative-selection"
+    >
       <li
         v-for="narrativeItem in narratives.slice().reverse()"
         :key="narrativeItem.id"
@@ -30,44 +39,49 @@
 </template>
 
 <script>
-import NarrativeSelectorIcon from "./NarrativeSelectorIcon";
+import NarrativeSelectorIcon from './NarrativeSelectorIcon.vue';
 
 export default {
-  name: "NarrativeSelector",
+  name: 'NarrativeSelector',
   components: {
-    NarrativeSelectorIcon
+    NarrativeSelectorIcon,
   },
   props: {
     narrative: {
       type: Object,
-      required: true
+      required: true,
     },
     narratives: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       narrativeSelectionOpen: false,
-      narrativeSelectionOpening: false
+      narrativeSelectionOpening: false,
     };
+  },
+  created() {
+    document.addEventListener('click', this.documentClick);
+  },
+  destroyed() {
+    document.removeEventListener('click', this.documentClick);
   },
   methods: {
     setNarrativeItem(narrativeItem, visible) {
       if (visible) {
-        narrativeItem.classList.remove("narrative-item-hide");
-        narrativeItem.classList.add("narrative-item-show");
+        narrativeItem.classList.remove('narrative-item-hide');
+        narrativeItem.classList.add('narrative-item-show');
       } else {
-        narrativeItem.classList.remove("narrative-item-show");
-        narrativeItem.classList.add("narrative-item-hide");
+        narrativeItem.classList.remove('narrative-item-show');
+        narrativeItem.classList.add('narrative-item-hide');
       }
     },
     toggleNarrativeSelection() {
-      this.$refs.narrativeSelection.style.pointerEvents = this
-        .narrativeSelectionOpen
-        ? "none"
-        : "auto";
+      this.$refs.narrativeSelection.style.pointerEvents = this.narrativeSelectionOpen
+        ? 'none'
+        : 'auto';
 
       if (!this.narrativeSelectionOpening) {
         this.narrativeSelectionOpening = true;
@@ -85,17 +99,13 @@ export default {
       }
     },
     selectNarrative(narrative) {
-      this.$emit("narrative-change", narrative);
+      this.$emit('narrative-change', narrative);
 
       this.toggleNarrativeSelection();
 
-      this.$refs.selectedNarrativeText.classList.add(
-        "narrative-icon-grow-shrink"
-      );
+      this.$refs.selectedNarrativeText.classList.add('narrative-icon-grow-shrink');
       setTimeout(() => {
-        this.$refs.selectedNarrativeText.classList.remove(
-          "narrative-icon-grow-shrink"
-        );
+        this.$refs.selectedNarrativeText.classList.remove('narrative-icon-grow-shrink');
       }, 300);
     },
     documentClick(e) {
@@ -104,14 +114,8 @@ export default {
           this.toggleNarrativeSelection();
         }
       }
-    }
+    },
   },
-  created() {
-    document.addEventListener("click", this.documentClick);
-  },
-  destroyed() {
-    document.removeEventListener("click", this.documentClick);
-  }
 };
 </script>
 
@@ -165,7 +169,7 @@ export default {
   display: flex;
   align-items: center;
   margin-left: -1.1rem;
-  font-family: "Flaco-Mono", sans-serif;
+  font-family: 'Flaco-Mono', sans-serif;
   font-size: 0.875rem;
   pointer-events: none;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
@@ -184,7 +188,7 @@ export default {
   margin-bottom: 0.6rem;
   width: fit-content;
   cursor: pointer;
-  font-family: "Flaco-Mono", sans-serif;
+  font-family: 'Flaco-Mono', sans-serif;
   border: 0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }

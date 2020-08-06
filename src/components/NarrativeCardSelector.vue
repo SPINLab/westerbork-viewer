@@ -1,37 +1,40 @@
 <template>
   <section>
-    <h2>{{ $t("chooseNarrative") }}</h2>
+    <h2>{{ $t('chooseNarrative') }}</h2>
     <ol class="narrative-cards">
       <li
         v-for="narrative in narratives"
         :key="narrative.id"
         class="narrative-card-container"
       >
-        <NarrativeCard :narrative="narrative" @picked="pickNarrative" />
+        <NarrativeCard
+          :narrative="narrative"
+          @picked="pickNarrative"
+        />
       </li>
     </ol>
   </section>
 </template>
 
 <script>
-import NarrativeCard from "./NarrativeCard";
+import NarrativeCard from './NarrativeCard.vue';
 
 export default {
-  name: "NarrativeCardSelector",
+  name: 'NarrativeCardSelector',
   components: {
-    NarrativeCard
+    NarrativeCard,
   },
   props: {
     narratives: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     pickNarrative(narrative) {
-      this.$emit("narrative-picked", narrative);
-    }
-  }
+      this.$emit('narrative-picked', narrative);
+    },
+  },
 };
 </script>
 
@@ -46,7 +49,7 @@ section {
 }
 
 h2 {
-  font-family: "CamphorPro-Regular", sans-serif;
+  font-family: 'CamphorPro-Regular', sans-serif;
   font-size: 3.4375rem;
   font-weight: normal;
   color: #ffffff;

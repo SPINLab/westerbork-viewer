@@ -1,27 +1,36 @@
 <template>
-  <div class="menu-item" id="graphics-settings">
-    <h4>{{ $t("language").toUpperCase() }}</h4>
+  <div
+    id="graphics-settings"
+    class="menu-item"
+  >
+    <h4>{{ $t('language').toUpperCase() }}</h4>
     <div class="radio-select">
-      <label class="radio-label" :class="{ selected: $i18n.locale === 'nl' }">
+      <label
+        class="radio-label"
+        :class="{ selected: $i18n.locale === 'nl' }"
+      >
         <input
+          id="nl"
           class="radio-input"
           type="radio"
-          id="nl"
           value="nl"
           name="language"
           @change="onChange"
-        />
+        >
         Nederlands
       </label>
-      <label class="radio-label" :class="{ selected: $i18n.locale === 'en' }">
+      <label
+        class="radio-label"
+        :class="{ selected: $i18n.locale === 'en' }"
+      >
         <input
+          id="en"
           class="radio-input"
           type="radio"
-          id="en"
           value="en"
           name="language"
           @change="onChange"
-        />
+        >
         English
       </label>
     </div>
@@ -30,12 +39,12 @@
 
 <script>
 export default {
-  name: "SettingsMenuLanguage",
+  name: 'SettingsMenuLanguage',
   methods: {
     onChange(e) {
       this.$i18n.locale = e.target.value;
-    }
-  }
+    },
+  },
 };
 </script>
 

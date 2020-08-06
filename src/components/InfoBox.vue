@@ -7,32 +7,35 @@
       <transition name="delayed-fade">
         <ZoomButton
           v-show="!cardsExpanded && visible"
-          iconColor="#333333"
+          icon-color="#333333"
           @click.native="openSource"
         />
       </transition>
       <transition name="fade">
-        <div class="media-container" ref="media">
+        <div
+          ref="media"
+          class="media-container"
+        >
           <transition name="fade">
             <div
               v-show="!cardsExpanded && activeLayer === 'house'"
               class="media"
               v-html="houseMedia || ''"
-            ></div>
+            />
           </transition>
           <transition name="fade">
             <div
               v-show="!cardsExpanded && activeLayer === 'camp'"
               class="media"
               v-html="campMedia"
-            ></div>
+            />
           </transition>
           <transition name="fade">
             <div
               v-show="!cardsExpanded && activeLayer === 'memory'"
               class="media"
               v-html="memoryMedia"
-            ></div>
+            />
           </transition>
         </div>
       </transition>
@@ -43,21 +46,21 @@
           v-show="!cardsExpanded && !visible"
           id="expand-info-button"
           direction="left"
-          arrowColor="#333333"
+          arrow-color="#333333"
           @click.native="expand"
         />
         <ExpandCollapseButton
           v-show="!cardsExpanded && visible"
           id="expand-cards-button"
           direction="left"
-          arrowColor="#333333"
+          arrow-color="#333333"
           @click.native="expand"
         />
         <ExpandCollapseButton
           v-show="visible"
           id="collapse-info-button"
           direction="right"
-          arrowColor="#333333"
+          arrow-color="#333333"
           @click.native="collapse"
         />
       </div>
@@ -82,7 +85,7 @@
           :expanded="cardsExpanded"
           :class="{
             'card-expand-1': cardsExpanded,
-            'card-collapse-1': !cardsCollapsed
+            'card-collapse-1': !cardsCollapsed,
           }"
           :style="{ 'z-index': campIndex, 'margin-top': campOffset }"
           @change-card="switchCard"
@@ -98,12 +101,12 @@
           :expanded="cardsExpanded"
           :class="{
             'card-expand-2': cardsExpanded,
-            'card-collapse-2': !cardsCollapsed
+            'card-collapse-2': !cardsCollapsed,
           }"
           :style="{
             'z-index': memoryIndex,
             'margin-top': memoryOffset,
-            'margin-left': '-0.4rem'
+            'margin-left': '-0.4rem',
           }"
           @change-card="switchCard"
           @open-source="openSource"
@@ -115,79 +118,79 @@
 </template>
 
 <script>
-import InfoBoxCard from "./InfoBoxCard";
-import ExpandCollapseButton from "./ExpandCollapseButton";
-import ZoomButton from "./ZoomButton";
+import InfoBoxCard from './InfoBoxCard.vue';
+import ExpandCollapseButton from './ExpandCollapseButton.vue';
+import ZoomButton from './ZoomButton.vue';
 
 export default {
-  name: "InfoBox",
+  name: 'InfoBox',
   components: {
     InfoBoxCard,
     ExpandCollapseButton,
-    ZoomButton
+    ZoomButton,
   },
   props: {
     houseMedia: {
       type: String,
       required: false,
-      default: ""
+      default: '',
     },
     houseContent: {
       type: String,
       required: false,
-      default: ""
+      default: '',
     },
     campMedia: {
       type: String,
       required: false,
-      default: ""
+      default: '',
     },
     campContent: {
       type: String,
       required: false,
-      default: ""
+      default: '',
     },
     memoryMedia: {
       type: String,
       required: false,
-      default: ""
+      default: '',
     },
     memoryContent: {
       type: String,
       required: false,
-      default: ""
-    }
+      default: '',
+    },
   },
   data() {
     return {
       visible: false,
-      cardOrder: ["house", "camp", "memory"],
+      cardOrder: ['house', 'camp', 'memory'],
       cardsExpanded: false,
-      cardsCollapsed: true
+      cardsCollapsed: true,
     };
   },
   computed: {
-    houseIndex: function() {
-      return 5 - this.cardOrder.indexOf("house");
+    houseIndex() {
+      return 5 - this.cardOrder.indexOf('house');
     },
-    campIndex: function() {
-      return 5 - this.cardOrder.indexOf("camp");
+    campIndex() {
+      return 5 - this.cardOrder.indexOf('camp');
     },
-    memoryIndex: function() {
-      return 5 - this.cardOrder.indexOf("memory");
+    memoryIndex() {
+      return 5 - this.cardOrder.indexOf('memory');
     },
-    houseOffset: function() {
-      return this.cardOrder.indexOf("house") * 1.3 + "rem";
+    houseOffset() {
+      return `${this.cardOrder.indexOf('house') * 1.3 }rem`;
     },
-    campOffset: function() {
-      return this.cardOrder.indexOf("camp") * 1.3 + "rem";
+    campOffset() {
+      return `${this.cardOrder.indexOf('camp') * 1.3 }rem`;
     },
-    memoryOffset: function() {
-      return this.cardOrder.indexOf("memory") * 1.3 + "rem";
+    memoryOffset() {
+      return `${this.cardOrder.indexOf('memory') * 1.3 }rem`;
     },
-    activeLayer: function() {
+    activeLayer() {
       return this.cardOrder[0];
-    }
+    },
   },
   methods: {
     switchCard(card) {
@@ -195,14 +198,14 @@ export default {
       this.cardOrder.unshift(card);
       this.$refs[card].flipCard();
 
-      for (const element of this.$refs.media.children) {
+      this.$refs.media.children.forEach((element) => {
         const mediaElement = element.children[0];
-        if (mediaElement && mediaElement.nodeName === "VIDEO") {
+        if (mediaElement && mediaElement.nodeName === 'VIDEO') {
           mediaElement.pause();
         }
-      }
+      });
 
-      this.$emit("layer-change", card);
+      this.$emit('layer-change', card);
     },
     collapse() {
       if (this.cardsExpanded) {
@@ -219,17 +222,17 @@ export default {
         this.visible = true;
       }
     },
-    openSource(layer) {
-      this.$emit("open-source", this.activeLayer);
+    openSource() {
+      this.$emit('open-source', this.activeLayer);
     },
     onAnimationEnd(e) {
-      if (e.target.classList.contains("card-collapse-2")) {
+      if (e.target.classList.contains('card-collapse-2')) {
         this.cardsCollapsed = true;
       }
-      e.target.classList.remove("card-collapse-1");
-      e.target.classList.remove("card-collapse-2");
-    }
-  }
+      e.target.classList.remove('card-collapse-1');
+      e.target.classList.remove('card-collapse-2');
+    },
+  },
 };
 </script>
 

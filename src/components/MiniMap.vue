@@ -6,39 +6,38 @@
       'mini-map-collapse': !minimapExpanded
     }"
   >
-    <canvas ref="canvas" id="mini-map-canvas"> </canvas>
+    <canvas
+      id="mini-map-canvas"
+      ref="canvas"
+    />
     <ExpandCollapseButton
+      v-show="minimapExpanded"
       id="mini-map-collapse-button"
       class="expand-collapse-button"
-      v-show="minimapExpanded"
       direction="left"
-      arrowColor="#333333"
+      arrow-color="#333333"
       @click.native="toggleMinimap"
     />
     <ExpandCollapseButton
+      v-show="!minimapExpanded"
       id="mini-map-expand-button"
       class="expand-collapse-button"
-      v-show="!minimapExpanded"
       direction="right"
-      arrowColor="#333333"
+      arrow-color="#333333"
       @click.native="toggleMinimap"
     />
   </div>
 </template>
 
 <script>
-import ExpandCollapseButton from "./ExpandCollapseButton";
+import ExpandCollapseButton from './ExpandCollapseButton.vue';
 
-const vector = (p1, p2) => {
-  return {
-    x: p2.x - p1.x,
-    y: p2.y - p1.y
-  };
-};
+const vector = (p1, p2) => ({
+  x: p2.x - p1.x,
+  y: p2.y - p1.y,
+});
 
-const dot = (u, v) => {
-  return u.x * v.x + u.y * v.y;
-};
+const dot = (u, v) => u.x * v.x + u.y * v.y;
 
 const pointInRectangle = (m, r) => {
   const AB = vector(r.A, r.B);
@@ -49,131 +48,109 @@ const pointInRectangle = (m, r) => {
   const dotABAB = dot(AB, AB);
   const dotBCBM = dot(BC, BM);
   const dotBCBC = dot(BC, BC);
-  return (
-    0 <= dotABAM && dotABAM <= dotABAB && 0 <= dotBCBM && dotBCBM <= dotBCBC
-  );
+  return dotABAM >= 0 && dotABAM <= dotABAB && dotBCBM >= 0 && dotBCBM <= dotBCBC;
 };
 
-const computeDistancePointToLine = (x, y, x1, y1, x2, y2) => {
-  return (
-    Math.abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1) /
-    Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2))
-  );
-};
+const computeDistancePointToLine = (x, y, x1, y1, x2, y2) => (
+  Math.abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1)
+  / Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
+);
 
 const floorMapExtentRD = {
   0: {
     A: { x: 236792.67, y: 548502.48 },
     B: { x: 236800.15, y: 548508.43 },
     C: { x: 236794.2, y: 548515.92 },
-    D: { x: 236786.71, y: 548509.97 }
+    D: { x: 236786.71, y: 548509.97 },
   },
   1: {
     A: { x: 236789.04, y: 548496.16 },
     B: { x: 236804.06, y: 548507.5 },
     C: { x: 236792.51, y: 548522.59 },
-    D: { x: 236777.48, y: 548511.24 }
+    D: { x: 236777.48, y: 548511.24 },
   },
   2: {
     A: { x: 236789.76, y: 548496.46 },
     B: { x: 236803.54, y: 548506.93 },
     C: { x: 236792.99, y: 548520.81 },
-    D: { x: 236779.27, y: 548510.34 }
-  }
+    D: { x: 236779.27, y: 548510.34 },
+  },
 };
 
 const floorHeights = [15.92, 18.87];
 
 const xAxesFloors = {};
-for (const floor in floorMapExtentRD) {
-  if (floorMapExtentRD.hasOwnProperty(floor)) {
-    const coords = floorMapExtentRD[floor];
-    xAxesFloors[floor] = {
-      x1: coords.A.x,
-      y1: coords.A.y,
-      x2: coords.B.x,
-      y2: coords.B.y
-    };
-  }
-}
+Object.keys(floorMapExtentRD).forEach((floor) => {
+  const coords = floorMapExtentRD[floor];
+  xAxesFloors[floor] = {
+    x1: coords.A.x,
+    y1: coords.A.y,
+    x2: coords.B.x,
+    y2: coords.B.y,
+  };
+});
 
 const yAxesFloors = {};
-for (const floor in floorMapExtentRD) {
-  if (floorMapExtentRD.hasOwnProperty(floor)) {
-    const coords = floorMapExtentRD[floor];
-    yAxesFloors[floor] = {
-      x1: coords.A.x,
-      y1: coords.A.y,
-      x2: coords.D.x,
-      y2: coords.D.y
-    };
-  }
-}
+Object.keys(floorMapExtentRD).forEach((floor) => {
+  const coords = floorMapExtentRD[floor];
+  yAxesFloors[floor] = {
+    x1: coords.A.x,
+    y1: coords.A.y,
+    x2: coords.D.x,
+    y2: coords.D.y,
+  };
+});
 
 const xAxesLengths = {};
-for (const floor in xAxesFloors) {
-  if (xAxesFloors.hasOwnProperty(floor)) {
-    const xAxis = xAxesFloors[floor];
-    const distance = Math.hypot(xAxis.x1 - xAxis.x2, xAxis.y1 - xAxis.y2);
-    xAxesLengths[floor] = distance;
-  }
-}
+Object.keys(xAxesFloors).forEach((floor) => {
+  const xAxis = xAxesFloors[floor];
+  const distance = Math.hypot(xAxis.x1 - xAxis.x2, xAxis.y1 - xAxis.y2);
+  xAxesLengths[floor] = distance;
+});
 
 const yAxesLengths = {};
-for (const floor in yAxesFloors) {
-  if (yAxesFloors.hasOwnProperty(floor)) {
-    const yAxis = yAxesFloors[floor];
-    const distance = Math.hypot(yAxis.x1 - yAxis.x2, yAxis.y1 - yAxis.y2);
-    yAxesLengths[floor] = distance;
-  }
-}
+Object.keys(yAxesFloors).forEach((floor) => {
+  const yAxis = yAxesFloors[floor];
+  const distance = Math.hypot(yAxis.x1 - yAxis.x2, yAxis.y1 - yAxis.y2);
+  yAxesLengths[floor] = distance;
+});
 
 const floorAngles = {};
-for (const floor in xAxesFloors) {
-  if (xAxesFloors.hasOwnProperty(floor)) {
-    const xAxis = xAxesFloors[floor];
-    const dy = Math.abs(xAxis.y1 - xAxis.y2);
-    const dx = Math.abs(xAxis.x1 - xAxis.x2);
-    const angle = Math.atan(dy / dx);
-    floorAngles[floor] = angle;
-  }
-}
+Object.keys(xAxesFloors).forEach((floor) => {
+  const xAxis = xAxesFloors[floor];
+  const dy = Math.abs(xAxis.y1 - xAxis.y2);
+  const dx = Math.abs(xAxis.x1 - xAxis.x2);
+  const angle = Math.atan(dy / dx);
+  floorAngles[floor] = angle;
+});
 
 export default {
-  name: "MiniMap",
+  name: 'MiniMap',
   components: {
-    ExpandCollapseButton
+    ExpandCollapseButton,
   },
   data() {
     return {
       currentFloor: 1,
       minimapExpanded: false,
       updateInterval: null,
-      canvasContext: null
+      canvasContext: null,
     };
+  },
+  mounted() {
+    this.canvasContext = this.$refs.canvas.getContext('2d');
+    this.canvasContext.fillStyle = '#fff';
+    this.updateFloor(true);
+    this.updateCanvas(this.canvasContext);
   },
   methods: {
     computeDeltaX(x, y, floor) {
       const yAxis = yAxesFloors[floor];
-      return computeDistancePointToLine(
-        x,
-        y,
-        yAxis.x1,
-        yAxis.y1,
-        yAxis.x2,
-        yAxis.y2
-      );
+      return computeDistancePointToLine(x, y, yAxis.x1, yAxis.y1, yAxis.x2, yAxis.y2);
     },
     computeDeltaY(x, y, floor) {
       const xAxis = xAxesFloors[floor];
-      return computeDistancePointToLine(
-        x,
-        y,
-        xAxis.x1,
-        xAxis.y1,
-        xAxis.x2,
-        xAxis.y2
-      );
+      return computeDistancePointToLine(x, y, xAxis.x1, xAxis.y1, xAxis.x2, xAxis.y2);
     },
     computeRelativePosition(sceneX, sceneY, floor) {
       const dx = this.computeDeltaX(sceneX, sceneY, floor);
@@ -187,7 +164,7 @@ export default {
       return pointInRectangle({ x, y }, rectangle);
     },
     updateFloor(force) {
-      const z = this.$viewer.scene.view.position.z;
+      const { z } = this.$viewer.scene.view.position;
       let floor;
       if (z < floorHeights[0]) {
         floor = 0;
@@ -198,13 +175,13 @@ export default {
       }
       if (force || floor !== this.currentFloor) {
         this.currentFloor = floor;
-        this.$refs.canvas.setAttribute("class", "");
+        this.$refs.canvas.setAttribute('class', '');
         if (this.currentFloor === 0) {
-          this.$refs.canvas.classList.add("basement");
+          this.$refs.canvas.classList.add('basement');
         } else if (this.currentFloor === 2) {
-          this.$refs.canvas.classList.add("second-floor");
+          this.$refs.canvas.classList.add('second-floor');
         } else {
-          this.$refs.canvas.classList.add("first-floor");
+          this.$refs.canvas.classList.add('first-floor');
         }
       }
     },
@@ -222,17 +199,13 @@ export default {
       const sceneX = this.$viewer.scene.view.position.x;
       const sceneY = this.$viewer.scene.view.position.y;
       if (this.positionWithinFloorplan(sceneX, sceneY, this.currentFloor)) {
-        const relativePosition = this.computeRelativePosition(
-          sceneX,
-          sceneY,
-          this.currentFloor
-        );
+        const relativePosition = this.computeRelativePosition(sceneX, sceneY, this.currentFloor);
         const convasPositionX = relativePosition.x * canvasWidth;
         const convasPositionY = (1 - relativePosition.y) * canvasHeight;
 
         let sceneAngle = Math.atan2(
           this.$viewer.scene.view.direction.y,
-          this.$viewer.scene.view.direction.x
+          this.$viewer.scene.view.direction.x,
         );
         sceneAngle = sceneAngle < 0 ? sceneAngle + Math.PI * 2 : sceneAngle;
         const angle = sceneAngle - floorAngles[0] + Math.PI / 2;
@@ -242,8 +215,8 @@ export default {
 
         const triangleSize = canvasWidth / 4;
         const grd = ctx.createLinearGradient(0, 0, 0, triangleSize);
-        grd.addColorStop(0, "rgba(255, 255, 255, 0.8)");
-        grd.addColorStop(0.9, "rgba(255, 255, 255, 0)");
+        grd.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+        grd.addColorStop(0.9, 'rgba(255, 255, 255, 0)');
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.lineTo(triangleSize, triangleSize);
@@ -267,14 +240,8 @@ export default {
       } else {
         clearInterval(this.updateInterval);
       }
-    }
+    },
   },
-  mounted() {
-    this.canvasContext = this.$refs.canvas.getContext("2d");
-    this.canvasContext.fillStyle = "#fff";
-    this.updateFloor(true);
-    this.updateCanvas(this.canvasContext);
-  }
 };
 </script>
 
@@ -294,13 +261,13 @@ export default {
 }
 
 .first-floor {
-  background-image: url("../assets/maps/firstfloor.png");
+  background-image: url('../assets/maps/firstfloor.png');
 }
 .second-floor {
-  background-image: url("../assets/maps/secondfloor.png");
+  background-image: url('../assets/maps/secondfloor.png');
 }
 .basement {
-  background-image: url("../assets/maps/basement.png");
+  background-image: url('../assets/maps/basement.png');
 }
 
 @keyframes expand-mini-map {

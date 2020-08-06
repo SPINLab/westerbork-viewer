@@ -1,10 +1,12 @@
 <template>
-  <button class="read-further-button">{{ $t("readFurther") }}...</button>
+  <button class="read-further-button">
+    {{ $t('readFurther') }}...
+  </button>
 </template>
 
 <script>
 export default {
-  name: "ReadFutherButton"
+  name: 'ReadFutherButton',
 };
 </script>
 
@@ -15,7 +17,7 @@ export default {
   border: 0;
   color: #ffffff;
   padding: 0.6rem 2rem;
-  font-family: "Flaco-Mono", sans-serif;
+  font-family: 'Flaco-Mono', sans-serif;
   font-size: 0.875rem;
   cursor: pointer;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);

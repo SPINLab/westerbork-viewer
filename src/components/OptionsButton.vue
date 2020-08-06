@@ -1,38 +1,50 @@
 <template>
-  <button class="base-button" type="button">
-    <SettingsMenuIcon v-if="icon === 'settings'" color="#ffffff" />
-    <AboutPageIcon v-if="icon === 'about'" color="#ffffff" />
-    <ShareIcon v-if="icon === 'share'" color="#ffffff" />
+  <button
+    class="base-button"
+    type="button"
+  >
+    <SettingsMenuIcon
+      v-if="icon === 'settings'"
+      color="#ffffff"
+    />
+    <AboutPageIcon
+      v-if="icon === 'about'"
+      color="#ffffff"
+    />
+    <ShareIcon
+      v-if="icon === 'share'"
+      color="#ffffff"
+    />
     <span>{{ title.toUpperCase() }}</span>
   </button>
 </template>
 
 <script>
-import SettingsMenuIcon from "./SettingsMenuIcon";
-import AboutPageIcon from "./AboutPageIcon";
-import ShareIcon from "./ShareIcon";
+import SettingsMenuIcon from './SettingsMenuIcon.vue';
+import AboutPageIcon from './AboutPageIcon.vue';
+import ShareIcon from './ShareIcon.vue';
 
 export default {
-  name: "BaseButton",
+  name: 'BaseButton',
+  components: {
+    SettingsMenuIcon,
+    AboutPageIcon,
+    ShareIcon,
+  },
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     icon: {
       type: String,
       required: false,
       default: null,
-      validator: function(value) {
-        return ["settings", "about", "share", null].includes(value);
-      }
-    }
+      validator(value) {
+        return ['settings', 'about', 'share', null].includes(value);
+      },
+    },
   },
-  components: {
-    SettingsMenuIcon,
-    AboutPageIcon,
-    ShareIcon
-  }
 };
 </script>
 
@@ -44,7 +56,7 @@ export default {
   color: #ffffff;
   background-color: #555555;
   cursor: pointer;
-  font-family: "Flaco-Mono", sans-serif;
+  font-family: 'Flaco-Mono', sans-serif;
   display: flex;
   align-items: center;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);

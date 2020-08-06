@@ -1,12 +1,15 @@
 <template>
   <transition name="fade">
-    <div v-show="isOpen" class="about-page">
+    <div
+      v-show="isOpen"
+      class="about-page"
+    >
       <div class="content">
         <header>
           <TheLogo
-            titleColor="#4B4B4B"
-            subtitleColor="#4B4B4B"
-            lineColor="#A8A8A8"
+            title-color="#4B4B4B"
+            subtitle-color="#4B4B4B"
+            line-color="#A8A8A8"
           />
           <NavigationButton
             :title="$t('backButtonText')"
@@ -76,37 +79,37 @@
                 <img
                   :src="require('../assets/logo_partners/uva.png')"
                   alt="Universiteit van Amsterdam"
-                />
+                >
               </li>
               <li>
                 <img
                   :src="require('../assets/logo_partners/vu-spinlab-logo.png')"
                   alt="Universiteit van Amsterdam"
-                />
+                >
               </li>
               <li>
                 <img
                   :src="require('../assets/logo_partners/kampwesterbork.png')"
                   alt="Herinneringscentrum Kamp Westerbork"
-                />
+                >
               </li>
               <li>
                 <img
                   :src="require('../assets/logo_partners/hera.png')"
                   alt="HERA"
-                />
+                >
               </li>
               <li>
                 <img
                   :src="require('../assets/logo_partners/rotary.png')"
                   alt="Rotary"
-                />
+                >
               </li>
             </ul>
           </section>
           <section class="software">
             <h3>SOFTWARE</h3>
-            <p v-html="$t('softwareText')"></p>
+            <p v-html="$t('softwareText')" />
           </section>
         </div>
       </div>
@@ -115,20 +118,20 @@
 </template>
 
 <script>
-import TheLogo from "./TheLogo";
-import NavigationButton from "./NavigationButton";
-import TeamMember from "./TeamMember";
+import TheLogo from './TheLogo.vue';
+import NavigationButton from './NavigationButton.vue';
+import TeamMember from './TeamMember.vue';
 
 export default {
-  name: "AboutPage",
+  name: 'AboutPage',
   components: {
     TheLogo,
     NavigationButton,
-    TeamMember
+    TeamMember,
   },
   data() {
     return {
-      isOpen: false
+      isOpen: false,
     };
   },
   methods: {
@@ -137,8 +140,8 @@ export default {
     },
     open() {
       this.isOpen = true;
-    }
-  }
+    },
+  },
 };
 </script>
 

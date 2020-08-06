@@ -1,30 +1,36 @@
 <template>
   <div class="narrative-card">
     <h3>{{ narrative.title.toUpperCase() }}</h3>
-    <div class="narrative-text" v-html="narrative.description"></div>
-    <NavigationButton :title="$t('continue')" @click.native="pickNarrative" />
+    <div
+      class="narrative-text"
+      v-html="narrative.description"
+    />
+    <NavigationButton
+      :title="$t('continue')"
+      @click.native="pickNarrative"
+    />
   </div>
 </template>
 
 <script>
-import NavigationButton from "./NavigationButton";
+import NavigationButton from './NavigationButton.vue';
 
 export default {
-  name: "NarrativeCard",
+  name: 'NarrativeCard',
   components: {
-    NavigationButton
+    NavigationButton,
   },
   props: {
     narrative: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     pickNarrative() {
-      this.$emit("picked", this.narrative);
-    }
-  }
+      this.$emit('picked', this.narrative);
+    },
+  },
 };
 </script>
 
@@ -38,7 +44,7 @@ export default {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   height: 22rem;
-  background-image: url("../assets/background_images/whitepaper.png");
+  background-image: url('../assets/background_images/whitepaper.png');
   color: #212121;
   width: 16rem;
   margin: 1rem 1rem 2rem 1rem;

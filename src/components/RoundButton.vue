@@ -1,21 +1,24 @@
 <template>
-  <button v-html="icon" :style="`background-color: ${color}`"></button>
+  <button
+    :style="`background-color: ${color}`"
+    v-html="icon"
+  />
 </template>
 
 <script>
 export default {
-  name: "RoundButton",
+  name: 'RoundButton',
   props: {
     icon: {
       type: String,
-      required: true
+      required: true,
     },
     color: {
       type: String,
       required: false,
-      default: "#ffffff"
-    }
-  }
+      default: '#ffffff',
+    },
+  },
 };
 </script>
 
@@ -29,8 +32,7 @@ button {
   border-radius: 50%;
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 button:focus {

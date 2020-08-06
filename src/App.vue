@@ -1,12 +1,16 @@
 <template>
   <div id="app">
-    <div id="top-left-fade"></div>
-    <TheLogo titleColor="#FFFFFF" subtitleColor="#FFFFFF" lineColor="#FFFFFF" />
+    <div id="top-left-fade" />
+    <TheLogo
+      title-color="#FFFFFF"
+      subtitle-color="#FFFFFF"
+      line-color="#FFFFFF"
+    />
     <PotreeViewer
       ref="PotreeViewer"
       :graphics="graphics"
       :num-points="points"
-      :pointClouds="pointClouds"
+      :point-clouds="pointClouds"
     />
 
     <TheIntroduction
@@ -19,7 +23,10 @@
     />
 
     <div v-show="step >= 8">
-      <div class="options-buttons" v-if="this.appMode !== 'onpremise'">
+      <div
+        v-if="appMode !== 'onpremise'"
+        class="options-buttons"
+      >
         <div class="settings-menu-container">
           <OptionsButton
             id="settings-button"
@@ -46,23 +53,26 @@
 
       <div class="narrative-progression-container">
         <NarrativeSelector
+          v-if="appMode !== 'onpremise'"
           :narrative="narrative"
           :narratives="narratives"
           @narrative-change="changeNarrative"
-          v-if="this.appMode !== 'onpremise'"
         />
-        <ProgressionBar ref="progression" @room-change="changeRoom" />
-        <div id="bottom-fade"></div>
+        <ProgressionBar
+          ref="progression"
+          @room-change="changeRoom"
+        />
+        <div id="bottom-fade" />
       </div>
 
       <InfoBox
         ref="infoBox"
-        :houseMedia="sources.house.media"
-        :houseContent="sources.house.content"
-        :campMedia="sources.camp.media"
-        :campContent="sources.camp.content"
-        :memoryMedia="sources.memory.media"
-        :memoryContent="sources.memory.content"
+        :house-media="sources.house.media"
+        :house-content="sources.house.content"
+        :camp-media="sources.camp.media"
+        :camp-content="sources.camp.content"
+        :memory-media="sources.memory.media"
+        :memory-content="sources.memory.content"
         @layer-change="changeLayer"
         @open-source="openSourcePage"
       />
@@ -76,7 +86,10 @@
         :sources="sources"
       />
 
-      <AboutPage ref="aboutPage" v-if="this.appMode !== 'onpremise'" />
+      <AboutPage
+        v-if="appMode !== 'onpremise'"
+        ref="aboutPage"
+      />
 
       <NavigationButton
         v-if="appMode === 'onpremise'"
@@ -86,7 +99,7 @@
       />
 
       <LanguageSwitchButton
-        v-if="this.appMode === 'onpremise'"
+        v-if="appMode === 'onpremise'"
         id="language-switch"
         @click.native="switchLanguage"
       />
@@ -95,41 +108,41 @@
 </template>
 
 <script>
-import TheLogo from "./components/TheLogo";
-import PotreeViewer from "./components/PotreeViewer";
-import TheIntroduction from "./components/TheIntroduction";
-import SettingsMenu from "./components/SettingsMenu";
-import AboutPage from "./components/AboutPage";
-import OptionsButton from "./components/OptionsButton";
-import ProgressionBar from "./components/ProgressionBar";
-import NarrativeSelector from "./components/NarrativeSelector";
-import InfoBox from "./components/InfoBox";
-import SourcePage from "./components/SourcePage";
-import MiniMap from "./components/MiniMap";
-import NavigationButton from "./components/NavigationButton";
-import LanguageSwitchButton from "./components/LanguageSwitchButton";
+import TheLogo from './components/TheLogo.vue';
+import PotreeViewer from './components/PotreeViewer.vue';
+import TheIntroduction from './components/TheIntroduction.vue';
+import SettingsMenu from './components/SettingsMenu.vue';
+import AboutPage from './components/AboutPage.vue';
+import OptionsButton from './components/OptionsButton.vue';
+import ProgressionBar from './components/ProgressionBar.vue';
+import NarrativeSelector from './components/NarrativeSelector.vue';
+import InfoBox from './components/InfoBox.vue';
+import SourcePage from './components/SourcePage.vue';
+import MiniMap from './components/MiniMap.vue';
+import NavigationButton from './components/NavigationButton.vue';
+import LanguageSwitchButton from './components/LanguageSwitchButton.vue';
 
 const directusRoomNames = {
-  outside: "Buiten",
-  hallway: "1_Entrance/hallway",
-  diningRoom: "2_Dining room",
-  livingRoom: "3_Living room",
-  sittingRoom: "4_sitting room",
-  conservatory: "5_conservatory",
-  kitchen: "6_Kitchen",
-  basement: "7_Basement",
-  gardenShed: "8_Garden shed",
-  bedroomGemmeker: "9_Bedroom Gemmeker",
-  bedroomObreen: "10_Bedroom Speck Obreen",
-  guestroom1: "11_Guestroom1",
-  guestroom2: "12_Guestroom2",
-  bedroomHassel: "13_Bedroom Elisabeth Hassel",
-  bathroom: "14_Bathroom",
-  attic: "15_Attic"
+  outside: 'Buiten',
+  hallway: '1_Entrance/hallway',
+  diningRoom: '2_Dining room',
+  livingRoom: '3_Living room',
+  sittingRoom: '4_sitting room',
+  conservatory: '5_conservatory',
+  kitchen: '6_Kitchen',
+  basement: '7_Basement',
+  gardenShed: '8_Garden shed',
+  bedroomGemmeker: '9_Bedroom Gemmeker',
+  bedroomObreen: '10_Bedroom Speck Obreen',
+  guestroom1: '11_Guestroom1',
+  guestroom2: '12_Guestroom2',
+  bedroomHassel: '13_Bedroom Elisabeth Hassel',
+  bathroom: '14_Bathroom',
+  attic: '15_Attic',
 };
 
 export default {
-  name: "app",
+  name: 'App',
   components: {
     TheLogo,
     PotreeViewer,
@@ -143,47 +156,47 @@ export default {
     SourcePage,
     MiniMap,
     NavigationButton,
-    LanguageSwitchButton
+    LanguageSwitchButton,
   },
   data() {
     return {
       appMode: process.env.VUE_APP_MODE,
       step: 0,
       pointClouds: [
-        { name: "AHN2", visible: true },
-        { name: "Commandantshuis", visible: true }
+        { name: 'AHN2', visible: true },
+        { name: 'Commandantshuis', visible: true },
       ],
-      graphics: process.env.VUE_APP_MODE === "onpremise" ? "high" : "medium",
-      points: process.env.VUE_APP_MODE === "onpremise" ? 7000000 : 5000000,
-      narrative: { id: null, title: "", description: "" },
+      graphics: process.env.VUE_APP_MODE === 'onpremise' ? 'high' : 'medium',
+      points: process.env.VUE_APP_MODE === 'onpremise' ? 7000000 : 5000000,
+      narrative: { id: null, title: '', description: '' },
       narratives: [],
-      room: "outside",
-      layer: "house",
+      room: 'outside',
+      layer: 'house',
       sources: {
         house: {
-          media: "",
-          content: ""
+          media: '',
+          content: '',
         },
         camp: {
-          media: "",
-          content: ""
+          media: '',
+          content: '',
         },
         memory: {
-          media: "",
-          content: ""
-        }
+          media: '',
+          content: '',
+        },
       },
       sourceData: null,
-      narrativesData: null
+      narrativesData: null,
     };
   },
   mounted() {
     this.setNarratives();
-    this.$watch("$i18n.locale", async function() {
+    this.$watch('$i18n.locale', async () => {
       await this.setNarratives();
       this.parseContents(this.sourceData);
     });
-    if (process.env.VUE_APP_MODE === "onpremise") {
+    if (process.env.VUE_APP_MODE === 'onpremise') {
       let lastActivity = new Date().getTime();
       const resetTimer = () => {
         lastActivity = new Date().getTime();
@@ -198,14 +211,14 @@ export default {
 
       setInterval(() => {
         if (new Date().getTime() - lastActivity >= 120000) {
-          location.reload();
+          window.location.reload();
         }
       }, 1000);
     }
   },
   methods: {
     switchLanguage() {
-      this.$i18n.locale = this.$i18n.locale === "nl" ? "en" : "nl";
+      this.$i18n.locale = this.$i18n.locale === 'nl' ? 'en' : 'nl';
     },
     onGraphicsChange(graphics) {
       this.graphics = graphics;
@@ -226,41 +239,38 @@ export default {
       if (!this.narrativesData) {
         await this.getNarratives();
       }
-      this.narratives = this.narrativesData.map(v => {
-        if (this.$i18n.locale === "nl") {
+      this.narratives = this.narrativesData.map((v) => {
+        if (this.$i18n.locale === 'nl') {
           return {
             id: v.sort_number,
             title: v.heading_dutch,
             question: v.question_dutch,
-            description: v.summary_dutch
-          };
-        } else if (this.$i18n.locale === "en") {
-          return {
-            id: v.sort_number,
-            title: v.heading_english,
-            question: v.question_english,
-            description: v.summary_english
+            description: v.summary_dutch,
           };
         }
+        return {
+          id: v.sort_number,
+          title: v.heading_english,
+          question: v.question_english,
+          description: v.summary_english,
+        };
       });
       if (this.narrative.id) {
-        this.narrative = this.narratives.find(
-          narrative => narrative.id === this.narrative.id
-        );
+        this.narrative = this.narratives.find((narrative) => narrative.id === this.narrative.id);
       }
     },
     async getNarratives() {
       const response = await fetch(
-        `https://data.campscapes.org/api/1.1/tables/wch_intro_texts_narratives/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5`
+        'https://data.campscapes.org/api/1.1/tables/wch_intro_texts_narratives/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5',
       );
       const json = await response.json();
-      let data = json.data;
-      data = data.filter(v => v.sort_number !== null);
+      let { data } = json;
+      data = data.filter((v) => v.sort_number !== null);
       data = data.sort((a, b) => a.sort_number - b.sort_number);
       this.narrativesData = data;
     },
     hidePointCloud(pcName) {
-      const pc = this.pointClouds.filter(v => v.name === pcName)[0];
+      const pc = this.pointClouds.filter((v) => v.name === pcName)[0];
       if (pc) pc.visible = false;
     },
     toggleSettingsMenu() {
@@ -289,26 +299,26 @@ export default {
       const directusRoomName = directusRoomNames[this.room];
       const response = await fetch(
         `https://data.campscapes.org/api/1.1/tables/source/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5&filters[room.name][eq]=${encodeURIComponent(
-          directusRoomName
-        )}&filters[narratives.heading_${
-          this.$i18n.locale === "nl" ? "dutch" : "english"
-        }][eq]=${this.narrative.title}`
+          directusRoomName,
+        )}&filters[narratives.heading_${this.$i18n.locale === 'nl' ? 'dutch' : 'english'}][eq]=${
+          this.narrative.title
+        }`,
       );
       const json = await response.json();
 
       const sourceData = {
         house: [],
         camp: [],
-        memory: []
+        memory: [],
       };
 
-      for (let source of json.data) {
-        if (["house", "camp", "memory"].includes(source.layer)) {
+      json.data.forEach((source) => {
+        if (['house', 'camp', 'memory'].includes(source.layer)) {
           sourceData[source.layer].push(source);
         } else {
           console.warn(`Source layer name: '${source.layer}' is not valid.`);
         }
-      }
+      });
 
       return sourceData;
     },
@@ -320,11 +330,11 @@ export default {
       this.sources.memory.media = this.parseMedia(sourceData.memory[0]);
 
       if (
-        (sourceData.house.length !== 0 ||
-          sourceData.camp.length !== 0 ||
-          sourceData.memory.length !== 0) &&
-        !this.$refs.infoBox.visible &&
-        this.step !== 7
+        (sourceData.house.length !== 0
+          || sourceData.camp.length !== 0
+          || sourceData.memory.length !== 0)
+        && !this.$refs.infoBox.visible
+        && this.step !== 7
       ) {
         this.$refs.infoBox.expand();
       }
@@ -338,12 +348,12 @@ export default {
     },
     parseContent(source) {
       if (!source) {
-        return "";
+        return '';
       }
 
-      if (this.$i18n.locale === "nl") {
+      if (this.$i18n.locale === 'nl') {
         const dutchSource = source.content.data.find(
-          sourceContentData => sourceContentData.language_code === "2"
+          (sourceContentData) => sourceContentData.language_code === '2',
         );
         if (dutchSource) {
           return dutchSource.description;
@@ -351,20 +361,20 @@ export default {
       }
 
       const englishSource = source.content.data.find(
-        sourceContentData => sourceContentData.language_code === "1"
+        (sourceContentData) => sourceContentData.language_code === '1',
       );
       if (englishSource) {
         return englishSource.description;
       }
 
-      return "";
+      return '';
     },
     parseMedia(source) {
-      if (!source) return "";
+      if (!source) return '';
 
-      let html = "";
+      let html = '';
       if (source.file !== null) {
-        if (source.file.data.type === "video/mp4") {
+        if (source.file.data.type === 'video/mp4') {
           html += `
             <video controls>
             <source src="https://data.campscapes.org/${source.file.data.url}" type="video/mp4">
@@ -372,11 +382,13 @@ export default {
             </video>
           `;
         } else if (
-          source.file.data.type === "image/jpeg" ||
-          source.file.data.type === "image/png"
+          source.file.data.type === 'image/jpeg'
+          || source.file.data.type === 'image/png'
         ) {
           html += `
-            <img src="https://data.campscapes.org/${source.file.data.url}" alt="${source.file.data.title}" >
+            <img src="https://data.campscapes.org/${
+              source.file.data.url
+            }" alt="${source.file.data.title}" >
           `;
         } else {
           console.warn(`File type: '${source.file.data.type}' not recognized.`);
@@ -385,29 +397,29 @@ export default {
       return html;
     },
     backToStart() {
-      location.reload();
-    }
-  }
+      window.location.reload();
+    },
+  },
 };
 </script>
 
 <style>
 @font-face {
-  font-family: "CamphorPro-Regular";
-  src: url("assets/fonts/CamphorPro-Regular.woff") format("woff");
+  font-family: 'CamphorPro-Regular';
+  src: url('assets/fonts/CamphorPro-Regular.woff') format('woff');
 }
 
 @font-face {
-  font-family: "CamphorPro-Italic";
-  src: url("assets/fonts/CamphorPro-Italic.woff") format("woff");
+  font-family: 'CamphorPro-Italic';
+  src: url('assets/fonts/CamphorPro-Italic.woff') format('woff');
 }
 
 @font-face {
-  font-family: "Flaco-Mono";
-  src: url("assets/fonts/Flaco-Mono.woff2") format("woff2"),
-    url("assets/fonts/Flaco-Mono.woff") format("woff"),
-    url("assets/fonts/Flaco-Mono.ttf") format("truetype"),
-    url("assets/fonts/Flaco-Mono.eot") format("eot");
+  font-family: 'Flaco-Mono';
+  src: url('assets/fonts/Flaco-Mono.woff2') format('woff2'),
+    url('assets/fonts/Flaco-Mono.woff') format('woff'),
+    url('assets/fonts/Flaco-Mono.ttf') format('truetype'),
+    url('assets/fonts/Flaco-Mono.eot') format('eot');
 }
 
 html {
@@ -415,7 +427,7 @@ html {
 }
 
 body {
-  font-family: "CamphorPro-Regular", sans-serif;
+  font-family: 'CamphorPro-Regular', sans-serif;
   margin: 0;
   overflow: hidden;
 }
@@ -424,7 +436,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: "Flaco-Mono", sans-serif;
+  font-family: 'Flaco-Mono', sans-serif;
 }
 
 #app {
@@ -520,11 +532,7 @@ h4 {
   left: 0;
   width: 30rem;
   height: 20rem;
-  background: linear-gradient(
-    to bottom right,
-    rgba(0, 0, 0, 0.9),
-    rgba(0, 0, 0, 0) 50%
-  );
+  background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0) 50%);
   pointer-events: none;
   z-index: 1;
 }

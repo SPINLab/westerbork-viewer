@@ -2,8 +2,8 @@
   <div id="progression-bar">
     <VueSlider
       ref="progressionSlider"
-      class="slider"
       v-model="step"
+      class="slider"
       v-bind="options"
       @change="moveToRoom"
     />
@@ -13,9 +13,15 @@
         :key="index"
         @click="onLabelClick(room)"
       >
-        <div v-show="room == step" class="highlight"></div>
-        <br />
-        <button v-show="room == step" class="selected">
+        <div
+          v-show="room == step"
+          class="highlight"
+        />
+        <br>
+        <button
+          v-show="room == step"
+          class="selected"
+        >
           <span>{{ $t(room) }}</span>
         </button>
         <button v-show="room != step">
@@ -27,116 +33,113 @@
 </template>
 
 <script>
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/default.css";
+import VueSlider from 'vue-slider-component';
+import 'vue-slider-component/theme/default.css';
 
 const rooms = [
-  "outside",
-  "hallway",
-  "diningRoom",
-  "livingRoom",
-  "sittingRoom",
-  "conservatory",
-  "kitchen",
-  "basement",
-  "gardenShed",
-  "bedroomGemmeker",
-  "bedroomObreen",
-  "guestroom1",
-  "guestroom2",
-  "bedroomHassel",
-  "bathroom",
-  "attic"
+  'outside',
+  'hallway',
+  'diningRoom',
+  'livingRoom',
+  'sittingRoom',
+  'conservatory',
+  'kitchen',
+  'basement',
+  'gardenShed',
+  'bedroomGemmeker',
+  'bedroomObreen',
+  'guestroom1',
+  'guestroom2',
+  'bedroomHassel',
+  'bathroom',
+  'attic',
 ];
 
 const markStyle = {
-  width: "1rem",
-  height: "1rem",
-  backgroundColor: "#C1C1C1",
-  display: "block",
-  transform: "translate(-0.25rem, -0.25rem)"
+  width: '1rem',
+  height: '1rem',
+  backgroundColor: '#C1C1C1',
+  display: 'block',
+  transform: 'translate(-0.25rem, -0.25rem)',
 };
 
-const marks = rooms.reduce(
-  (o, key) => ({ ...o, [key]: { style: markStyle } }),
-  {}
-);
+const marks = rooms.reduce((o, key) => ({ ...o, [key]: { style: markStyle } }), {});
 
 export default {
-  name: "ProgressionBar",
+  name: 'ProgressionBar',
   components: {
-    VueSlider
+    VueSlider,
   },
   data() {
     return {
-      step: "Outside",
-      rooms: rooms,
+      step: 'Outside',
+      rooms,
       enabled: false,
       percentAnimationDuration: 1000,
       options: {
-        data: [...rooms, "Attic"],
-        tooltip: "none",
-        marks: marks,
+        data: [...rooms, 'Attic'],
+        tooltip: 'none',
+        marks,
         lazy: true,
         dotSize: 22,
         dotStyle: {
-          backgroundColor: "#FFD27C",
-          transform: "translateX(2px)"
+          backgroundColor: '#FFD27C',
+          transform: 'translateX(2px)',
         },
         railStyle: {
-          backgroundColor: "#E5E5E5",
-          height: "0.5rem",
-          width: "99.8%"
+          backgroundColor: '#E5E5E5',
+          height: '0.5rem',
+          width: '99.8%',
         },
         processStyle: {
-          backgroundColor: "#FFFFFF"
+          backgroundColor: '#FFFFFF',
         },
         stepStyle: {
-          backgroundColor: "#C1C1C1",
-          visibility: "visible",
-          width: "0.9375rem",
-          height: "0.9375rem",
-          transform: "translate(-30%, -30%)",
-          cursor: "pointer"
+          backgroundColor: '#C1C1C1',
+          visibility: 'visible',
+          width: '0.9375rem',
+          height: '0.9375rem',
+          transform: 'translate(-30%, -30%)',
+          cursor: 'pointer',
         },
-        hideLabel: true
+        hideLabel: true,
       },
       stepLocations: new Map([
-        ["outside", 0],
-        ["hallway", 0.1029],
-        ["diningRoom", 0.1295],
-        ["livingRoom", 0.1578],
-        ["sittingRoom", 0.1943],
-        ["conservatory", 0.227],
-        ["kitchen", 0.3358],
-        ["basement", 0.385],
-        ["gardenShed", 0.465],
-        ["bedroomGemmeker", 0.6155],
-        ["bedroomObreen", 0.68],
-        ["guestroom1", 0.7376],
-        ["guestroom2", 0.7877],
-        ["bedroomHassel", 0.8538],
-        ["bathroom", 0.9167],
-        ["attic", 0.998]
+        ['outside', 0],
+        ['hallway', 0.1029],
+        ['diningRoom', 0.1295],
+        ['livingRoom', 0.1578],
+        ['sittingRoom', 0.1943],
+        ['conservatory', 0.227],
+        ['kitchen', 0.3358],
+        ['basement', 0.385],
+        ['gardenShed', 0.465],
+        ['bedroomGemmeker', 0.6155],
+        ['bedroomObreen', 0.68],
+        ['guestroom1', 0.7376],
+        ['guestroom2', 0.7877],
+        ['bedroomHassel', 0.8538],
+        ['bathroom', 0.9167],
+        ['attic', 0.998],
       ]),
-      stepEntranceLocations: new Map([
-        ["outside", 0],
-        ["hallway", 0.0878],
-        ["diningRoom", 0.1163],
-        ["livingRoom", 0.14],
-        ["sittingRoom", 0.1668],
-        ["conservatory", 0.2148],
-        ["kitchen", 0.325],
-        ["basement", 0.3774],
-        ["gardenShed", 0.4558],
-        ["bedroomGemmeker", 0.6043],
-        ["bedroomObreen", 0.6619],
-        ["guestroom1", 0.7232],
-        ["guestroom2", 0.7698],
-        ["bedroomHassel", 0.839],
-        ["bathroom", 0.9038],
-        ["attic", 0.9847]
-      ])
+      stepEntranceLocations: {
+        outside: 0,
+        hallway: 0.0878,
+        diningRoom: 0.1163,
+        livingRoom: 0.14,
+        sittingRoom: 0.1668,
+        conservatory: 0.2148,
+        kitchen: 0.325,
+        basement: 0.3774,
+        gardenShed: 0.4558,
+        bedroomGemmeker: 0.6043,
+        bedroomObreen: 0.6619,
+        guestroom1: 0.7232,
+        guestroom2: 0.7698,
+        bedroomHassel: 0.839,
+        bathroom: 0.9038,
+        attic: 0.9847,
+      },
     };
   },
   methods: {
@@ -147,18 +150,21 @@ export default {
     startProgression() {
       if (this.enabled === false) {
         setInterval(() => {
-          const position = this.$viewer.pathControls.position;
+          const { position } = this.$viewer.pathControls;
           let step;
-          for (let [stepName, stepPosition] of this.stepEntranceLocations) {
-            if (position >= stepPosition) {
-              step = stepName;
+          const entranceKeys = Object.keys(this.stepEntranceLocations);
+          const entranceValues = Object.values(this.stepEntranceLocations);
+          for (let i = 0; i < entranceValues.length; i += 1) {
+            if (position >= entranceValues[i]) {
+              step = entranceKeys[i];
             } else {
               break;
             }
           }
+
           if (step !== this.step) {
             this.step = step;
-            this.$emit("room-change", step);
+            this.$emit('room-change', step);
           }
         }, 10);
 
@@ -166,11 +172,11 @@ export default {
       }
     },
     lockView() {
-      this.$viewer.pathControls.lockViewToPath = "always";
+      this.$viewer.pathControls.lockViewToPath = 'always';
       this.$viewer.pathControls.userInputCancels = false;
     },
     unlockView() {
-      this.$viewer.pathControls.lockViewToPath = "moving";
+      this.$viewer.pathControls.lockViewToPath = 'moving';
       this.$viewer.pathControls.userInputCancels = true;
     },
     moveToRoom() {
@@ -179,30 +185,23 @@ export default {
       const percentDistance = Math.abs(currentLoc - stepLoc);
 
       if (percentDistance < 0.1) {
-        const animationDuration =
-          percentDistance * 100 * this.percentAnimationDuration;
+        const animationDuration = percentDistance * 100 * this.percentAnimationDuration;
 
         this.lockView();
-        this.$viewer.pathControls.moveTo(
-          stepLoc,
-          animationDuration,
-          this.unlockView
-        );
+        this.$viewer.pathControls.moveTo(stepLoc, animationDuration, this.unlockView);
       } else {
-        this.$viewer.renderArea.classList.add("warp");
+        this.$viewer.renderArea.classList.add('warp');
         setTimeout(() => {
-          this.$viewer.scene.view.direction = this.$viewer.pathControls.path.getTangentAt(
-            stepLoc
-          );
+          this.$viewer.scene.view.direction = this.$viewer.pathControls.path.getTangentAt(stepLoc);
           this.$viewer.pathControls.position = stepLoc;
-          this.$emit("room-change", this.step);
+          this.$emit('room-change', this.step);
           setTimeout(() => {
-            this.$viewer.renderArea.classList.remove("warp");
+            this.$viewer.renderArea.classList.remove('warp');
           }, 500);
         }, 500);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -260,7 +259,7 @@ export default {
   border: 0;
   background-color: unset;
   color: unset;
-  font-family: "Flaco-Mono", sans-serif;
+  font-family: 'Flaco-Mono', sans-serif;
   font-size: 0.875rem;
   cursor: unset;
   word-break: break-word;

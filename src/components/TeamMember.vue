@@ -8,21 +8,21 @@
 
 <script>
 export default {
-  name: "TeamMember",
+  name: 'TeamMember',
   props: {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     position: {
       type: String,
-      required: true
+      required: true,
     },
     organization: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 
@@ -33,7 +33,7 @@ export default {
 
 h4 {
   margin: 0.4rem 0;
-  font-family: "CamphorPro-Regular", sans-serif;
+  font-family: 'CamphorPro-Regular', sans-serif;
   font-size: 1.3125rem;
   font-weight: normal;
 }
