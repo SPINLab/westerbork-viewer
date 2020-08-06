@@ -166,7 +166,7 @@ export default {
         { name: 'AHN2', visible: true },
         { name: 'Commandantshuis', visible: true },
       ],
-      graphics: process.env.VUE_APP_MODE === 'onpremise' ? 'high' : 'medium',
+      graphics: 'medium',
       points: process.env.VUE_APP_MODE === 'onpremise' ? 7000000 : 5000000,
       narrative: { id: null, title: '', description: '' },
       narratives: [],
@@ -335,6 +335,7 @@ export default {
           || sourceData.memory.length !== 0)
         && !this.$refs.infoBox.visible
         && this.step !== 7
+        && this.step !== 8
       ) {
         this.$refs.infoBox.expand();
       }
