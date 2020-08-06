@@ -8,7 +8,7 @@
         <ZoomButton
           v-show="!cardsExpanded && visible"
           icon-color="#333333"
-          @click.native="openSource"
+          @click.native="openSource(activeLayer)"
         />
       </transition>
       <transition name="fade">
@@ -222,8 +222,8 @@ export default {
         this.visible = true;
       }
     },
-    openSource() {
-      this.$emit('open-source', this.activeLayer);
+    openSource(layer) {
+      this.$emit('open-source', layer);
     },
     onAnimationEnd(e) {
       if (e.target.classList.contains('card-collapse-2')) {
