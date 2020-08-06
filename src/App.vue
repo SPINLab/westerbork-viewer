@@ -337,8 +337,27 @@ export default {
       }
     },
     parseContent(source) {
-      // TODO: english/dutch version?
-      return source ? source.content.data[0].description : "";
+      if (!source) {
+        return "";
+      }
+
+      if (this.$i18n.locale === "nl") {
+        const dutchSource = source.content.data.find(
+          sourceContentData => sourceContentData.language_code === "2"
+        );
+        if (dutchSource) {
+          return dutchSource.description;
+        }
+      }
+
+      const englishSource = source.content.data.find(
+        sourceContentData => sourceContentData.language_code === "1"
+      );
+      if (englishSource) {
+        return englishSource.description;
+      }
+
+      return "";
     },
     parseMedia(source) {
       if (!source) return "";
