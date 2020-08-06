@@ -90,8 +90,8 @@ export default {
 
 .card {
   position: absolute;
-  top: 16%;
-  padding: 2rem 3rem 0rem 3rem;
+  top: 10%;
+  padding: 2rem 3rem;
   background-repeat: no-repeat;
   background-size: 100% 100%;
   overflow: hidden;
@@ -104,13 +104,11 @@ export default {
 
 .card-expanded {
   margin-top: 0;
-  top: 8%;
-  padding: 2rem 3rem;
 }
 
 .content {
   position: relative;
-  max-height: 40vh;
+  max-height: 45vh;
   overflow: hidden;
   margin-bottom: 0.1rem;
   padding-bottom: 1rem;

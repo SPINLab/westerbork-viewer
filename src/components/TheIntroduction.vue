@@ -166,6 +166,7 @@ export default {
           this.$viewer.pathControls.position = 0;
           this.$viewer.pathControls.lockViewToPath = "moving";
           this.$viewer.pathControls.userInputCancels = true;
+          this.$viewer.pathControls.rotationSpeed = 100;
           if (process.env.VUE_APP_MODE === "onpremise") {
             this.next();
             this.pickNarrative(this.narratives[0]);
@@ -251,6 +252,7 @@ export default {
       this.$viewer.pathControls.position = 0;
       this.$viewer.pathControls.lockViewToPath = "moving";
       this.$viewer.pathControls.userInputCancels = true;
+      this.$viewer.pathControls.rotationSpeed = 100;
       this.$viewer.scene.view.yaw = 1.485;
       this.$viewer.scene.view.pitch = 0;
       this.step = 6;

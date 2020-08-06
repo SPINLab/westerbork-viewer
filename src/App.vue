@@ -110,7 +110,7 @@ import NavigationButton from "./components/NavigationButton";
 import LanguageSwitchButton from "./components/LanguageSwitchButton";
 
 const directusRoomNames = {
-  outside: "",
+  outside: "Buiten",
   hallway: "1_Entrance/hallway",
   diningRoom: "2_Dining room",
   livingRoom: "3_Living room",
@@ -323,7 +323,8 @@ export default {
         (sourceData.house.length !== 0 ||
           sourceData.camp.length !== 0 ||
           sourceData.memory.length !== 0) &&
-        !this.$refs.infoBox.visible
+        !this.$refs.infoBox.visible &&
+        this.step !== 7
       ) {
         this.$refs.infoBox.expand();
       }
@@ -347,9 +348,7 @@ export default {
         if (source.file.data.type === "video/mp4") {
           html += `
             <video controls>
-            <source src="https://data.campscapes.org/${
-              source.file.data.url
-            }" type="video/mp4">
+            <source src="https://data.campscapes.org/${source.file.data.url}" type="video/mp4">
             Your browser does not support the video tag.
             </video>
           `;
@@ -358,9 +357,7 @@ export default {
           source.file.data.type === "image/png"
         ) {
           html += `
-            <img src="https://data.campscapes.org/${
-              source.file.data.url
-            }" alt="${source.file.data.title}" >
+            <img src="https://data.campscapes.org/${source.file.data.url}" alt="${source.file.data.title}" >
           `;
         } else {
           console.warn(`File type: '${source.file.data.type}' not recognized.`);

@@ -220,7 +220,7 @@ export default {
       }
     },
     openSource(layer) {
-      this.$emit("open-source", layer);
+      this.$emit("open-source", this.activeLayer);
     },
     onAnimationEnd(e) {
       if (e.target.classList.contains("card-collapse-2")) {

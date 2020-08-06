@@ -105,7 +105,8 @@ export default {
     this.$viewer.setNavigationMode(Potree.PathControls);
     this.$viewer.setMoveSpeed(2);
     this.$viewer.pathControls.setPath(pathOverview);
-    this.$viewer.pathControls.position = 0;
+    this.$viewer.pathControls.rotationSpeed = 50;
+    this.$viewer.pathControls.position = 0.2;
     this.$viewer.pathControls.loop = false;
     this.$viewer.pathControls.lockViewToPath = "moving";
     this.$viewer.scene.view.direction = this.$viewer.pathControls.path.getTangentAt(
@@ -149,6 +150,9 @@ export default {
       this.$viewer.scene.annotations.children = [];
       this.$viewer.scene.addAnnotation([236790, 548513, 69], {
         title: this.$t("commanderHouse")
+      });
+      this.$viewer.scene.addAnnotation([237079, 548442, 69], {
+        title: this.$t("campTerrain")
       });
     }
   }

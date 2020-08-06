@@ -25,7 +25,7 @@
               <TeamMember
                 name="Jitte Waagen"
                 position="Project Lead"
-                organization="4DLab"
+                organization="4D Research Lab"
               />
               <TeamMember
                 name="Rob van der Laarse"
@@ -55,7 +55,7 @@
               <TeamMember
                 name="Tijm Lanjouw"
                 position="3D Modeller"
-                organization="4DLab"
+                organization="4D Research Lab"
               />
               <TeamMember
                 name="Erik van Zummeren"
