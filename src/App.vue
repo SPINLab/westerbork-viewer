@@ -387,9 +387,7 @@ export default {
           || source.file.data.type === 'image/png'
         ) {
           html += `
-            <img src="https://data.campscapes.org/${
-              source.file.data.url
-            }" alt="${source.file.data.title}" >
+            <img src="https://data.campscapes.org/${source.file.data.url}" alt="${source.file.data.title}" >
           `;
         } else {
           console.warn(`File type: '${source.file.data.type}' not recognized.`);

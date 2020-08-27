@@ -17,100 +17,129 @@
             @click.native="close"
           />
         </header>
-        <div>
-          <section class="about">
-            <h3>{{ $t("aboutSubtitle") }}</h3>
-            <p>{{ $t("aboutText") }}</p>
-          </section>
-          <section class="team">
-            <h3>TEAM</h3>
-            <ul>
-              <TeamMember
-                name="Jitte Waagen"
-                position="Project Lead"
-                organization="4D Research Lab"
-              />
-              <TeamMember
-                name="Rob van der Laarse"
-                position="Coordinator"
-                organization="Universiteit van Amsterdam"
-              />
-              <TeamMember
-                name="Maurice de Kleijn"
-                position="Coordinator"
-                organization="SPINLab"
-              />
-              <TeamMember
-                name="Bas Kortholt"
-                position="Coordinator"
-                organization="Herinneringscentrum Westerbork"
-              />
-              <TeamMember
-                name="Dana Dolghin"
-                position="Content"
-                organization="Universiteit van Amsterdam"
-              />
-              <TeamMember
-                name="Chris Lucas"
-                position="Front-end & Data Processing"
-                organization="SPINLab"
-              />
-              <TeamMember
-                name="Tijm Lanjouw"
-                position="3D Modeller"
-                organization="4D Research Lab"
-              />
-              <TeamMember
-                name="Erik van Zummeren"
-                position="Design"
-                organization=" "
-              />
-              <TeamMember
-                name="Ivan Kisjes"
-                position="Server Management"
-                organization="Create"
-              />
-            </ul>
-          </section>
-          <section class="partners">
-            <h3>PROJECT PARTNERS</h3>
-            <ul>
-              <li>
+        <div class="columns">
+          <div
+            id="about-text-column"
+            class="column"
+          >
+            <section class="about">
+              <h3>{{ $t('aboutSubtitle') }}</h3>
+              <div v-html="$t('aboutText')" />
+              <div style="display: flex; align-items: center; margin-top: 2rem">
                 <img
-                  :src="require('../assets/logo_partners/uva.png')"
-                  alt="Universiteit van Amsterdam"
+                  :src="require('../assets/logo_partners/eu.png')"
+                  alt="EU"
+                  style="width: 100%; height: 100%; margin-right: 2rem"
                 >
-              </li>
-              <li>
-                <img
-                  :src="require('../assets/logo_partners/vu-spinlab-logo.png')"
-                  alt="Universiteit van Amsterdam"
-                >
-              </li>
-              <li>
-                <img
-                  :src="require('../assets/logo_partners/kampwesterbork.png')"
-                  alt="Herinneringscentrum Kamp Westerbork"
-                >
-              </li>
-              <li>
-                <img
-                  :src="require('../assets/logo_partners/hera.png')"
-                  alt="HERA"
-                >
-              </li>
-              <li>
-                <img
-                  :src="require('../assets/logo_partners/rotary.png')"
-                  alt="Rotary"
-                >
-              </li>
-            </ul>
-          </section>
-          <section class="software">
-            <h3>SOFTWARE</h3>
-            <p v-html="$t('softwareText')" />
-          </section>
+                <p>
+                  This project has received funding from the European Union's Horizon 2020 research
+                  and innovation programme, the Seventh Framework Programme for research,
+                  technological development and demonstration of the Sixth Framework for research
+                  and technological development
+                </p>
+              </div>
+            </section>
+          </div>
+          <div
+            id="other-column"
+            class="column"
+          >
+            <section class="team">
+              <h3>TEAM</h3>
+              <ul>
+                <TeamMember
+                  name="Jitte Waagen"
+                  position="Project Lead"
+                  organization="4D Research Lab"
+                />
+                <TeamMember
+                  name="Rob van der Laarse"
+                  position="Coordinator"
+                  organization="Universiteit van Amsterdam"
+                />
+                <TeamMember
+                  name="Maurice de Kleijn"
+                  position="Coordinator"
+                  organization="SPINLab"
+                />
+                <TeamMember
+                  name="Bas Kortholt"
+                  position="Coordinator"
+                  organization="Herinneringscentrum Westerbork"
+                />
+                <TeamMember
+                  name="Dana Dolghin"
+                  position="Content"
+                  organization="Universiteit van Amsterdam"
+                />
+                <TeamMember
+                  name="Chris Lucas"
+                  position="Front-end & Data Processing"
+                  organization="SPINLab"
+                />
+                <TeamMember
+                  name="Tijm Lanjouw"
+                  position="3D Modeller"
+                  organization="4D Research Lab"
+                />
+                <TeamMember
+                  name="Erik van Zummeren"
+                  position="Design"
+                  organization=" "
+                />
+                <TeamMember
+                  name="Ivan Kisjes"
+                  position="Server Management"
+                  organization="Create"
+                />
+              </ul>
+            </section>
+            <section class="partners">
+              <h3>PROJECT PARTNERS</h3>
+              <ul>
+                <li>
+                  <img
+                    :src="require('../assets/logo_partners/uva.png')"
+                    alt="Universiteit van Amsterdam"
+                  >
+                </li>
+                <li>
+                  <img
+                    :src="require('../assets/logo_partners/4dresearchlab.png')"
+                    alt="4D Research Lab"
+                  >
+                </li>
+                <li>
+                  <img
+                    :src="require('../assets/logo_partners/vu-spinlab-logo.png')"
+                    alt="Universiteit van Amsterdam"
+                  >
+                </li>
+                <li>
+                  <img
+                    :src="require('../assets/logo_partners/kampwesterbork.png')"
+                    alt="Herinneringscentrum Kamp Westerbork"
+                  >
+                </li>
+                <li>
+                  <img
+                    :src="require('../assets/logo_partners/hera.png')"
+                    alt="HERA"
+                  >
+                </li>
+                <li>
+                  <img
+                    :src="require('../assets/logo_partners/rotary.png')"
+                    alt="Rotary"
+                  >
+                </li>
+              </ul>
+            </section>
+            <section class="software">
+              <h3>SOFTWARE</h3>
+              <p v-html="$t('softwareText')" />
+            </section>
+          </div>
         </div>
       </div>
     </div>
@@ -159,6 +188,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 1.2rem;
 }
 
 .content {
@@ -180,14 +210,24 @@ header {
   margin-top: 1rem;
 }
 
+.columns {
+  display: flex;
+}
+
+#about-text-column {
+  max-width: 55%;
+}
+
+#other-column {
+  max-width: 45%;
+}
+
 section {
   margin-bottom: 3rem;
 }
 
-.about p {
-  column-count: 2;
-  column-width: 30rem;
-  font-size: 1.3125rem;
+.about {
+  padding-right: 6rem;
 }
 
 .team ul {
@@ -210,6 +250,14 @@ section {
 }
 
 .partners li {
-  padding: 1rem 8rem 1rem 0;
+  padding: 1rem 2rem 1rem 0;
+}
+
+.partners li > * {
+  max-height: 65px;
+}
+
+td {
+  margin: 1rem;
 }
 </style>

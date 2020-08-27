@@ -36,9 +36,11 @@ h4 {
   font-family: 'CamphorPro-Regular', sans-serif;
   font-size: 1.3125rem;
   font-weight: normal;
+  color: rgb(57, 57, 57);
 }
 
 p {
   margin: 0;
+  color: rgb(132, 132, 132);
 }
 </style>

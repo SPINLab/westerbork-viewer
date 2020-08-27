@@ -91,12 +91,9 @@ export default {
     this.$viewer.setPointBudget(this.numPoints);
 
     this.pointClouds.forEach((pc) => {
-      Potree.loadPointCloud(
-        `pointclouds/${pc.name.toLowerCase()}/ept.json`,
-        pc.name, (e) => {
-          this.onPointCloudLoaded(e.pointcloud, 0.65);
-        },
-      );
+      Potree.loadPointCloud(`pointclouds/${pc.name.toLowerCase()}/ept.json`, pc.name, (e) => {
+        this.onPointCloudLoaded(e.pointcloud, 0.65);
+      });
     });
 
     this.$viewer.setNavigationMode(Potree.PathControls);
