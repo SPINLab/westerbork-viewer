@@ -5,7 +5,7 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: ['airbnb-base', 'plugin:vue/essential', 'plugin:vue/recommended'],
+  extends: ['airbnb-base', 'plugin:vue/recommended', 'plugin:import/recommended'],
   rules: {
     'no-console':
       process.env.NODE_ENV === 'production' ? ['error', { allow: ['warn', 'error'] }] : 'off',
@@ -28,6 +28,6 @@ module.exports = {
     ],
   },
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@babel/eslint-parser',
   },
 };
