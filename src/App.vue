@@ -201,13 +201,12 @@ export default {
       const resetTimer = () => {
         lastActivity = new Date().getTime();
       };
-      document.onkeypress = resetTimer;
+      document.onkeydown = resetTimer;
       document.onmousemove = resetTimer;
       document.onmousedown = resetTimer;
       document.ontouchstart = resetTimer;
       document.onclick = resetTimer;
       document.onscroll = resetTimer;
-      document.onkeypress = resetTimer;
 
       setInterval(() => {
         if (new Date().getTime() - lastActivity >= 120000) {
