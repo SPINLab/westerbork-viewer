@@ -150,7 +150,7 @@ export default {
     startProgression() {
       if (this.enabled === false) {
         setInterval(() => {
-          const { position } = this.$viewer.pathControls;
+          const { position } = this.$viewer.controls;
           let step;
           const entranceKeys = Object.keys(this.stepEntranceLocations);
           const entranceValues = Object.values(this.stepEntranceLocations);
@@ -172,15 +172,15 @@ export default {
       }
     },
     lockView() {
-      this.$viewer.pathControls.lockViewToPath = 'always';
-      this.$viewer.pathControls.userInputCancels = false;
+      this.$viewer.controls.lockViewToPath = 'always';
+      this.$viewer.controls.userInputCancels = false;
     },
     unlockView() {
-      this.$viewer.pathControls.lockViewToPath = 'moving';
-      this.$viewer.pathControls.userInputCancels = true;
+      this.$viewer.controls.lockViewToPath = 'moving';
+      this.$viewer.controls.userInputCancels = true;
     },
     moveToRoom() {
-      const currentLoc = this.$viewer.pathControls.position;
+      const currentLoc = this.$viewer.controls.position;
       const stepLoc = this.stepLocations.get(this.step);
       const percentDistance = Math.abs(currentLoc - stepLoc);
 
@@ -188,12 +188,12 @@ export default {
         const animationDuration = percentDistance * 100 * this.percentAnimationDuration;
 
         this.lockView();
-        this.$viewer.pathControls.moveTo(stepLoc, animationDuration, this.unlockView);
+        this.$viewer.controls.moveTo(stepLoc, animationDuration, this.unlockView);
       } else {
         this.$viewer.renderArea.classList.add('warp');
         setTimeout(() => {
-          this.$viewer.scene.view.direction = this.$viewer.pathControls.path.getTangentAt(stepLoc);
-          this.$viewer.pathControls.position = stepLoc;
+          this.$viewer.scene.view.direction = this.$viewer.controls.path.getTangentAt(stepLoc);
+          this.$viewer.controls.position = stepLoc;
           this.$emit('room-change', this.step);
           setTimeout(() => {
             this.$viewer.renderArea.classList.remove('warp');

@@ -7,8 +7,7 @@ import Vue from 'vue';
 
 import { pathOverview } from './path';
 
-const { Potree } = window;
-const { THREE } = window;
+const { Potree, THREE } = window;
 
 export default {
   name: 'PotreeViewer',
@@ -96,15 +95,16 @@ export default {
       });
     });
 
-    this.$viewer.setNavigationMode(Potree.PathControls);
+    const controls = new Potree.PathControls(this.$viewer);
+    this.$viewer.setControls(controls);
     this.$viewer.setMoveSpeed(2);
-    this.$viewer.pathControls.setPath(pathOverview);
-    this.$viewer.pathControls.rotationSpeed = 50;
-    this.$viewer.pathControls.position = 0.2;
-    this.$viewer.pathControls.loop = false;
-    this.$viewer.pathControls.lockViewToPath = 'moving';
-    this.$viewer.scene.view.direction = this.$viewer.pathControls.path.getTangentAt(
-      this.$viewer.pathControls.position,
+    this.$viewer.controls.setPath(pathOverview);
+    this.$viewer.controls.rotationSpeed = 50;
+    this.$viewer.controls.position = 0.2;
+    this.$viewer.controls.loop = false;
+    this.$viewer.controls.lockViewToPath = 'moving';
+    this.$viewer.scene.view.direction = this.$viewer.controls.path.getTangentAt(
+      this.$viewer.controls.position,
     );
 
     this.createAnnotations();
