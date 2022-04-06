@@ -3,9 +3,9 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true,
+    node: true
   },
-  extends: ['airbnb-base', 'plugin:vue/recommended', 'plugin:import/recommended'],
+  extends: ['airbnb-base', 'plugin:vue/recommended', 'plugin:import/recommended', 'prettier'],
   rules: {
     'no-console':
       process.env.NODE_ENV === 'production' ? ['error', { allow: ['warn', 'error'] }] : 'off',
@@ -15,8 +15,8 @@ module.exports = {
       2,
       {
         SwitchCase: 1,
-        ignoredNodes: ['TemplateLiteral'],
-      },
+        ignoredNodes: ['TemplateLiteral']
+      }
     ],
     'template-curly-spacing': 0,
     'no-param-reassign': ['error', { props: false }],
@@ -24,10 +24,18 @@ module.exports = {
       2,
       100,
       2,
-      { ignorePattern: 'd="([\\s\\S]*?)"', ignoreStrings: true, ignoreTemplateLiterals: true },
-    ],
+      { ignorePattern: 'd="([\\s\\S]*?)"', ignoreStrings: true, ignoreTemplateLiterals: true }
+    ]
   },
   parserOptions: {
-    parser: '@babel/eslint-parser',
+    parser: '@babel/eslint-parser'
   },
+  overrides: [
+    {
+      files: ['*.html'],
+      rules: {
+        'vue/comment-directive': 'off'
+      }
+    }
+  ]
 };
