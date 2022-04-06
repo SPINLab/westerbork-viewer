@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
     "build:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service build --dest dist-on-premise",
-    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
-    "serve:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service serve"
+    "lint": "vue-cli-service lint",
+    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "potree": "github:chrislcs/potree#westerbork",
+    "potree": "github:chrislcs/potree#westerbork-2",
     "shepherd.js": "^9.0.0",
     "vue": "^2.6.14",
     "vue-i18n": "^8.27.1",

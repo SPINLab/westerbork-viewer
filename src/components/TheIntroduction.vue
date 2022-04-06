@@ -167,12 +167,12 @@ export default {
           this.gridColor = '#FFD27C';
           break;
         case 6:
-          this.$viewer.pathControls.setPath(pathHouse);
+          this.$viewer.controls.setPath(pathHouse);
           this.$viewer.setMoveSpeed(2);
-          this.$viewer.pathControls.position = 0;
-          this.$viewer.pathControls.lockViewToPath = 'moving';
-          this.$viewer.pathControls.userInputCancels = true;
-          this.$viewer.pathControls.rotationSpeed = 100;
+          this.$viewer.controls.position = 0;
+          this.$viewer.controls.lockViewToPath = 'moving';
+          this.$viewer.controls.userInputCancels = true;
+          this.$viewer.controls.rotationSpeed = 100;
           if (process.env.VUE_APP_MODE === 'onpremise') {
             this.next();
             this.pickNarrative(this.narratives[0]);
@@ -200,9 +200,9 @@ export default {
       this.$i18n.locale = this.$i18n.locale === 'nl' ? 'en' : 'nl';
     },
     flyToHouse() {
-      this.$viewer.pathControls.lockViewToPath = 'always';
-      this.$viewer.pathControls.userInputCancels = false;
-      this.$viewer.pathControls.moveTo(1, 20000, () => {
+      this.$viewer.controls.lockViewToPath = 'always';
+      this.$viewer.controls.userInputCancels = false;
+      this.$viewer.controls.moveTo(1, 20000, () => {
         const ahn2pc = this.$viewer.scene.pointclouds.filter((v) => v.name === 'AHN2')[0];
         const t = setInterval(() => {
           ahn2pc.material.size -= 0.005;
@@ -210,7 +210,7 @@ export default {
             clearInterval(t);
             this.$emit('hide-point-cloud', 'AHN2');
             ahn2pc.material.size = 0.65;
-            this.$viewer.pathControls.lockViewToPath = 'moving';
+            this.$viewer.controls.lockViewToPath = 'moving';
             this.next();
           }
         }, 8);
@@ -238,17 +238,17 @@ export default {
       this.intros = [...this.intros, ...introTexts];
     },
     skip() {
-      if (this.$viewer.pathControls.tweens[0]) {
-        this.$viewer.pathControls.tweens[0].stop();
+      if (this.$viewer.controls.tweens[0]) {
+        this.$viewer.controls.tweens[0].stop();
       }
       this.$emit('hide-point-cloud', 'AHN2');
       this.$viewer.scene.annotations.children = [];
-      this.$viewer.pathControls.setPath(pathHouse);
+      this.$viewer.controls.setPath(pathHouse);
       this.$viewer.setMoveSpeed(2);
-      this.$viewer.pathControls.position = 0;
-      this.$viewer.pathControls.lockViewToPath = 'moving';
-      this.$viewer.pathControls.userInputCancels = true;
-      this.$viewer.pathControls.rotationSpeed = 100;
+      this.$viewer.controls.position = 0;
+      this.$viewer.controls.lockViewToPath = 'moving';
+      this.$viewer.controls.userInputCancels = true;
+      this.$viewer.controls.rotationSpeed = 100;
       this.$viewer.scene.view.yaw = 1.485;
       this.$viewer.scene.view.pitch = 0;
       this.step = 6;
