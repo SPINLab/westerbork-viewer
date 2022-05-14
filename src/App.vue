@@ -23,10 +23,7 @@
     />
 
     <div v-show="step >= 8">
-      <div
-        v-if="appMode !== 'onpremise'"
-        class="options-buttons"
-      >
+      <div v-if="appMode !== 'onpremise'" class="options-buttons">
         <div class="settings-menu-container">
           <OptionsButton
             id="settings-button"
@@ -58,10 +55,7 @@
           :narratives="narratives"
           @narrative-change="changeNarrative"
         />
-        <ProgressionBar
-          ref="progression"
-          @room-change="changeRoom"
-        />
+        <ProgressionBar ref="progression" @room-change="changeRoom" />
         <div id="bottom-fade" />
       </div>
 
@@ -86,10 +80,7 @@
         :sources="sources"
       />
 
-      <AboutPage
-        v-if="appMode !== 'onpremise'"
-        ref="aboutPage"
-      />
+      <AboutPage v-if="appMode !== 'onpremise'" ref="aboutPage" />
 
       <NavigationButton
         v-if="appMode === 'onpremise'"
@@ -121,6 +112,7 @@ import SourcePage from './components/SourcePage.vue';
 import MiniMap from './components/MiniMap.vue';
 import NavigationButton from './components/NavigationButton.vue';
 import LanguageSwitchButton from './components/LanguageSwitchButton.vue';
+import { getSessionUuid, getSessionTime } from './session';
 
 const directusRoomNames = {
   outside: 'Buiten',
@@ -196,6 +188,8 @@ export default {
       await this.setNarratives();
       this.parseContents(this.sourceData);
     });
+    this.validateSession();
+
     if (process.env.VUE_APP_MODE === 'onpremise') {
       let lastActivity = new Date().getTime();
       const resetTimer = () => {
@@ -216,6 +210,28 @@ export default {
     }
   },
   methods: {
+    validateSession() {
+      let interactivityCounter = 0;
+      const increaseInteractivity = () => {
+        interactivityCounter += 1;
+        if (interactivityCounter >= 2) {
+          const sessiodId = getSessionUuid();
+          if (sessiodId) {
+            navigator.sendBeacon(
+              'http://localhost:3000/v1/sessions',
+              JSON.stringify({
+                id: getSessionUuid(),
+                valid: true,
+              }),
+            );
+            document.removeEventListener('touchstart', increaseInteractivity);
+            document.removeEventListener('click', increaseInteractivity);
+          }
+        }
+      };
+      document.addEventListener('touchstart', increaseInteractivity);
+      document.addEventListener('click', increaseInteractivity);
+    },
     switchLanguage() {
       this.$i18n.locale = this.$i18n.locale === 'nl' ? 'en' : 'nl';
     },
@@ -255,7 +271,9 @@ export default {
         };
       });
       if (this.narrative.id) {
-        this.narrative = this.narratives.find((narrative) => narrative.id === this.narrative.id);
+        this.narrative = this.narratives.find(
+          (narrative) => narrative.id === this.narrative.id,
+        );
       }
     },
     async getNarratives() {
@@ -299,9 +317,9 @@ export default {
       const response = await fetch(
         `https://data.campscapes.org/api/1.1/tables/source/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5&filters[room.name][eq]=${encodeURIComponent(
           directusRoomName,
-        )}&filters[narratives.heading_${this.$i18n.locale === 'nl' ? 'dutch' : 'english'}][eq]=${
-          this.narrative.title
-        }`,
+        )}&filters[narratives.heading_${
+          this.$i18n.locale === 'nl' ? 'dutch' : 'english'
+        }][eq]=${this.narrative.title}`,
       );
       const json = await response.json();
 
@@ -329,12 +347,12 @@ export default {
       this.sources.memory.media = this.parseMedia(sourceData.memory[0]);
 
       if (
-        (sourceData.house.length !== 0
-          || sourceData.camp.length !== 0
-          || sourceData.memory.length !== 0)
-        && !this.$refs.infoBox.visible
-        && this.step !== 7
-        && this.step !== 8
+        (sourceData.house.length !== 0 ||
+          sourceData.camp.length !== 0 ||
+          sourceData.memory.length !== 0) &&
+        !this.$refs.infoBox.visible &&
+        this.step !== 7 &&
+        this.step !== 8
       ) {
         this.$refs.infoBox.expand();
       }
@@ -382,8 +400,8 @@ export default {
             </video>
           `;
         } else if (
-          source.file.data.type === 'image/jpeg'
-          || source.file.data.type === 'image/png'
+          source.file.data.type === 'image/jpeg' ||
+          source.file.data.type === 'image/png'
         ) {
           html += `
             <img src="https://data.campscapes.org/${source.file.data.url}" alt="${source.file.data.title}" >
@@ -530,7 +548,11 @@ h4 {
   left: 0;
   width: 30rem;
   height: 20rem;
-  background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0) 50%);
+  background: linear-gradient(
+    to bottom right,
+    rgba(0, 0, 0, 0.9),
+    rgba(0, 0, 0, 0) 50%
+  );
   pointer-events: none;
   z-index: 1;
 }
