@@ -3,20 +3,27 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
   },
-  extends: ['airbnb-base', 'plugin:vue/recommended', 'plugin:import/recommended', 'prettier'],
+  extends: [
+    'airbnb-base',
+    'plugin:vue/recommended',
+    'plugin:import/recommended',
+    'prettier',
+  ],
   rules: {
     'no-console':
-      process.env.NODE_ENV === 'production' ? ['error', { allow: ['warn', 'error'] }] : 'off',
+      process.env.NODE_ENV === 'production'
+        ? ['error', { allow: ['warn', 'error'] }]
+        : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     indent: [
       'error',
       2,
       {
         SwitchCase: 1,
-        ignoredNodes: ['TemplateLiteral']
-      }
+        ignoredNodes: ['TemplateLiteral'],
+      },
     ],
     'template-curly-spacing': 0,
     'no-param-reassign': ['error', { props: false }],
@@ -24,18 +31,23 @@ module.exports = {
       2,
       100,
       2,
-      { ignorePattern: 'd="([\\s\\S]*?)"', ignoreStrings: true, ignoreTemplateLiterals: true }
-    ]
+      {
+        ignorePattern: 'd="([\\s\\S]*?)"',
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+      },
+    ],
+    'import/prefer-default-export': 0,
   },
   parserOptions: {
-    parser: '@babel/eslint-parser'
+    parser: '@babel/eslint-parser',
   },
   overrides: [
     {
       files: ['*.html'],
       rules: {
-        'vue/comment-directive': 'off'
-      }
-    }
-  ]
+        'vue/comment-directive': 'off',
+      },
+    },
+  ],
 };
