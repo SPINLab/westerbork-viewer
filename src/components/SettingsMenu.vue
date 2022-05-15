@@ -1,20 +1,9 @@
 <template>
   <transition name="fade">
-    <div
-      v-show="menuOpen"
-      id="settings-menu"
-      ref="menu"
-      class="menu"
-    >
+    <div v-show="menuOpen" id="settings-menu" ref="menu" class="menu">
       <SettingsMenuLanguage />
-      <SettingsMenuGraphics
-        :graphics="graphics"
-        @change="onGraphicsChange"
-      />
-      <SettingsMenuPoints
-        :points="points"
-        @change="onPointsChange"
-      />
+      <SettingsMenuGraphics />
+      <SettingsMenuPoints />
     </div>
   </transition>
 </template>
@@ -31,22 +20,6 @@ export default {
     SettingsMenuPoints,
     SettingsMenuLanguage,
   },
-  props: {
-    graphics: {
-      type: String,
-      required: true,
-      validator(value) {
-        return ['low', 'medium', 'high'].includes(value);
-      },
-    },
-    points: {
-      type: Number,
-      required: true,
-      validator(value) {
-        return value >= 200000 && value <= 10000000;
-      },
-    },
-  },
   data() {
     return {
       menuOpen: false,
@@ -62,17 +35,11 @@ export default {
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
     },
-    onGraphicsChange(graphics) {
-      this.$emit('graphics-change', graphics);
-    },
-    onPointsChange(points) {
-      this.$emit('points-change', points);
-    },
     documentClick(e) {
       if (
-        !this.$el.parentElement.contains(e.target)
-        && !e.target.classList.contains('shepherd-button')
-        && !e.target.classList.contains('shepherd-modal-target')
+        !this.$el.parentElement.contains(e.target) &&
+        !e.target.classList.contains('shepherd-button') &&
+        !e.target.classList.contains('shepherd-modal-target')
       ) {
         if (this.menuOpen) this.menuOpen = false;
       }

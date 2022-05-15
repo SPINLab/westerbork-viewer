@@ -1,14 +1,12 @@
 <template>
   <div class="narrative-card">
-    <h3>{{ narrativeQuestion }}</h3>
-    <NavigationButton
-      :title="$t('continue')"
-      @click.native="nextStep"
-    />
+    <h3>{{ narrative.question }}</h3>
+    <NavigationButton :title="$t('continue')" @click.native="nextStep" />
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import NavigationButton from './NavigationButton.vue';
 
 export default {
@@ -16,15 +14,12 @@ export default {
   components: {
     NavigationButton,
   },
-  props: {
-    narrativeQuestion: {
-      type: String,
-      required: true,
-    },
+  computed: {
+    ...mapGetters(['narrative']),
   },
   methods: {
     nextStep() {
-      this.$emit('next-step');
+      this.$store.dispatch('nextStep');
     },
   },
 };

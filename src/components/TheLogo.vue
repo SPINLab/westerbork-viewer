@@ -8,7 +8,7 @@
       x="0px"
       y="0px"
       viewBox="0 0 266.09 40"
-      style="enable-background: new 0 0 266.09 40;"
+      style="enable-background: new 0 0 266.09 40"
       xml:space="preserve"
     >
       <g transform="translate(-1.7 0.5)">
@@ -153,14 +153,16 @@
         />
       </g>
     </svg>
-    <span v-if="appMode === 'onpremise'">
+    <span v-if="onPremiseMode">
       A collaberation between 4D Research Lab (UvA) and SPINLab (VU)
     </span>
-    <span v-if="appMode === 'onpremise'">Powered by Potree</span>
+    <span v-if="onPremiseMode">Powered by Potree</span>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'TheLogo',
   props: {
@@ -177,10 +179,8 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      appMode: process.env.VUE_APP_MODE,
-    };
+  computed: {
+    ...mapState(['onPremiseMode']),
   },
 };
 </script>

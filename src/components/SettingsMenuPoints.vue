@@ -1,16 +1,10 @@
 <template>
-  <div
-    id="points-settings"
-    class="menu-item"
-  >
+  <div id="points-settings" class="menu-item">
     <h4>{{ $t('points').toUpperCase() }}</h4>
-    <div
-      id="points-slider"
-      class="slider"
-    >
+    <div id="points-slider" class="slider">
       <vue-slider
         ref="pointsSlider"
-        :value="points"
+        :value="numPoints"
         v-bind="pointsOptions"
         @change="onChange"
       />
@@ -19,6 +13,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/default.css';
 
@@ -27,31 +22,13 @@ export default {
   components: {
     VueSlider,
   },
-  props: {
-    points: {
-      type: Number,
-      required: true,
-      validator(value) {
-        return value >= 200000 && value <= 10000000;
-      },
-    },
-  },
   data() {
     return {
       pointsOptions: {
         adsorb: true,
         data: [
-          200000,
-          1000000,
-          2000000,
-          3000000,
-          4000000,
-          5000000,
-          6000000,
-          7000000,
-          8000000,
-          9000000,
-          10000000,
+          200000, 1000000, 2000000, 3000000, 4000000, 5000000, 6000000, 7000000,
+          8000000, 9000000, 10000000,
         ],
         tooltip: 'always',
         tooltipPlacement: 'bottom',
@@ -73,9 +50,12 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState(['numPoints']),
+  },
   methods: {
-    onChange(e) {
-      this.$emit('change', e);
+    onChange(numPoints) {
+      this.$store.dispatch('setNumPoints', numPoints);
     },
   },
 };

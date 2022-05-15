@@ -8,57 +8,30 @@
     }"
     @animationend="onAnimationEnd"
   >
-    <div
-      v-show="!expanded && active"
-      class="nav-card-buttons"
-    >
-      <button
-        :class="{ active: isHouse }"
-        @click="switchCard('house')"
-      >
-        {{ $t("house").toUpperCase() }}
+    <div v-show="!expanded && active" class="nav-card-buttons">
+      <button :class="{ active: isHouse }" @click="switchCard('house')">
+        {{ $t('house').toUpperCase() }}
       </button>
-      <button
-        :class="{ active: isCamp }"
-        @click="switchCard('camp')"
-      >
-        {{ $t("camp").toUpperCase() }}
+      <button :class="{ active: isCamp }" @click="switchCard('camp')">
+        {{ $t('camp').toUpperCase() }}
       </button>
-      <button
-        :class="{ active: isMemory }"
-        @click="switchCard('memory')"
-      >
-        {{ $t("memory").toUpperCase() }}
+      <button :class="{ active: isMemory }" @click="switchCard('memory')">
+        {{ $t('memory').toUpperCase() }}
       </button>
     </div>
-    <div
-      v-show="expanded"
-      class="nav-card-buttons"
-    >
-      <button
-        v-show="isHouse"
-        class="active"
-      >
-        {{ $t("house").toUpperCase() }}
+    <div v-show="expanded" class="nav-card-buttons">
+      <button v-show="isHouse" class="active">
+        {{ $t('house').toUpperCase() }}
       </button>
-      <button
-        v-show="isCamp"
-        class="active"
-      >
-        {{ $t("camp").toUpperCase() }}
+      <button v-show="isCamp" class="active">
+        {{ $t('camp').toUpperCase() }}
       </button>
-      <button
-        v-show="isMemory"
-        class="active"
-      >
-        {{ $t("memory").toUpperCase() }}
+      <button v-show="isMemory" class="active">
+        {{ $t('memory').toUpperCase() }}
       </button>
     </div>
     <div class="card-text">
-      <div
-        class="content"
-        v-html="content"
-      />
+      <div class="content" v-html="content" />
       <div
         :class="{
           fade: true,
@@ -71,7 +44,7 @@
     <ReadFurtherButton
       v-show="
         (!expanded && active && content.length > 100) ||
-          (expanded && content.length > 100)
+        (expanded && content.length > 100)
       "
       @click.native="openSource"
     />
@@ -79,6 +52,7 @@
 </template>
 
 <script>
+import { EventBus } from '../event-bus';
 import ReadFurtherButton from './ReadFurtherButton.vue';
 
 export default {
@@ -139,7 +113,7 @@ export default {
   methods: {
     switchCard(card) {
       if (card !== this.layer) {
-        this.$emit('change-card', card);
+        this.$store.dispatch('setLayer', card);
       }
     },
     flipCard() {
@@ -149,7 +123,7 @@ export default {
       this.$el.classList.remove('flip-card');
     },
     openSource() {
-      this.$emit('open-source', this.layer);
+      EventBus.$emit('open-source-page');
     },
   },
 };
@@ -167,15 +141,15 @@ export default {
 }
 
 .card-black {
-  background-image: url("../assets/background_images/blackpaper.png");
+  background-image: url('../assets/background_images/blackpaper.png');
   color: #ffffff;
 }
 .card-pink {
-  background-image: url("../assets/background_images/pinkpaper.png");
+  background-image: url('../assets/background_images/pinkpaper.png');
   color: #ffffff;
 }
 .card-white {
-  background-image: url("../assets/background_images/whitepaper.png");
+  background-image: url('../assets/background_images/whitepaper.png');
   color: #575757;
 }
 
@@ -192,7 +166,7 @@ export default {
   border: 0;
   background-color: unset;
   cursor: pointer;
-  font-family: "Flaco-Mono", sans-serif;
+  font-family: 'Flaco-Mono', sans-serif;
 }
 
 /* Card black */

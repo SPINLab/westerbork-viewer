@@ -8,31 +8,28 @@
         <ZoomButton
           v-show="!cardsExpanded && visible"
           icon-color="#333333"
-          @click.native="openSource(activeLayer)"
+          @click.native="openSource()"
         />
       </transition>
       <transition name="fade">
-        <div
-          ref="media"
-          class="media-container"
-        >
+        <div ref="media" class="media-container">
           <transition name="fade">
             <div
-              v-show="!cardsExpanded && activeLayer === 'house'"
+              v-show="!cardsExpanded && layer === 'house'"
               class="media"
               v-html="houseMedia || ''"
             />
           </transition>
           <transition name="fade">
             <div
-              v-show="!cardsExpanded && activeLayer === 'camp'"
+              v-show="!cardsExpanded && layer === 'camp'"
               class="media"
               v-html="campMedia"
             />
           </transition>
           <transition name="fade">
             <div
-              v-show="!cardsExpanded && activeLayer === 'memory'"
+              v-show="!cardsExpanded && layer === 'memory'"
               class="media"
               v-html="memoryMedia"
             />
@@ -73,8 +70,6 @@
           :active="cardOrder.indexOf('house') === 0"
           :expanded="cardsExpanded"
           :style="{ 'z-index': houseIndex, 'margin-top': houseOffset }"
-          @change-card="switchCard"
-          @open-source="openSource"
         />
         <InfoBoxCard
           ref="camp"
@@ -88,8 +83,6 @@
             'card-collapse-1': !cardsCollapsed,
           }"
           :style="{ 'z-index': campIndex, 'margin-top': campOffset }"
-          @change-card="switchCard"
-          @open-source="openSource"
           @animationend.native="onAnimationEnd"
         />
         <InfoBoxCard
@@ -108,8 +101,6 @@
             'margin-top': memoryOffset,
             'margin-left': '-0.4rem',
           }"
-          @change-card="switchCard"
-          @open-source="openSource"
           @animationend.native="onAnimationEnd"
         />
       </div>
@@ -118,9 +109,12 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+
 import InfoBoxCard from './InfoBoxCard.vue';
 import ExpandCollapseButton from './ExpandCollapseButton.vue';
 import ZoomButton from './ZoomButton.vue';
+import { EventBus } from '../event-bus';
 
 export default {
   name: 'InfoBox',
@@ -128,38 +122,6 @@ export default {
     InfoBoxCard,
     ExpandCollapseButton,
     ZoomButton,
-  },
-  props: {
-    houseMedia: {
-      type: String,
-      required: false,
-      default: '',
-    },
-    houseContent: {
-      type: String,
-      required: false,
-      default: '',
-    },
-    campMedia: {
-      type: String,
-      required: false,
-      default: '',
-    },
-    campContent: {
-      type: String,
-      required: false,
-      default: '',
-    },
-    memoryMedia: {
-      type: String,
-      required: false,
-      default: '',
-    },
-    memoryContent: {
-      type: String,
-      required: false,
-      default: '',
-    },
   },
   data() {
     return {
@@ -170,6 +132,15 @@ export default {
     };
   },
   computed: {
+    ...mapState(['layer']),
+    ...mapGetters([
+      'houseMedia',
+      'campMedia',
+      'memoryMedia',
+      'houseContent',
+      'campContent',
+      'memoryContent',
+    ]),
     houseIndex() {
       return 5 - this.cardOrder.indexOf('house');
     },
@@ -180,33 +151,30 @@ export default {
       return 5 - this.cardOrder.indexOf('memory');
     },
     houseOffset() {
-      return `${this.cardOrder.indexOf('house') * 1.3 }rem`;
+      return `${this.cardOrder.indexOf('house') * 1.3}rem`;
     },
     campOffset() {
-      return `${this.cardOrder.indexOf('camp') * 1.3 }rem`;
+      return `${this.cardOrder.indexOf('camp') * 1.3}rem`;
     },
     memoryOffset() {
-      return `${this.cardOrder.indexOf('memory') * 1.3 }rem`;
-    },
-    activeLayer() {
-      return this.cardOrder[0];
+      return `${this.cardOrder.indexOf('memory') * 1.3}rem`;
     },
   },
-  methods: {
-    switchCard(card) {
-      this.cardOrder.splice(this.cardOrder.indexOf(card), 1);
-      this.cardOrder.unshift(card);
-      this.$refs[card].flipCard();
+  watch: {
+    layer() {
+      this.cardOrder.splice(this.cardOrder.indexOf(this.layer), 1);
+      this.cardOrder.unshift(this.layer);
+      this.$refs[this.layer].flipCard();
 
-      this.$refs.media.children.forEach((element) => {
+      [...this.$refs.media.children].forEach((element) => {
         const mediaElement = element.children[0];
         if (mediaElement && mediaElement.nodeName === 'VIDEO') {
           mediaElement.pause();
         }
       });
-
-      this.$emit('layer-change', card);
     },
+  },
+  methods: {
     collapse() {
       if (this.cardsExpanded) {
         this.cardsExpanded = false;
@@ -222,8 +190,8 @@ export default {
         this.visible = true;
       }
     },
-    openSource(layer) {
-      this.$emit('open-source', layer);
+    openSource() {
+      EventBus.$emit('open-source-page');
     },
     onAnimationEnd(e) {
       if (e.target.classList.contains('card-collapse-2')) {

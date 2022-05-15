@@ -27,7 +27,6 @@
   "minimapHint": "This map will show you where in the house you are.",
   "narrativeButtonHint": "To change the current narrative you can press this button. This will open a selection menu.",
   "narrativeSelectionHint": "In this menu you can choose the narrative.",
-  "progressBarHint": "This bar shows the progression through the tour of the house. You can jump forwards and backwards by clicking on a room.",
   "expandInfoButtonHint": "By clicking this button the information panel will become visible.",
   "infoBoxHint": "In this panel information will be shown according to the current narrative and room.",
   "controlsHint": "You can move backwards and forwards by pressing ' &uarr; ' (or 'W') and ' &darr; ' (or 'S') buttons. You can look around by clicking and holding the left mouse button and moving the cursor around.",

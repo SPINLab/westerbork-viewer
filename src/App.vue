@@ -6,27 +6,12 @@
       subtitle-color="#FFFFFF"
       line-color="#FFFFFF"
     />
-    <PotreeViewer
-      ref="PotreeViewer"
-      :graphics="graphics"
-      :num-points="points"
-      :point-clouds="pointClouds"
-    />
+    <PotreeViewer ref="PotreeViewer" />
 
-    <TheIntroduction
-      :narratives="narratives"
-      @next-step="nextStep"
-      @hide-point-cloud="hidePointCloud"
-      @narrative-picked="changeNarrative"
-      @start-progression="startProgression"
-      @skip-intro="skipIntro"
-    />
+    <TheIntroduction />
 
     <div v-show="step >= 8">
-      <div
-        v-if="appMode !== 'onpremise'"
-        class="options-buttons"
-      >
+      <div v-if="!onPremiseMode" class="options-buttons">
         <div class="settings-menu-container">
           <OptionsButton
             id="settings-button"
@@ -34,14 +19,7 @@
             icon="settings"
             @click.native="toggleSettingsMenu"
           />
-          <SettingsMenu
-            id="settings-menu"
-            ref="settingsMenu"
-            :graphics="graphics"
-            :points="points"
-            @graphics-change="onGraphicsChange"
-            @points-change="onPointsChange"
-          />
+          <SettingsMenu id="settings-menu" ref="settingsMenu" />
         </div>
         <OptionsButton
           id="about-page-button"
@@ -51,55 +29,28 @@
         />
       </div>
 
-      <div class="narrative-progression-container">
-        <NarrativeSelector
-          v-if="appMode !== 'onpremise'"
-          :narrative="narrative"
-          :narratives="narratives"
-          @narrative-change="changeNarrative"
-        />
-        <ProgressionBar
-          ref="progression"
-          @room-change="changeRoom"
-        />
+      <div class="narrative-container">
+        <NarrativeSelector v-if="!onPremiseMode" />
         <div id="bottom-fade" />
       </div>
 
-      <InfoBox
-        ref="infoBox"
-        :house-media="sources.house.media"
-        :house-content="sources.house.content"
-        :camp-media="sources.camp.media"
-        :camp-content="sources.camp.content"
-        :memory-media="sources.memory.media"
-        :memory-content="sources.memory.content"
-        @layer-change="changeLayer"
-        @open-source="openSourcePage"
-      />
+      <InfoBox ref="infoBox" />
 
       <MiniMap />
 
-      <SourcePage
-        ref="sourcePage"
-        :narrative="narrative"
-        :room="room"
-        :sources="sources"
-      />
+      <SourcePage ref="sourcePage" />
 
-      <AboutPage
-        v-if="appMode !== 'onpremise'"
-        ref="aboutPage"
-      />
+      <AboutPage v-if="!onPremiseMode" ref="aboutPage" />
 
       <NavigationButton
-        v-if="appMode === 'onpremise'"
+        v-if="onPremiseMode"
         class="to-start-button"
         :title="$t('toStartText')"
         @click.native="backToStart"
       />
 
       <LanguageSwitchButton
-        v-if="appMode === 'onpremise'"
+        v-if="onPremiseMode"
         id="language-switch"
         @click.native="switchLanguage"
       />
@@ -108,38 +59,20 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+
 import TheLogo from './components/TheLogo.vue';
 import PotreeViewer from './components/PotreeViewer.vue';
 import TheIntroduction from './components/TheIntroduction.vue';
 import SettingsMenu from './components/SettingsMenu.vue';
 import AboutPage from './components/AboutPage.vue';
 import OptionsButton from './components/OptionsButton.vue';
-import ProgressionBar from './components/ProgressionBar.vue';
 import NarrativeSelector from './components/NarrativeSelector.vue';
 import InfoBox from './components/InfoBox.vue';
 import SourcePage from './components/SourcePage.vue';
 import MiniMap from './components/MiniMap.vue';
 import NavigationButton from './components/NavigationButton.vue';
 import LanguageSwitchButton from './components/LanguageSwitchButton.vue';
-
-const directusRoomNames = {
-  outside: 'Buiten',
-  hallway: '1_Entrance/hallway',
-  diningRoom: '2_Dining room',
-  livingRoom: '3_Living room',
-  sittingRoom: '4_sitting room',
-  conservatory: '5_conservatory',
-  kitchen: '6_Kitchen',
-  basement: '7_Basement',
-  gardenShed: '8_Garden shed',
-  bedroomGemmeker: '9_Bedroom Gemmeker',
-  bedroomObreen: '10_Bedroom Speck Obreen',
-  guestroom1: '11_Guestroom1',
-  guestroom2: '12_Guestroom2',
-  bedroomHassel: '13_Bedroom Elisabeth Hassel',
-  bathroom: '14_Bathroom',
-  attic: '15_Attic',
-};
 
 export default {
   name: 'App',
@@ -150,7 +83,6 @@ export default {
     SettingsMenu,
     AboutPage,
     OptionsButton,
-    ProgressionBar,
     NarrativeSelector,
     InfoBox,
     SourcePage,
@@ -158,45 +90,33 @@ export default {
     NavigationButton,
     LanguageSwitchButton,
   },
-  data() {
-    return {
-      appMode: process.env.VUE_APP_MODE,
-      step: 0,
-      pointClouds: [
-        { name: 'AHN2', visible: true },
-        { name: 'Commandantshuis', visible: true },
-      ],
-      graphics: 'medium',
-      points: process.env.VUE_APP_MODE === 'onpremise' ? 7000000 : 5000000,
-      narrative: { id: null, title: '', description: '' },
-      narratives: [],
-      room: 'outside',
-      layer: 'house',
-      sources: {
-        house: {
-          media: '',
-          content: '',
-        },
-        camp: {
-          media: '',
-          content: '',
-        },
-        memory: {
-          media: '',
-          content: '',
-        },
-      },
-      sourceData: null,
-      narrativesData: null,
-    };
+  computed: {
+    ...mapState([
+      'onPremiseMode',
+      'step',
+      'selectedNarrative',
+      'room',
+      'sources',
+    ]),
+    ...mapGetters(['narrative']),
+  },
+  watch: {
+    async selectedNarrative() {
+      this.updateSourceData();
+    },
+    async room() {
+      this.updateSourceData();
+    },
   },
   mounted() {
-    this.setNarratives();
+    this.$store.dispatch('setNarratives', this.$i18n.locale);
+
     this.$watch('$i18n.locale', async () => {
-      await this.setNarratives();
-      this.parseContents(this.sourceData);
+      await this.$store.dispatch('setNarratives', this.$i18n.locale);
+      this.updateSourceData();
     });
-    if (process.env.VUE_APP_MODE === 'onpremise') {
+
+    if (this.onPremiseMode) {
       let lastActivity = new Date().getTime();
       const resetTimer = () => {
         lastActivity = new Date().getTime();
@@ -210,7 +130,7 @@ export default {
 
       setInterval(() => {
         if (new Date().getTime() - lastActivity >= 120000) {
-          window.location.reload();
+          this.backToStart();
         }
       }, 1000);
     }
@@ -219,180 +139,30 @@ export default {
     switchLanguage() {
       this.$i18n.locale = this.$i18n.locale === 'nl' ? 'en' : 'nl';
     },
-    onGraphicsChange(graphics) {
-      this.graphics = graphics;
-    },
-    onPointsChange(points) {
-      this.points = points;
-    },
-    nextStep() {
-      this.step += 1;
-    },
-    startProgression() {
-      this.$refs.progression.startProgression();
-    },
-    skipIntro() {
-      this.step = 6;
-    },
-    async setNarratives() {
-      if (!this.narrativesData) {
-        await this.getNarratives();
-      }
-      this.narratives = this.narrativesData.map((v) => {
-        if (this.$i18n.locale === 'nl') {
-          return {
-            id: v.sort_number,
-            title: v.heading_dutch,
-            question: v.question_dutch,
-            description: v.summary_dutch,
-          };
-        }
-        return {
-          id: v.sort_number,
-          title: v.heading_english,
-          question: v.question_english,
-          description: v.summary_english,
-        };
-      });
-      if (this.narrative.id) {
-        this.narrative = this.narratives.find((narrative) => narrative.id === this.narrative.id);
-      }
-    },
-    async getNarratives() {
-      const response = await fetch(
-        'https://data.campscapes.org/api/1.1/tables/wch_intro_texts_narratives/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5',
-      );
-      const json = await response.json();
-      let { data } = json;
-      data = data.filter((v) => v.sort_number !== null);
-      data = data.sort((a, b) => a.sort_number - b.sort_number);
-      this.narrativesData = data;
-    },
-    hidePointCloud(pcName) {
-      const pc = this.pointClouds.filter((v) => v.name === pcName)[0];
-      if (pc) pc.visible = false;
-    },
     toggleSettingsMenu() {
       this.$refs.settingsMenu.toggleMenu();
     },
     openAboutPage() {
       this.$refs.aboutPage.open();
     },
-    async changeNarrative(narrative) {
-      this.narrative = narrative;
-      this.sourceData = await this.getSourceData();
-      this.parseSourceData(this.sourceData);
-    },
-    async changeRoom(room) {
-      this.room = room;
-      this.sourceData = await this.getSourceData();
-      this.parseSourceData(this.sourceData);
-    },
-    changeLayer(layer) {
-      this.layer = layer;
-    },
-    openSourcePage(layer) {
-      this.$refs.sourcePage.open(layer);
-    },
-    async getSourceData() {
-      const directusRoomName = directusRoomNames[this.room];
-      const response = await fetch(
-        `https://data.campscapes.org/api/1.1/tables/source/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5&filters[room.name][eq]=${encodeURIComponent(
-          directusRoomName,
-        )}&filters[narratives.heading_${this.$i18n.locale === 'nl' ? 'dutch' : 'english'}][eq]=${
-          this.narrative.title
-        }`,
+    async updateSourceData() {
+      await this.$store.dispatch(
+        'updateSourceData',
+        this.$i18n.locale === 'nl' ? 'dutch' : 'english',
       );
-      const json = await response.json();
-
-      const sourceData = {
-        house: [],
-        camp: [],
-        memory: [],
-      };
-
-      json.data.forEach((source) => {
-        if (['house', 'camp', 'memory'].includes(source.layer)) {
-          sourceData[source.layer].push(source);
-        } else {
-          console.warn(`Source layer name: '${source.layer}' is not valid.`);
-        }
-      });
-
-      return sourceData;
-    },
-    parseSourceData(sourceData) {
-      this.parseContents(sourceData);
-
-      this.sources.house.media = this.parseMedia(sourceData.house[0]);
-      this.sources.camp.media = this.parseMedia(sourceData.camp[0]);
-      this.sources.memory.media = this.parseMedia(sourceData.memory[0]);
-
       if (
-        (sourceData.house.length !== 0
-          || sourceData.camp.length !== 0
-          || sourceData.memory.length !== 0)
-        && !this.$refs.infoBox.visible
-        && this.step !== 7
-        && this.step !== 8
+        (this.sources.house.content ||
+          this.sources.house.media ||
+          this.sources.camp.content ||
+          this.sources.camp.media ||
+          this.sources.memory.content ||
+          this.sources.memory.media) &&
+        !this.$refs.infoBox.visible &&
+        this.step !== 7 &&
+        this.step !== 8
       ) {
         this.$refs.infoBox.expand();
       }
-    },
-    parseContents(sourceData) {
-      if (sourceData) {
-        this.sources.house.content = this.parseContent(sourceData.house[0]);
-        this.sources.camp.content = this.parseContent(sourceData.camp[0]);
-        this.sources.memory.content = this.parseContent(sourceData.memory[0]);
-      }
-    },
-    parseContent(source) {
-      if (!source) {
-        return '';
-      }
-
-      if (this.$i18n.locale === 'nl') {
-        const dutchSource = source.content.data.find(
-          (sourceContentData) => sourceContentData.language_code === '2',
-        );
-        if (dutchSource) {
-          return dutchSource.description;
-        }
-      }
-
-      const englishSource = source.content.data.find(
-        (sourceContentData) => sourceContentData.language_code === '1',
-      );
-      if (englishSource) {
-        return englishSource.description;
-      }
-
-      return '';
-    },
-    parseMedia(source) {
-      if (!source) return '';
-
-      let html = '';
-      if (source.file !== null) {
-        if (source.file.data.type === 'video/mp4') {
-          html += `
-            <video controls>
-            <source src="https://data.campscapes.org/${source.file.data.url}" type="video/mp4">
-            Your browser does not support the video tag.
-            </video>
-          `;
-        } else if (
-          source.file.data.type === 'image/jpeg'
-          || source.file.data.type === 'image/png'
-        ) {
-          html += `
-            <img src="https://data.campscapes.org/${source.file.data.url}" alt="${source.file.data.title}" >
-          `;
-        } else {
-          console.warn(`File type: '${source.file.data.type}' not recognized.`);
-        }
-      }
-      return html;
     },
     backToStart() {
       window.location.reload();
@@ -503,7 +273,7 @@ h4 {
   max-height: 2.5rem;
 }
 
-.narrative-progression-container {
+.narrative-container {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -530,7 +300,11 @@ h4 {
   left: 0;
   width: 30rem;
   height: 20rem;
-  background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0) 50%);
+  background: linear-gradient(
+    to bottom right,
+    rgba(0, 0, 0, 0.9),
+    rgba(0, 0, 0, 0) 50%
+  );
   pointer-events: none;
   z-index: 1;
 }
@@ -545,7 +319,7 @@ h4 {
 }
 
 @media only screen and (max-width: 1400px) {
-  .narrative-progression-container {
+  .narrative-container {
     flex-wrap: wrap;
   }
 }

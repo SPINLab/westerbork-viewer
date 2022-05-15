@@ -24,10 +24,7 @@
       />
     </transition>
     <transition name="fade">
-      <div
-        v-if="step === 2"
-        class="hint-text"
-      >
+      <div v-if="step === 2" class="hint-text">
         {{ $t('lookAroundHint') }}
       </div>
     </transition>
@@ -70,24 +67,13 @@
       </div>
     </transition>
     <transition name="fade">
-      <NarrativeCardSelector
-        v-if="step === 6"
-        :narratives="narratives"
-        @narrative-picked="pickNarrative"
-      />
+      <NarrativeCardSelector v-if="step === 6" />
     </transition>
     <transition name="fade">
-      <NarrativeIntroCard
-        v-if="step === 7"
-        :narrative-question="pickedNarrativeQuestion"
-        @next-step="next"
-      />
+      <NarrativeIntroCard v-if="step === 7" />
     </transition>
     <transition name="fade">
-      <div
-        v-show="[0, 1, 2, 4, 5, 6, 7].includes(step)"
-        class="fade"
-      />
+      <div v-show="[0, 1, 2, 4, 5, 6, 7].includes(step)" class="fade" />
     </transition>
     <AppTour ref="tour" />
     <NavigationButton
@@ -100,6 +86,8 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+
 import TheGrid from './TheGrid.vue';
 import IntroductionCard from './IntroductionCard.vue';
 import NavigationButton from './NavigationButton.vue';
@@ -107,8 +95,10 @@ import AltNavigationButton from './AltNavigationButton.vue';
 import NarrativeCardSelector from './NarrativeCardSelector.vue';
 import NarrativeIntroCard from './NarrativeIntroCard.vue';
 import AppTour from './AppTour.vue';
+import { pointClouds } from './PotreeViewer.vue';
+import { EventBus } from '../event-bus';
 
-import { pathHouse } from './path';
+const { Potree } = window;
 
 export default {
   name: 'TheIntroduction',
@@ -121,29 +111,27 @@ export default {
     NarrativeIntroCard,
     AppTour,
   },
-  props: {
-    narratives: {
-      type: Array,
-      required: true,
-    },
-  },
   data() {
     return {
-      appMode: process.env.VUE_APP_MODE,
-      step: 0,
       gridColor: '#000000',
       intros: [
         {
           heading: 'appIntroHeading',
-          text: process.env.VUE_APP_MODE === 'onpremise' ? 'appIntroTextShort' : 'appIntroText',
+          text: this.onPremiseMode ? 'appIntroTextShort' : 'appIntroText',
         },
       ],
-      pickedNarrativeQuestion: {},
     };
   },
   computed: {
+    ...mapState(['onPremiseMode', 'step', 'narratives']),
+    ...mapGetters(['narrative']),
     language() {
       return this.$i18n.locale === 'nl' ? 'dutch' : 'english';
+    },
+  },
+  watch: {
+    step() {
+      this.doStep();
     },
   },
   mounted() {
@@ -151,9 +139,9 @@ export default {
   },
   methods: {
     next() {
-      this.step += 1;
-      this.$emit('next-step');
-
+      this.$store.dispatch('nextStep');
+    },
+    doStep() {
       switch (this.step) {
         case 2:
           this.$viewer.controls.lockPosition = true;
@@ -167,22 +155,17 @@ export default {
           this.gridColor = '#FFD27C';
           break;
         case 6:
-          this.$viewer.controls.setPath(pathHouse);
-          this.$viewer.setMoveSpeed(2);
-          this.$viewer.controls.position = 0;
-          this.$viewer.controls.lockViewToPath = 'moving';
-          this.$viewer.controls.userInputCancels = true;
-          this.$viewer.controls.rotationSpeed = 100;
-          if (process.env.VUE_APP_MODE === 'onpremise') {
-            this.next();
-            this.pickNarrative(this.narratives[0]);
+          this.setStartPositionAndControls();
+          if (this.onPremiseMode) {
+            this.$store.dispatch('setNarrative', this.narratives[0].id);
+            this.$store.dispatch('nextStep');
           }
           break;
         case 8:
           this.$refs.grid.$el.style = 'z-index: 3;';
           this.gridColor = '#000000';
           this.$refs.tour.tour.on('complete', () => {
-            this.next();
+            this.$store.dispatch('nextStep');
           });
           this.$nextTick(() => {
             this.$refs.tour.tour.start();
@@ -190,7 +173,6 @@ export default {
           break;
         case 9:
           this.$refs.grid.$el.style = 'z-index: unset;';
-          this.$emit('start-progression');
           break;
         default:
           break;
@@ -203,23 +185,23 @@ export default {
       this.$viewer.controls.lockViewToPath = 'always';
       this.$viewer.controls.userInputCancels = false;
       this.$viewer.controls.moveTo(1, 20000, () => {
-        const ahn2pc = this.$viewer.scene.pointclouds.filter((v) => v.name === 'AHN2')[0];
+        const surroundingsPointCloud = this.$viewer.scene.pointclouds.find(
+          (v) => v.name === pointClouds.surroundings,
+        );
         const t = setInterval(() => {
-          ahn2pc.material.size -= 0.005;
-          if (ahn2pc.material.size < 0.002) {
+          surroundingsPointCloud.material.size -= 0.005;
+          if (surroundingsPointCloud.material.size < 0.002) {
             clearInterval(t);
-            this.$emit('hide-point-cloud', 'AHN2');
-            ahn2pc.material.size = 0.65;
+            EventBus.$emit('set-point-cloud-visibility', {
+              pointcloud: pointClouds.surroundings,
+              visible: false,
+            });
+            surroundingsPointCloud.material.size = 0.65;
             this.$viewer.controls.lockViewToPath = 'moving';
-            this.next();
+            this.$store.dispatch('nextStep');
           }
         }, 8);
       });
-    },
-    pickNarrative(narrative) {
-      this.pickedNarrativeQuestion = narrative.question;
-      this.next();
-      this.$emit('narrative-picked', narrative);
     },
     async getIntroTexts() {
       const response = await fetch(
@@ -227,35 +209,47 @@ export default {
       );
       const json = await response.json();
       const { data } = json;
-      let introTexts = data.filter((v) => v.order_in_app !== null && v.order_in_app !== 0);
+      let introTexts = data.filter(
+        (v) => v.order_in_app !== null && v.order_in_app !== 0,
+      );
       introTexts = introTexts.sort((a, b) => a.order_in_app - b.order_in_app);
 
       introTexts.forEach((intro) => {
-        intro.summary_dutch = intro.summary_dutch.replace(/(?:\r\n|\r|\n)/g, '<br>');
-        intro.summary_english = intro.summary_english.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        intro.summary_dutch = intro.summary_dutch.replace(
+          /(?:\r\n|\r|\n)/g,
+          '<br>',
+        );
+        intro.summary_english = intro.summary_english.replace(
+          /(?:\r\n|\r|\n)/g,
+          '<br>',
+        );
       });
 
       this.intros = [...this.intros, ...introTexts];
+    },
+    setStartPositionAndControls() {
+      // TODO: disable double click to move
+      this.$viewer.setControls(new Potree.FirstPersonControls(this.$viewer));
+      this.$viewer.setMoveSpeed(0);
+      this.$viewer.controls.rotationSpeed = 100;
+      this.$viewer.scene.view.yaw = 1.485;
+      this.$viewer.scene.view.pitch = 0;
+      this.$store.dispatch('setWaypoint', 'outside');
     },
     skip() {
       if (this.$viewer.controls.tweens[0]) {
         this.$viewer.controls.tweens[0].stop();
       }
-      this.$emit('hide-point-cloud', 'AHN2');
+      EventBus.$emit('set-point-cloud-visibility', {
+        pointcloud: pointClouds.surroundings,
+        visible: false,
+      });
       this.$viewer.scene.annotations.children = [];
-      this.$viewer.controls.setPath(pathHouse);
-      this.$viewer.setMoveSpeed(2);
-      this.$viewer.controls.position = 0;
-      this.$viewer.controls.lockViewToPath = 'moving';
-      this.$viewer.controls.userInputCancels = true;
-      this.$viewer.controls.rotationSpeed = 100;
-      this.$viewer.scene.view.yaw = 1.485;
-      this.$viewer.scene.view.pitch = 0;
-      this.step = 6;
-      this.$emit('skip-intro');
-      if (process.env.VUE_APP_MODE === 'onpremise') {
-        this.next();
-        this.pickNarrative(this.narratives[0]);
+      this.setStartPositionAndControls();
+      this.$store.dispatch('setStep', 6);
+      if (this.onPremiseMode) {
+        this.$store.dispatch('setNarrative', this.narratives[0].id);
+        this.$store.dispatch('nextStep');
       }
     },
   },

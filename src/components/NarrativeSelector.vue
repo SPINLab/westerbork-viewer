@@ -1,25 +1,16 @@
 <template>
   <div id="narrative-selector">
     <div class="selected-narrative-container">
-      <button
-        id="narrative-selection-button"
-        @click="toggleNarrativeSelection"
-      >
+      <button id="narrative-selection-button" @click="toggleNarrativeSelection">
         <NarrativeSelectorIcon color="#ffffff" />
       </button>
-      <div
-        ref="selectedNarrative"
-        class="selected-narrative"
-      >
+      <div v-if="narrative" ref="selectedNarrative" class="selected-narrative">
         <span ref="selectedNarrativeText">
-          <b> {{ narrative.id || 0 }} </b>
+          <b> {{ narrative.id }} </b>
         </span>
       </div>
     </div>
-    <ol
-      ref="narrativeSelection"
-      class="narrative-selection"
-    >
+    <ol ref="narrativeSelection" class="narrative-selection">
       <li
         v-for="narrativeItem in narratives.slice().reverse()"
         :key="narrativeItem.id"
@@ -28,7 +19,8 @@
       >
         <button
           :class="{
-            'narrative-item-highlight': narrativeItem.id === narrative.id
+            'narrative-item-highlight':
+              narrative != null && narrativeItem.id === narrative.id,
           }"
         >
           {{ narrativeItem.id }}. {{ narrativeItem.title }}
@@ -39,6 +31,7 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import NarrativeSelectorIcon from './NarrativeSelectorIcon.vue';
 
 export default {
@@ -46,21 +39,15 @@ export default {
   components: {
     NarrativeSelectorIcon,
   },
-  props: {
-    narrative: {
-      type: Object,
-      required: true,
-    },
-    narratives: {
-      type: Array,
-      required: true,
-    },
-  },
   data() {
     return {
       narrativeSelectionOpen: false,
       narrativeSelectionOpening: false,
     };
+  },
+  computed: {
+    ...mapState(['narratives']),
+    ...mapGetters(['narrative']),
   },
   created() {
     document.addEventListener('click', this.documentClick);
@@ -79,10 +66,6 @@ export default {
       }
     },
     toggleNarrativeSelection() {
-      this.$refs.narrativeSelection.style.pointerEvents = this.narrativeSelectionOpen
-        ? 'none'
-        : 'auto';
-
       if (!this.narrativeSelectionOpening) {
         this.narrativeSelectionOpening = true;
         let i = this.narrativeSelectionOpen ? 0 : this.narratives.length - 1;
@@ -99,13 +82,17 @@ export default {
       }
     },
     selectNarrative(narrative) {
-      this.$emit('narrative-change', narrative);
+      this.$store.dispatch('setNarrative', narrative.id);
 
       this.toggleNarrativeSelection();
 
-      this.$refs.selectedNarrativeText.classList.add('narrative-icon-grow-shrink');
+      this.$refs.selectedNarrativeText.classList.add(
+        'narrative-icon-grow-shrink',
+      );
       setTimeout(() => {
-        this.$refs.selectedNarrativeText.classList.remove('narrative-icon-grow-shrink');
+        this.$refs.selectedNarrativeText.classList.remove(
+          'narrative-icon-grow-shrink',
+        );
       }, 300);
     },
     documentClick(e) {
@@ -120,11 +107,15 @@ export default {
 </script>
 
 <style scoped>
+button {
+  pointer-events: auto;
+}
+
 #narrative-selector {
-  width: 10vw;
   z-index: 1;
   display: flex;
   flex-direction: column-reverse;
+  pointer-events: none;
 }
 
 #narrative-selector:focus {
@@ -135,7 +126,7 @@ export default {
   display: flex;
   align-items: center;
   margin: 2rem;
-  pointer-events: auto;
+  margin-top: 0;
 }
 
 #narrative-selection-button {

@@ -1,14 +1,8 @@
 <template>
-  <div
-    id="graphics-settings"
-    class="menu-item"
-  >
+  <div id="graphics-settings" class="menu-item">
     <h4>GRAPHICS</h4>
     <div class="radio-select">
-      <label
-        class="radio-label"
-        :class="{ selected: graphics === 'low' }"
-      >
+      <label class="radio-label" :class="{ selected: graphics === 'low' }">
         <input
           id="low"
           class="radio-input"
@@ -16,13 +10,10 @@
           value="low"
           name="graphics"
           @change="onChange"
-        >
+        />
         {{ $t('low') }}
       </label>
-      <label
-        class="radio-label"
-        :class="{ selected: graphics === 'medium' }"
-      >
+      <label class="radio-label" :class="{ selected: graphics === 'medium' }">
         <input
           id="medium"
           class="radio-input"
@@ -30,13 +21,10 @@
           value="medium"
           name="graphics"
           @change="onChange"
-        >
+        />
         {{ $t('medium') }}
       </label>
-      <label
-        class="radio-label"
-        :class="{ selected: graphics === 'high' }"
-      >
+      <label class="radio-label" :class="{ selected: graphics === 'high' }">
         <input
           id="high"
           class="radio-input"
@@ -44,7 +32,7 @@
           value="high"
           name="graphics"
           @change="onChange"
-        >
+        />
         {{ $t('high') }}
       </label>
     </div>
@@ -52,20 +40,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'SettingsMenuGraphics',
-  props: {
-    graphics: {
-      type: String,
-      required: true,
-      validator(value) {
-        return ['low', 'medium', 'high'].includes(value);
-      },
-    },
+  computed: {
+    ...mapState(['graphics']),
   },
   methods: {
     onChange(e) {
-      this.$emit('change', e.target.value);
+      this.$store.dispatch('setGraphics', e.target.value);
     },
   },
 };

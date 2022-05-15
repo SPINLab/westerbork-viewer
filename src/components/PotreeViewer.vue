@@ -4,115 +4,57 @@
 
 <script>
 import Vue from 'vue';
+import { mapState } from 'vuex';
 
-import { pathOverview } from './path';
+import { EventBus } from '../event-bus';
+import pathOverview from './path';
 
 const { Potree, THREE } = window;
 
+export const pointClouds = {
+  surroundings: 'AHN2',
+  house: 'Commandantshuis',
+};
+
 export default {
   name: 'PotreeViewer',
-  props: {
-    graphics: {
-      type: String,
-      required: false,
-      default: 'medium',
-      validator(value) {
-        return ['low', 'medium', 'high'].includes(value);
-      },
-    },
-    numPoints: {
-      type: Number,
-      required: false,
-      default: 6000000,
-      validator(value) {
-        return value > 0 && value < 50000000;
-      },
-    },
-    pointClouds: {
-      type: Array,
-      required: true,
-    },
+  computed: {
+    ...mapState(['step', 'graphics', 'numPoints', 'waypoint']),
   },
   watch: {
-    graphics(value) {
-      switch (value) {
-        case 'low':
-          this.$viewer.useEDL = false;
-          this.$viewer.useHQ = false;
-          break;
-        case 'medium':
-          this.$viewer.useEDL = true;
-          this.$viewer.useHQ = false;
-          break;
-        case 'high':
-          this.$viewer.useEDL = true;
-          this.$viewer.useHQ = true;
-          break;
-        default:
-          break;
-      }
+    graphics() {
+      this.updateGraphics(this.graphics);
     },
-    numPoints(value) {
-      this.$viewer.setPointBudget(value);
-    },
-    pointClouds: {
-      handler(pointClouds) {
-        pointClouds.forEach((pc) => {
-          const pcPotree = this.$viewer.scene.pointclouds.filter((v) => v.name === pc.name)[0];
-          if (pcPotree) pcPotree.visible = pc.visible;
-        });
-      },
-      deep: true,
+    numPoints() {
+      this.updateNumPoints(this.numPoints);
     },
   },
   mounted() {
     Vue.prototype.$viewer = new Potree.Viewer(this.$el);
     this.$viewer.setFOV(80);
     this.$viewer.setBackground('skybox');
-
-    switch (this.graphics) {
-      case 'low':
-        this.$viewer.useEDL = false;
-        this.$viewer.useHQ = false;
-        break;
-      case 'medium':
-        this.$viewer.useEDL = true;
-        this.$viewer.useHQ = false;
-        break;
-      case 'high':
-        this.$viewer.useEDL = true;
-        this.$viewer.useHQ = true;
-        break;
-      default:
-        break;
-    }
-
-    this.$viewer.setPointBudget(this.numPoints);
-
-    this.pointClouds.forEach((pc) => {
-      Potree.loadPointCloud(`pointclouds/${pc.name.toLowerCase()}/ept.json`, pc.name, (e) => {
-        this.onPointCloudLoaded(e.pointcloud, 0.65);
-      });
-    });
-
-    const controls = new Potree.PathControls(this.$viewer);
-    this.$viewer.setControls(controls);
-    this.$viewer.setMoveSpeed(2);
-    this.$viewer.controls.setPath(pathOverview);
-    this.$viewer.controls.rotationSpeed = 50;
-    this.$viewer.controls.position = 0.2;
-    this.$viewer.controls.loop = false;
-    this.$viewer.controls.lockViewToPath = 'moving';
-    this.$viewer.scene.view.direction = this.$viewer.controls.path.getTangentAt(
-      this.$viewer.controls.position,
-    );
-
-    this.createAnnotations();
-    this.$watch('$i18n.locale', () => {
-      this.createAnnotations();
-    });
+    this.updateGraphics(this.graphics);
+    this.updateNumPoints(this.numPoints);
+    this.loadPointClouds();
+    this.setIntroPathControls();
+    this.initAnnotations();
+    EventBus.$on('set-point-cloud-visibility', this.setPointCloudVisibility);
+  },
+  destroyed() {
+    EventBus.$off('set-point-cloud-visibility', this.setPointCloudVisibility);
   },
   methods: {
+    loadPointClouds() {
+      Object.values(pointClouds).forEach((pointCloudName) => {
+        Potree.loadPointCloud(
+          `https://data.campscapes.org/westerbork/pointclouds/${pointCloudName.toLowerCase()}/ept.json`,
+          pointCloudName,
+          (event) => {
+            this.onPointCloudLoaded(event.pointcloud, 0.65);
+          },
+        );
+      });
+    },
     onPointCloudLoaded(pointcloud, size) {
       this.$viewer.scene.addPointCloud(pointcloud);
 
@@ -140,6 +82,24 @@ export default {
         this.$viewer.scene.scene.add(meshPlane);
       }
     },
+    setIntroPathControls() {
+      const controls = new Potree.PathControls(this.$viewer);
+      this.$viewer.setControls(controls);
+      this.$viewer.setMoveSpeed(2);
+      this.$viewer.controls.setPath(pathOverview);
+      this.$viewer.controls.rotationSpeed = 50;
+      this.$viewer.controls.position = 0.2;
+      this.$viewer.controls.loop = false;
+      this.$viewer.controls.lockViewToPath = 'moving';
+      this.$viewer.scene.view.direction =
+        this.$viewer.controls.path.getTangentAt(this.$viewer.controls.position);
+    },
+    initAnnotations() {
+      this.createAnnotations();
+      this.$watch('$i18n.locale', () => {
+        this.createAnnotations();
+      });
+    },
     createAnnotations() {
       this.$viewer.scene.annotations.children = [];
       this.$viewer.scene.addAnnotation([236790, 548513, 69], {
@@ -148,6 +108,33 @@ export default {
       this.$viewer.scene.addAnnotation([237079, 548442, 69], {
         title: this.$t('campTerrain'),
       });
+    },
+    setPointCloudVisibility({ pointcloud, visible }) {
+      const potreePointCloud = this.$viewer.scene.pointclouds.find(
+        (p) => p.name === pointcloud,
+      );
+      if (potreePointCloud) potreePointCloud.visible = visible;
+    },
+    updateGraphics(graphics) {
+      switch (graphics) {
+        case 'low':
+          this.$viewer.useEDL = false;
+          this.$viewer.useHQ = false;
+          break;
+        case 'medium':
+          this.$viewer.useEDL = true;
+          this.$viewer.useHQ = false;
+          break;
+        case 'high':
+          this.$viewer.useEDL = true;
+          this.$viewer.useHQ = true;
+          break;
+        default:
+          break;
+      }
+    },
+    updateNumPoints(numPoints) {
+      this.$viewer.setPointBudget(numPoints);
     },
   },
 };

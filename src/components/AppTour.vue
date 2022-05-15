@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Shepherd from 'shepherd.js';
 
 export default {
@@ -11,6 +12,9 @@ export default {
     return {
       tour: null,
     };
+  },
+  computed: {
+    ...mapState(['onPremiseMode']),
   },
   mounted() {
     this.createTour();
@@ -38,7 +42,7 @@ export default {
         action: this.tour.complete,
       };
 
-      if (process.env.VUE_APP_MODE !== 'onpremise') {
+      if (!this.onPremiseMode) {
         this.tour.addStep({
           id: 'settings-button',
           attachTo: { element: '#settings-button', on: 'right' },
@@ -82,7 +86,7 @@ export default {
         buttons: [skipButton, nextButton],
         beforeShowPromise() {
           return new Promise((resolve) => {
-            if (process.env.VUE_APP_MODE === 'onpremise') {
+            if (this.onPremiseMode) {
               setTimeout(() => {
                 resolve();
               }, 300);
@@ -111,7 +115,7 @@ export default {
         },
       });
 
-      if (process.env.VUE_APP_MODE !== 'onpremise') {
+      if (!this.onPremiseMode) {
         this.tour.addStep({
           id: 'narrative-selector',
           attachTo: { element: '#narrative-selection-button', on: 'top' },
@@ -146,24 +150,6 @@ export default {
       }
 
       this.tour.addStep({
-        id: 'progression-bar',
-        attachTo: { element: '#progression-bar', on: 'top' },
-        text: this.$t('progressBarHint'),
-        buttons: [skipButton, nextButton],
-        beforeShowPromise() {
-          return new Promise((resolve) => {
-            if (process.env.VUE_APP_MODE === 'onpremise') {
-              const minimapCollapseButton = document.getElementById(
-                'mini-map-collapse-button',
-              );
-              minimapCollapseButton.click();
-            }
-            resolve();
-          });
-        },
-      });
-
-      this.tour.addStep({
         id: 'expand-info-button',
         attachTo: { element: '#expand-info-button', on: 'left' },
         text: this.$t('expandInfoButtonHint'),
@@ -177,9 +163,8 @@ export default {
         buttons: [skipButton, nextButton],
         beforeShowPromise() {
           return new Promise((resolve) => {
-            const expandInfoButton = document.getElementById(
-              'expand-info-button',
-            );
+            const expandInfoButton =
+              document.getElementById('expand-info-button');
             expandInfoButton.click();
             setTimeout(() => {
               resolve();
@@ -215,7 +200,7 @@ export default {
 </script>
 
 <style>
-@import "~shepherd.js/dist/css/shepherd.css";
+@import '~shepherd.js/dist/css/shepherd.css';
 
 .shepherd-element:focus,
 .shepherd-content:focus,
@@ -249,7 +234,7 @@ export default {
   background-color: #ffd27c;
   color: #212121;
   cursor: pointer;
-  font-family: "Flaco-Mono", sans-serif;
+  font-family: 'Flaco-Mono', sans-serif;
   border: 0;
   padding: 0.6rem 1rem;
   margin: 0.6rem;

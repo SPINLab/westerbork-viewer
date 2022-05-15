@@ -6,23 +6,17 @@
         icon-color="#333333"
         @click.native="close"
       />
-      <div class="content">
-        <div
-          class="media-container"
-          v-html="media"
-        />
+      <div v-if="narrative" class="content">
+        <div class="media-container" v-html="media" />
         <section class="text-container">
           <h2>
             {{
-              `${narrative.title.toUpperCase()} > ${$t(room).toUpperCase()} > ${$t(
-                layer
-              ).toUpperCase()}`
+              `${narrative.title.toUpperCase()} > ${$t(
+                room,
+              ).toUpperCase()} > ${$t(layer).toUpperCase()}`
             }}
           </h2>
-          <div
-            class="text"
-            v-html="content"
-          />
+          <div class="text" v-html="content" />
         </section>
       </div>
     </article>
@@ -30,6 +24,9 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+
+import { EventBus } from '../event-bus';
 import CloseButton from './CloseButton.vue';
 
 export default {
@@ -37,40 +34,25 @@ export default {
   components: {
     CloseButton,
   },
-  props: {
-    narrative: {
-      type: Object,
-      required: true,
-    },
-    room: {
-      type: String,
-      required: true,
-    },
-    sources: {
-      type: Object,
-      required: true,
-    },
-  },
   data() {
     return {
       isOpen: false,
-      layer: 'house',
     };
   },
   computed: {
-    media() {
-      return this.sources[this.layer].media;
-    },
-    content() {
-      return this.sources[this.layer].content;
-    },
+    ...mapState(['layer', 'room']),
+    ...mapGetters(['narrative', 'media', 'content']),
+  },
+  created() {
+    EventBus.$on('open-source-page', () => {
+      this.open();
+    });
   },
   methods: {
     close() {
       this.isOpen = false;
     },
-    open(layer) {
-      this.layer = layer;
+    open() {
       this.isOpen = true;
     },
   },

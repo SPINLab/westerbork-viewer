@@ -7,16 +7,15 @@
         :key="narrative.id"
         class="narrative-card-container"
       >
-        <NarrativeCard
-          :narrative="narrative"
-          @picked="pickNarrative"
-        />
+        <NarrativeCard :narrative="narrative" />
       </li>
     </ol>
   </section>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import NarrativeCard from './NarrativeCard.vue';
 
 export default {
@@ -24,16 +23,8 @@ export default {
   components: {
     NarrativeCard,
   },
-  props: {
-    narratives: {
-      type: Array,
-      required: true,
-    },
-  },
-  methods: {
-    pickNarrative(narrative) {
-      this.$emit('narrative-picked', narrative);
-    },
+  computed: {
+    ...mapState(['narratives']),
   },
 };
 </script>

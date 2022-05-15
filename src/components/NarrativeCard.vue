@@ -1,14 +1,8 @@
 <template>
   <div class="narrative-card">
     <h3>{{ narrative.title.toUpperCase() }}</h3>
-    <div
-      class="narrative-text"
-      v-html="narrative.description"
-    />
-    <NavigationButton
-      :title="$t('continue')"
-      @click.native="pickNarrative"
-    />
+    <div class="narrative-text" v-html="narrative.description" />
+    <NavigationButton :title="$t('continue')" @click.native="pickNarrative" />
   </div>
 </template>
 
@@ -28,7 +22,8 @@ export default {
   },
   methods: {
     pickNarrative() {
-      this.$emit('picked', this.narrative);
+      this.$store.dispatch('setNarrative', this.narrative.id);
+      this.$store.dispatch('nextStep');
     },
   },
 };
