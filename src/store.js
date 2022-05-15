@@ -82,6 +82,7 @@ export default new Vuex.Store({
     narrativesData: null,
     room: '',
     layer: 'house',
+    waypoint: '',
     sources: {
       house: {
         media: '',
@@ -120,6 +121,9 @@ export default new Vuex.Store({
     },
     setLayer(state, value) {
       state.layer = value;
+    },
+    setWaypoint(state, value) {
+      state.waypoint = value;
     },
     setHouseMedia(state, value) {
       state.sources.house.media = value;
@@ -190,6 +194,9 @@ export default new Vuex.Store({
     },
     setLayer({ commit }, value) {
       commit('setLayer', value);
+    },
+    setWaypoint({ commit }, value) {
+      commit('setWaypoint', value);
     },
     setGraphics({ commit }, value) {
       commit('setGraphics', value);

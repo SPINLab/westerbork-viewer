@@ -8,8 +8,9 @@ import { mapState } from 'vuex';
 
 import { EventBus } from '../event-bus';
 import pathOverview from './path';
+import waypoints from './waypoints';
 
-const { Potree, THREE } = window;
+const { Potree, THREE, TWEEN } = window;
 
 export const pointClouds = {
   surroundings: 'AHN2',
@@ -27,6 +28,13 @@ export default {
     },
     numPoints() {
       this.updateNumPoints(this.numPoints);
+    },
+    waypoint() {
+      if (this.step < 9) {
+        this.goToWaypoint(this.waypoint, 0);
+      } else {
+        this.goToWaypoint(this.waypoint);
+      }
     },
   },
   mounted() {
@@ -135,6 +143,45 @@ export default {
     },
     updateNumPoints(numPoints) {
       this.$viewer.setPointBudget(numPoints);
+    },
+    goToWaypoint(waypoint, duration = 1000) {
+      return new Promise((resolve) => {
+        const coordinates = waypoints[waypoint];
+        if (coordinates) {
+          if (duration === 0) {
+            this.$viewer.scene.view.position.set(
+              coordinates.x,
+              coordinates.y,
+              coordinates.z,
+            );
+            this.$store.dispatch('setRoom', waypoint);
+            resolve();
+          } else {
+            const position = {
+              x: this.$viewer.scene.view.position.x,
+              y: this.$viewer.scene.view.position.y,
+              z: this.$viewer.scene.view.position.z,
+            };
+            const tween = new TWEEN.Tween(position).to(coordinates, duration);
+            tween.easing(TWEEN.Easing.Quartic.InOut);
+
+            tween.onUpdate(() => {
+              this.$viewer.scene.view.position.set(
+                position.x,
+                position.y,
+                position.z,
+              );
+            });
+
+            tween.onComplete(() => {
+              this.$store.dispatch('setRoom', waypoint);
+              resolve();
+            });
+
+            tween.start();
+          }
+        }
+      });
     },
   },
 };
