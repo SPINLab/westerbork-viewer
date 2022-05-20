@@ -228,10 +228,10 @@ export default {
       this.intros = [...this.intros, ...introTexts];
     },
     setStartPositionAndControls() {
-      // TODO: disable double click to move
       this.$viewer.setControls(new Potree.FirstPersonControls(this.$viewer));
       this.$viewer.setMoveSpeed(0);
       this.$viewer.controls.rotationSpeed = 100;
+      this.$viewer.controls.zoomToLocation = () => true;
       this.$viewer.scene.view.yaw = 1.485;
       this.$viewer.scene.view.pitch = 0;
       this.$store.dispatch('setWaypoint', 'outside');
