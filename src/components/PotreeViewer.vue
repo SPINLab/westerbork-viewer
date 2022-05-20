@@ -20,7 +20,7 @@ export const pointClouds = {
 export default {
   name: 'PotreeViewer',
   computed: {
-    ...mapState(['step', 'graphics', 'numPoints', 'waypoint']),
+    ...mapState(['step', 'graphics', 'numPoints', 'waypoint', 'room']),
   },
   watch: {
     graphics() {
@@ -146,7 +146,7 @@ export default {
     },
     goToWaypoint(waypoint, duration = 1000) {
       return new Promise((resolve) => {
-        const coordinates = waypoints[waypoint];
+        const { coordinates, room } = waypoints[waypoint];
         if (coordinates) {
           const { view } = this.$viewer.scene;
 
@@ -198,7 +198,9 @@ export default {
                 view.position.copy(pos);
               })
               .onComplete(() => {
-                this.$store.dispatch('setRoom', waypoint);
+                if (this.room !== room) {
+                  this.$store.dispatch('setRoom', room);
+                }
                 resolve();
               })
               .start();

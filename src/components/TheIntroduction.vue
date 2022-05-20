@@ -234,7 +234,7 @@ export default {
       this.$viewer.controls.zoomToLocation = () => true;
       this.$viewer.scene.view.yaw = 1.485;
       this.$viewer.scene.view.pitch = 0;
-      this.$store.dispatch('setWaypoint', 'outside');
+      this.$store.dispatch('setWaypoint', 0);
     },
     skip() {
       if (this.$viewer.controls.tweens[0]) {
