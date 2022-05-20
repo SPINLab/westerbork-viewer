@@ -1,26 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-Vue.use(Vuex);
+import rooms from './data/rooms';
 
-const directusRoomNames = {
-  outside: 'Buiten',
-  hallway: '1_Entrance/hallway',
-  diningRoom: '2_Dining room',
-  livingRoom: '3_Living room',
-  sittingRoom: '4_sitting room',
-  conservatory: '5_conservatory',
-  kitchen: '6_Kitchen',
-  basement: '7_Basement',
-  gardenShed: '8_Garden shed',
-  bedroomGemmeker: '9_Bedroom Gemmeker',
-  bedroomObreen: '10_Bedroom Speck Obreen',
-  guestroom1: '11_Guestroom1',
-  guestroom2: '12_Guestroom2',
-  bedroomHassel: '13_Bedroom Elisabeth Hassel',
-  bathroom: '14_Bathroom',
-  attic: '15_Attic',
-};
+Vue.use(Vuex);
 
 function parseContent(source, language) {
   if (!source) {
@@ -82,7 +65,7 @@ export default new Vuex.Store({
     narrativesData: null,
     room: '',
     layer: 'house',
-    waypoint: '',
+    waypoint: null,
     sources: {
       house: {
         media: '',
@@ -216,7 +199,7 @@ export default new Vuex.Store({
     },
     async updateSourceData({ commit, state, getters }, language) {
       if (state.room && getters.narrative) {
-        const directusRoomName = directusRoomNames[state.room];
+        const directusRoomName = rooms[state.room].directusName;
         const response = await fetch(
           `https://data.campscapes.org/api/1.1/tables/source/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5&filters[room.name][eq]=${encodeURIComponent(
             directusRoomName,

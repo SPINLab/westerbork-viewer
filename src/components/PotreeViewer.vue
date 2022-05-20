@@ -7,8 +7,8 @@ import Vue from 'vue';
 import { mapState } from 'vuex';
 
 import { EventBus } from '../event-bus';
-import pathOverview from './path';
-import waypoints from './waypoints';
+import pathOverview from '../data/path';
+import waypoints from '../data/waypoints';
 
 const { Potree, THREE, TWEEN } = window;
 
