@@ -152,7 +152,7 @@ export default {
 
           if (duration === 0) {
             view.position.set(coordinates.x, coordinates.y, coordinates.z);
-            this.$store.dispatch('setRoom', waypoint);
+            this.$store.dispatch('setRoom', room);
             resolve();
           } else {
             const position = new THREE.Vector3(
