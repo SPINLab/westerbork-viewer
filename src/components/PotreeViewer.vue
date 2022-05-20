@@ -148,37 +148,60 @@ export default {
       return new Promise((resolve) => {
         const coordinates = waypoints[waypoint];
         if (coordinates) {
+          const { view } = this.$viewer.scene;
+
           if (duration === 0) {
-            this.$viewer.scene.view.position.set(
+            view.position.set(coordinates.x, coordinates.y, coordinates.z);
+            this.$store.dispatch('setRoom', waypoint);
+            resolve();
+          } else {
+            const position = new THREE.Vector3(
+              view.position.x,
+              view.position.y,
+              view.position.z,
+            );
+            const targetPosition = new THREE.Vector3(
               coordinates.x,
               coordinates.y,
               coordinates.z,
             );
-            this.$store.dispatch('setRoom', waypoint);
-            resolve();
-          } else {
-            const position = {
-              x: this.$viewer.scene.view.position.x,
-              y: this.$viewer.scene.view.position.y,
-              z: this.$viewer.scene.view.position.z,
-            };
-            const tween = new TWEEN.Tween(position).to(coordinates, duration);
-            tween.easing(TWEEN.Easing.Quartic.InOut);
+            const direction = new THREE.Vector3(
+              view.direction.x,
+              view.direction.y,
+              view.direction.z,
+            );
+            const targetDirection = new THREE.Vector3()
+              .subVectors(targetPosition, view.position)
+              .normalize();
 
-            tween.onUpdate(() => {
-              this.$viewer.scene.view.position.set(
-                position.x,
-                position.y,
-                position.z,
-              );
-            });
+            const value = { x: 0 };
+            new TWEEN.Tween(value)
+              .to({ x: 1 }, duration)
+              .easing(TWEEN.Easing.Quartic.InOut)
+              .onUpdate(() => {
+                const t = value.x;
 
-            tween.onComplete(() => {
-              this.$store.dispatch('setRoom', waypoint);
-              resolve();
-            });
+                const pos = new THREE.Vector3(
+                  (1 - t) * position.x + t * targetPosition.x,
+                  (1 - t) * position.y + t * targetPosition.y,
+                  (1 - t) * position.z + t * targetPosition.z,
+                );
 
-            tween.start();
+                if (t < 0.5) {
+                  const target = new THREE.Vector3(
+                    (1 - t * 2) * direction.x + t * 2 * targetDirection.x,
+                    (1 - t * 2) * direction.y + t * 2 * targetDirection.y,
+                    (1 - t * 2) * direction.z + t * 2 * targetDirection.z,
+                  );
+                  view.direction = target;
+                }
+                view.position.copy(pos);
+              })
+              .onComplete(() => {
+                this.$store.dispatch('setRoom', waypoint);
+                resolve();
+              })
+              .start();
           }
         }
       });
