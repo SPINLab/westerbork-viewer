@@ -7,15 +7,11 @@ import Vue from 'vue';
 import { mapState } from 'vuex';
 
 import { EventBus } from '../event-bus';
-import pathOverview from '../data/path';
 import waypoints from '../data/waypoints';
 
 const { Potree, THREE, TWEEN } = window;
 
-export const pointClouds = {
-  surroundings: 'AHN2',
-  house: 'Commandantshuis',
-};
+const POINT_CLOUD = 'Commandantshuis';
 
 export default {
   name: 'PotreeViewer',
@@ -30,11 +26,8 @@ export default {
       this.updateNumPoints(this.numPoints);
     },
     waypoint() {
-      if (this.step < 9) {
-        this.goToWaypoint(this.waypoint, 0);
-      } else {
-        this.goToWaypoint(this.waypoint);
-      }
+      this.goToWaypoint(this.waypoint);
+      this.createAnnotations();
     },
   },
   mounted() {
@@ -43,8 +36,8 @@ export default {
     this.$viewer.setBackground('skybox');
     this.updateGraphics(this.graphics);
     this.updateNumPoints(this.numPoints);
-    this.loadPointClouds();
-    this.setIntroPathControls();
+    this.loadPointCloud();
+    this.setControls();
     this.initAnnotations();
     EventBus.$on('set-point-cloud-visibility', this.setPointCloudVisibility);
   },
@@ -52,55 +45,29 @@ export default {
     EventBus.$off('set-point-cloud-visibility', this.setPointCloudVisibility);
   },
   methods: {
-    loadPointClouds() {
-      Object.values(pointClouds).forEach((pointCloudName) => {
-        Potree.loadPointCloud(
-          `https://data.campscapes.org/westerbork/pointclouds/${pointCloudName.toLowerCase()}/ept.json`,
-          pointCloudName,
-          (event) => {
-            this.onPointCloudLoaded(event.pointcloud, 0.65);
-          },
-        );
-      });
+    loadPointCloud() {
+      Potree.loadPointCloud(
+        `https://data.campscapes.org/westerbork/pointclouds/${POINT_CLOUD.toLowerCase()}/ept.json`,
+        POINT_CLOUD,
+        (event) => {
+          this.onPointCloudLoaded(event.pointcloud, 0.65);
+        },
+      );
     },
     onPointCloudLoaded(pointcloud, size) {
       this.$viewer.scene.addPointCloud(pointcloud);
-
       const { material } = pointcloud;
       material.size = size;
       material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-
-      if (pointcloud.name === 'AHN2') {
-        const { offset } = pointcloud.pcoGeometry;
-        const { center } = pointcloud.boundingSphere;
-        const bbox = pointcloud.boundingBox;
-
-        const lengthX = bbox.max.x + offset.x - (bbox.min.x + offset.x);
-        const lengthY = bbox.max.y + offset.y - (bbox.min.y + offset.y);
-
-        const meshGeometry = new THREE.PlaneGeometry(lengthX, lengthY);
-        const meshMaterial = new THREE.MeshBasicMaterial({
-          color: 0x4b433b,
-          side: THREE.DoubleSide,
-        });
-        const meshPlane = new THREE.Mesh(meshGeometry, meshMaterial);
-
-        meshPlane.position.set(center.x + offset.x, center.y + offset.y, 0);
-
-        this.$viewer.scene.scene.add(meshPlane);
-      }
     },
-    setIntroPathControls() {
-      const controls = new Potree.PathControls(this.$viewer);
-      this.$viewer.setControls(controls);
-      this.$viewer.setMoveSpeed(2);
-      this.$viewer.controls.setPath(pathOverview);
-      this.$viewer.controls.rotationSpeed = 50;
-      this.$viewer.controls.position = 0.2;
-      this.$viewer.controls.loop = false;
-      this.$viewer.controls.lockViewToPath = 'moving';
-      this.$viewer.scene.view.direction =
-        this.$viewer.controls.path.getTangentAt(this.$viewer.controls.position);
+    setControls() {
+      this.$viewer.setControls(new Potree.FirstPersonControls(this.$viewer));
+      this.$viewer.setMoveSpeed(1);
+      this.$viewer.controls.rotationSpeed = 100;
+      this.$viewer.controls.zoomToLocation = () => true;
+      this.$viewer.scene.view.position.set(236807.535, 548506.569, 18);
+      this.$viewer.scene.view.yaw = 1.485;
+      this.$viewer.scene.view.pitch = 0;
     },
     initAnnotations() {
       this.createAnnotations();
@@ -110,12 +77,26 @@ export default {
     },
     createAnnotations() {
       this.$viewer.scene.annotations.children = [];
-      this.$viewer.scene.addAnnotation([236790, 548513, 69], {
-        title: this.$t('commanderHouse'),
-      });
-      this.$viewer.scene.addAnnotation([237079, 548442, 69], {
-        title: this.$t('campTerrain'),
-      });
+      const waypoint = waypoints[this.waypoint];
+      if (waypoint?.annotations?.length) {
+        waypoint.annotations.forEach((annotation) => {
+          const potreeAnnotation = new Potree.Annotation({
+            position: annotation.coordinates,
+            title: this.$t(annotation.name),
+          });
+          potreeAnnotation.domElement[0].onclick = () => {
+            this.$store.dispatch('setWaypoint', annotation.waypoint);
+          };
+          if (annotation.arrow) {
+            potreeAnnotation.domElement[0].classList.add(
+              `arrow-${annotation.arrow}`,
+            );
+          }
+          potreeAnnotation.elTitle.off();
+          potreeAnnotation.domElement.off();
+          this.$viewer.scene.annotations.add(potreeAnnotation);
+        });
+      }
     },
     setPointCloudVisibility({ pointcloud, visible }) {
       const potreePointCloud = this.$viewer.scene.pointclouds.find(
@@ -227,34 +208,59 @@ export default {
   transform: translate(-50%, -30px);
   will-change: left, top;
   opacity: 1 !important;
+  pointer-events: auto;
 }
 
-.annotation-titlebar {
-  opacity: 1;
-  margin: auto;
-  display: table;
-  border-radius: 5rem;
-  padding: 1px 8px;
-  background-color: #ffd27c;
-  color: #212121;
-  font-size: 1rem;
-  font-family: Flaco-Mono, sans-serif;
-  border: 0;
-  padding: 0.6rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-}
-
-.annotation-description {
-  display: none;
+.annotation:hover {
+  cursor: pointer;
 }
 
 .annotation::after {
   content: '';
   position: absolute;
+}
+
+.annotation.arrow-left::after {
+  top: 50%;
+  left: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid #fff;
+  transform: translate(-100%, -50%);
+}
+.annotation.arrow-right::after {
+  top: 50%;
+  right: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid #fff;
+  transform: translate(100%, -50%);
+}
+.annotation.arrow-top::after {
+  top: 0;
   left: 50%;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid #ffd27c;
-  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #fff;
+  transform: translate(-50%, -100%);
+}
+.annotation.arrow-bottom::after {
+  bottom: 0;
+  left: 50%;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #fff;
+  transform: translate(-50%, 100%);
+}
+
+.annotation-titlebar {
+  padding: 1px 8px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-family: Flaco-Mono, sans-serif;
+}
+
+.annotation-description {
+  display: none;
 }
 </style>

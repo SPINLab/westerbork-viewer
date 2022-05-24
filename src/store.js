@@ -63,9 +63,9 @@ export default new Vuex.Store({
     selectedNarrative: null,
     narratives: [],
     narrativesData: null,
-    room: '',
+    room: 'outside',
     layer: 'house',
-    waypoint: null,
+    waypoint: 0,
     sources: {
       house: {
         media: '',

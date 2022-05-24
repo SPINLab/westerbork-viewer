@@ -8,9 +8,7 @@
     />
     <PotreeViewer ref="PotreeViewer" />
 
-    <TheIntroduction />
-
-    <div v-show="step >= 8">
+    <div>
       <div v-if="!onPremiseMode" class="options-buttons">
         <div class="settings-menu-container">
           <OptionsButton
@@ -63,7 +61,6 @@ import { mapGetters, mapState } from 'vuex';
 
 import TheLogo from './components/TheLogo.vue';
 import PotreeViewer from './components/PotreeViewer.vue';
-import TheIntroduction from './components/TheIntroduction.vue';
 import SettingsMenu from './components/SettingsMenu.vue';
 import AboutPage from './components/AboutPage.vue';
 import OptionsButton from './components/OptionsButton.vue';
@@ -79,7 +76,6 @@ export default {
   components: {
     TheLogo,
     PotreeViewer,
-    TheIntroduction,
     SettingsMenu,
     AboutPage,
     OptionsButton,
