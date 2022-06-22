@@ -4,33 +4,33 @@
       <div class="tour-tabs">
         <button
           v-for="(someTour, index) in tours"
-          :key="index"
+          :key="someTour.id"
           type="button"
           class="tour-tab"
-          :class="{ active: selectedTour === index }"
-          @click="selectTour(index)"
+          :class="{ active: selectedTour === someTour.id }"
+          @click="selectTour(someTour.id)"
         >
-          {{ $t(someTour.name) }}
+          Tour {{ index + 1 }}: {{ someTour.name_nl }}
         </button>
       </div>
-      <button type="button" @click="closeTour">
+      <button type="button" class="close-button" @click="closeTour">
         <CrossIcon class="close-icon" />
       </button>
     </div>
-    <div class="room-tag">{{ $t(room) }}</div>
+    <div class="place-tag">{{ placeName }}</div>
     <h2>{{ title }}</h2>
-    <p>{{ content }}</p>
+    <p ref="chapterContent" class="scrollable">{{ content }}</p>
     <div class="navigation-buttons">
       <button
         type="button"
-        :class="{ hidden: tourStep === 0 }"
+        :class="{ hidden: currentChapterIndex === 0 }"
         @click="previousStep"
       >
         &lt; Vorige
       </button>
       <button
         type="button"
-        :class="{ hidden: tourStep === tour.steps.length - 1 }"
+        :class="{ hidden: currentChapterIndex === selectedChapters.length - 1 }"
         @click="nextStep"
       >
         Volgende &gt;
@@ -42,8 +42,8 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
 
+import { useOverflowFade } from '../composables/overflow-fade';
 import CrossIcon from '../icons/CrossIcon.vue';
-import waypoints from '../data/waypoints';
 
 export default {
   name: 'TourPage',
@@ -51,29 +51,44 @@ export default {
     CrossIcon,
   },
   computed: {
-    ...mapState(['tourStep', 'tours', 'selectedTour']),
-    ...mapGetters(['tour', 'currentTourStep']),
+    ...mapState(['currentChapterIndex', 'selectedTour', 'places']),
+    ...mapGetters([
+      'tours',
+      'tour',
+      'chapter',
+      'selectedChapters',
+      'selectedWaypoints',
+    ]),
     title() {
-      return this.currentTourStep?.title || '';
+      return this.chapter?.pages?.data?.[0]?.page_title_nl || '';
     },
     content() {
-      return this.currentTourStep?.content || '';
+      return this.chapter?.pages?.data?.[0]?.page_text_nl || '';
     },
-    room() {
-      return this.currentTourStep?.waypoint != null &&
-        waypoints[this.currentTourStep.waypoint] != null &&
-        waypoints[this.currentTourStep.waypoint].room != null
-        ? waypoints[this.currentTourStep.waypoint].room
-        : '';
+    place() {
+      const placeId = parseInt(this.chapter?.waypoint?.data?.place, 10);
+      const place = this.places?.find((p) => p.id === placeId);
+      return place || { name_en: '', name_nl: '' };
     },
+    placeName() {
+      return this.place?.name_nl || '';
+    },
+  },
+  watch: {
+    content() {
+      this.checkOverflow();
+    },
+  },
+  mounted() {
+    this.checkOverflow = useOverflowFade(this.$refs.chapterContent);
   },
   methods: {
     ...mapActions({
-      previousStep: 'previousTourStep',
-      nextStep: 'nextTourStep',
+      previousStep: 'previousChapter',
+      nextStep: 'nextChapter',
     }),
-    selectTour(index) {
-      this.$store.dispatch('setSelectedTour', index);
+    selectTour(id) {
+      this.$store.dispatch('setSelectedTour', id);
     },
     closeTour() {
       this.$store.dispatch('setTourOpen', false);
@@ -90,6 +105,8 @@ section {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  height: 100vh;
+  box-sizing: border-box;
 }
 
 h2 {
@@ -103,10 +120,14 @@ h2 {
 p {
   margin: 0;
   font-size: 1.5rem;
+  overflow-y: auto;
+  --scrollbar-bg-color: var(--background);
+  padding-right: 1rem;
 }
 
 .header {
   display: flex;
+  width: 100%;
 }
 
 .close-icon {
@@ -141,12 +162,16 @@ p {
   font-variation-settings: 'wght' 600;
   font-size: 1.1rem;
 }
-.tour-tab.active,
-.tour-tab:hover {
+.tour-tab.active {
   color: var(--grey);
 }
 
-.room-tag {
+.close-button {
+  padding-inline: 1rem;
+  margin-left: 1rem;
+}
+
+.place-tag {
   display: inline-flex;
   margin-top: 1rem;
   color: var(--grey);
@@ -162,14 +187,20 @@ p {
   justify-content: space-between;
   width: 100%;
   border-top: 1px solid var(--grey);
-  margin-top: auto;
+  margin-top: 2rem;
   padding-top: 1rem;
   margin-inline: 0.5rem;
   font-variation-settings: 'wght' 600;
   font-size: 1.5rem;
   color: var(--grey);
 }
-.navigation-buttons button:hover {
-  color: var(--accent);
+
+@media (hover: hover) {
+  .tour-tab:hover {
+    color: var(--grey);
+  }
+  .navigation-buttons button:hover {
+    color: var(--accent);
+  }
 }
 </style>

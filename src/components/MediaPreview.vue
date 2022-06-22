@@ -1,12 +1,8 @@
 <template>
   <button type="button" @click="showMedia">
-    <img
-      v-if="isImage"
-      :src="dataUrl"
-      :alt="currentTourStep.media.file.data.title"
-    />
-    <video v-if="isVideo" preload="metadata">
-      <source :src="`${dataUrl}\#t=0.5`" type="video/mp4" />
+    <img v-if="mediaIsImage" :src="dataUrl" :alt="mediaTitle" />
+    <video v-if="mediaIsVideo" preload="metadata">
+      <source :src="`${mediaDataUrl}\#t=0.5`" type="video/mp4" />
     </video>
   </button>
 </template>
@@ -17,21 +13,12 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'MediaPreview',
   computed: {
-    ...mapGetters(['currentTourStep']),
-    isImage() {
-      return (
-        this.currentTourStep?.media?.file?.data?.type === 'image/jpeg' ||
-        this.currentTourStep?.media?.file?.data?.type === 'image/png'
-      );
-    },
-    isVideo() {
-      return this.currentTourStep?.media?.file?.data?.type === 'video/mp4';
-    },
-    dataUrl() {
-      return this.currentTourStep.media.file.data.url
-        ? `https://data.campscapes.org/${this.currentTourStep.media.file.data.url}`
-        : '';
-    },
+    ...mapGetters([
+      'mediaIsImage',
+      'mediaIsVideo',
+      'mediaDataUrl',
+      'mediaTitle',
+    ]),
   },
   methods: {
     showMedia() {

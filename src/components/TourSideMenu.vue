@@ -5,7 +5,7 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <nav ref="TourNav" class="scrollable">
+    <nav ref="tourNav" class="scrollable">
       <ol>
         <li class="side-menu-item">
           <div class="side-menu-item-icon home-icon-container">
@@ -16,29 +16,27 @@
             class="side-menu-item-description tour-title"
             @click="showWelcomeModal"
           >
-            {{ $t(tour.name) }}
+            {{ tour.name_nl }}
           </button>
         </li>
         <li
-          v-for="(step, index) in tour.steps"
-          :id="`tour-step-${index}`"
-          :key="index"
+          v-for="(someChapter, index) in selectedChapters"
+          :id="`chapter-${index}`"
+          :key="someChapter.id"
           class="side-menu-item"
-          :class="{ active: tourStep === index }"
+          :class="{ active: currentChapterIndex === index }"
         >
           <div class="side-menu-item-icon step-number">{{ index + 1 }}</div>
           <button
             type="button"
             class="side-menu-item-description step-description"
-            @click="goToStep(index)"
+            @click="goToChapter(index)"
           >
-            <div class="step-title">{{ step.title }}</div>
-            <div class="step-room">
-              {{
-                waypoints[step.waypoint]
-                  ? $t(waypoints[step.waypoint].room)
-                  : ''
-              }}
+            <div class="step-title">
+              {{ someChapter.pages.data[0].page_title_nl }}
+            </div>
+            <div class="step-place">
+              {{ getChapterPlace(someChapter) }}
             </div>
           </button>
         </li>
@@ -52,7 +50,6 @@ import { mapGetters, mapState } from 'vuex';
 
 import HomeIcon from '../icons/HomeIcon.vue';
 import { useOverflowFade } from '../composables/overflow-fade';
-import waypoints from '../data/waypoints';
 
 export default {
   name: 'TourSideMenu',
@@ -62,13 +59,12 @@ export default {
   data() {
     return {
       expanded: false,
-      waypoints,
       timer: null,
     };
   },
   computed: {
-    ...mapState(['tourStep', 'touchDevice']),
-    ...mapGetters(['tour']),
+    ...mapState(['currentChapterIndex', 'touchDevice', 'places']),
+    ...mapGetters(['tour', 'chapter', 'selectedChapters']),
   },
   watch: {
     tour() {
@@ -76,8 +72,9 @@ export default {
         setTimeout(this.checkOverflow, 0);
       }
     },
-    tourStep(newTourStep) {
-      const element = document.getElementById(`tour-step-${newTourStep}`);
+    chapter(newChapter) {
+      const index = this.selectedChapters.indexOf(newChapter);
+      const element = document.getElementById(`chapter-${index}`);
       if (element) {
         const clientRect = element.getBoundingClientRect();
         if (
@@ -94,7 +91,7 @@ export default {
   },
   mounted() {
     document.addEventListener('click', this.onDocumentClick);
-    this.checkOverflow = useOverflowFade(this.$refs.TourNav, {
+    this.checkOverflow = useOverflowFade(this.$refs.tourNav, {
       fadeHeight: 200,
     });
   },
@@ -105,8 +102,8 @@ export default {
     showWelcomeModal() {
       this.$store.dispatch('setWelcomeModalOpen', true);
     },
-    goToStep(stepIndex) {
-      this.$store.dispatch('setTourStep', stepIndex);
+    goToChapter(index) {
+      this.$store.dispatch('setCurrentChapterIndex', index);
       document.activeElement.blur();
     },
     onClick() {
@@ -129,6 +126,12 @@ export default {
       if (!this.$el.contains(event.target) && this.expanded) {
         this.expanded = false;
       }
+    },
+    getChapterPlace(chapter) {
+      const place = this.places.find(
+        (p) => p.id === parseInt(chapter.waypoint.data.place, 10),
+      );
+      return place?.name_nl || '';
     },
   },
 };
@@ -175,7 +178,6 @@ ol {
   margin: 0;
   margin-left: 1.8rem;
   list-style: none;
-  margin-top: 3rem;
 }
 
 p {
@@ -185,7 +187,7 @@ p {
 
 .side-menu-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 1.8rem;
   width: calc(30rem - 3.6rem);
   margin-block: 1.5rem;
@@ -267,7 +269,7 @@ p {
   text-overflow: ellipsis;
 }
 
-.step-room {
+.step-place {
   font-size: 1.1rem;
 }
 

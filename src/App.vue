@@ -21,6 +21,12 @@ export default {
     TourViewer,
     PointCloudViewer,
   },
+  mounted() {
+    this.$store.dispatch('getChapters');
+    this.$store.dispatch('getPlaces');
+    this.$store.dispatch('getWaypointLabels');
+    this.$store.dispatch('getHotspots');
+  },
 };
 </script>
 

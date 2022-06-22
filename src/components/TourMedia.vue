@@ -4,14 +4,10 @@
       <button type="button" class="minimize-button" @click="minimize">-</button>
     </div>
     <div class="figure-container">
-      <figure :class="{ 'video-figure': isVideo }">
-        <img
-          v-if="isImage"
-          :src="dataUrl"
-          :alt="currentTourStep.media.file.data.title"
-        />
-        <video v-if="isVideo" controls>
-          <source :src="dataUrl" type="video/mp4" />
+      <figure :class="{ 'video-figure': mediaIsVideo }">
+        <img v-if="mediaIsImage" :src="dataUrl" :alt="mediaTitle" />
+        <video v-if="mediaIsVideo" controls>
+          <source :src="mediaDataUrl" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <figcaption>{{ caption }}</figcaption>
@@ -26,23 +22,15 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'TourMedia',
   computed: {
-    ...mapGetters(['currentTourStep']),
-    isImage() {
-      return (
-        this.currentTourStep?.media?.file?.data?.type === 'image/jpeg' ||
-        this.currentTourStep?.media?.file?.data?.type === 'image/png'
-      );
-    },
-    isVideo() {
-      return this.currentTourStep?.media?.file?.data?.type === 'video/mp4';
-    },
-    dataUrl() {
-      return this.currentTourStep.media.file.data.url
-        ? `https://data.campscapes.org/${this.currentTourStep.media.file.data.url}`
-        : '';
-    },
+    ...mapGetters([
+      'chapter',
+      'mediaIsImage',
+      'mediaIsVideo',
+      'mediaDataUrl',
+      'mediaTitle',
+    ]),
     caption() {
-      return this.currentTourStep?.media?.caption || '';
+      return this.chapter?.pages?.data?.[0]?.media?.caption || '';
     },
   },
   methods: {

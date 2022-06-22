@@ -25,7 +25,7 @@
         </transition>
       </div>
       <div :class="{ 'top-center': !tourOpen, 'top-left': tourOpen }">
-        <h2 class="room-title">{{ $t(room) }}</h2>
+        <h2 class="place-name">{{ placeName }}</h2>
       </div>
       <div class="top-right">
         <MediaPreview v-show="tourOpen && !mediaOpen" class="media-preview" />
@@ -43,8 +43,8 @@
     >
       <div class="hotspot-overflow">
         <div class="hotspot-content scrollable">
-          <h3 class="hotspot-title">{{ currentHotspot.title }}</h3>
-          <p class="hotspot-text">{{ currentHotspot.text }}</p>
+          <h3 class="hotspot-title">{{ currentHotspot.title_nl }}</h3>
+          <p class="hotspot-text">{{ currentHotspot.text_nl }}</p>
         </div>
       </div>
     </section>
@@ -62,12 +62,15 @@ import MediaPreview from './MediaPreview.vue';
 import HelpMenu from './HelpMenu.vue';
 import NavigationOnboarding from './NavigationOnboarding.vue';
 
-import waypoints from '../data/waypoints';
-import hotspots from '../data/hotspots';
-
 const { Potree, THREE, TWEEN } = window;
 
 const POINT_CLOUD = 'Commandantshuis';
+const ARROW_DIRECTIONS = {
+  value1: 'left',
+  value2: 'right',
+  value3: 'up',
+  value4: 'down',
+};
 
 const infoIconSvg = `
   <svg
@@ -128,24 +131,30 @@ export default {
   computed: {
     ...mapState([
       'touchDevice',
+      'waypointLabels',
+      'hotspots',
       'step',
       'graphics',
       'numPoints',
       'waypoint',
-      'room',
       'tourOpen',
       'mediaOpen',
       'navigationOnboardingOpen',
       'renderPointCloud',
     ]),
-    ...mapGetters(['tour']),
+    ...mapGetters(['tour', 'selectedWaypoints', 'selectedChapters', 'place']),
     waypointHasChapter() {
-      return this.tour.steps.find((step) => step.waypoint === this.waypoint);
+      return this.selectedChapters.find(
+        (chapter) => chapter.waypoint.data.id === this.waypoint,
+      );
     },
     cssVariables() {
       return {
         '--popper-overflow-y': this.popperOverflowY,
       };
+    },
+    placeName() {
+      return this.place?.name_nl || '';
     },
   },
   watch: {
@@ -156,11 +165,15 @@ export default {
       this.updateNumPoints(this.numPoints);
     },
     waypoint() {
-      this.goToWaypoint(this.waypoint);
-      this.createAnnotations();
+      if (this.tourOpen) {
+        this.goToWaypoint(this.waypoint, 0);
+      } else {
+        this.updateWaypoint(this.waypoint);
+      }
+      // this.createAnnotations();
     },
-    room() {
-      this.createAnnotations();
+    place() {
+      // this.createAnnotations();
     },
     renderPointCloud() {
       if (this.renderPointCloud) {
@@ -207,7 +220,7 @@ export default {
       material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
     },
     pauseRender() {
-      this.$viewer.renderer.setAnimationLoop(() => null);
+      this.$viewer.renderer.setAnimationLoop(null);
     },
     resumeRender() {
       this.$viewer.renderer.setAnimationLoop(
@@ -235,19 +248,19 @@ export default {
       this.createHotspots();
     },
     createWaypoints() {
-      const waypoint = waypoints[this.waypoint];
-      if (waypoint?.annotations?.length) {
-        waypoint.annotations.forEach((annotation) => {
+      const waypointLabels = this.waypointLabels[this.waypoint];
+      if (waypointLabels?.length) {
+        waypointLabels.forEach((label) => {
           const potreeAnnotation = new Potree.Annotation({
-            position: annotation.coordinates,
-            title: this.$t(annotation.name),
+            position: label.coordinate,
+            title: label.text_nl,
           });
           potreeAnnotation.domElement[0].onclick = () => {
-            this.$store.dispatch('setWaypoint', annotation.waypoint);
+            this.$store.dispatch('setWaypoint', label.waypoint.data.id);
           };
-          if (annotation.arrow) {
+          if (label.arrow_direction) {
             potreeAnnotation.domElement[0].classList.add(
-              `arrow-${annotation.arrow}`,
+              `arrow-${ARROW_DIRECTIONS[label.arrow_direction]}`,
             );
           }
           potreeAnnotation.elTitle.off();
@@ -257,12 +270,14 @@ export default {
       }
     },
     createHotspots() {
-      const hotspotsInRoom = hotspots[this.room];
-      if (hotspotsInRoom?.length) {
-        hotspotsInRoom.forEach((hotspot) => {
+      const hotspotsAtPlace = this.hotspots.filter(
+        (hotspot) => hotspot.place.data.id === this.place?.id,
+      );
+      if (hotspotsAtPlace?.length) {
+        hotspotsAtPlace.forEach((hotspot) => {
           const potreeAnnotation = new Potree.Annotation({
             position: hotspot.coordinates,
-            title: ' ',
+            title: hotspot.title_nl,
           });
           potreeAnnotation.elTitle.append(infoIconSvg);
           potreeAnnotation.domElement[0].onclick = () => {
@@ -288,7 +303,12 @@ export default {
         this.currentAnnotation.elTitle.append(infoIconSvg);
         this.currentAnnotation = null;
       }
-      this.currentHotspot = { title: '', text: '' };
+      this.currentHotspot = {
+        title_en: '',
+        title_nl: '',
+        text_en: '',
+        text_nl: '',
+      };
     },
     showHotspotPopup(hotspot, annotation) {
       if (this.hotspotPopupShown) {
@@ -373,67 +393,68 @@ export default {
     updateNumPoints(numPoints) {
       this.$viewer.setPointBudget(numPoints);
     },
-    goToWaypoint(waypoint, duration = 1000) {
-      return new Promise((resolve) => {
-        const { coordinates, room } = waypoints[waypoint];
-        if (coordinates) {
-          const { view } = this.$viewer.scene;
-          this.hideHotspotPopup();
-          if (duration === 0) {
-            view.position.set(coordinates.x, coordinates.y, coordinates.z);
-            this.$store.dispatch('setRoom', room);
-            resolve();
-          } else {
-            const position = new THREE.Vector3(
-              view.position.x,
-              view.position.y,
-              view.position.z,
-            );
-            const targetPosition = new THREE.Vector3(
-              coordinates.x,
-              coordinates.y,
-              coordinates.z,
-            );
-            const direction = new THREE.Vector3(
-              view.direction.x,
-              view.direction.y,
-              view.direction.z,
-            );
-            const targetDirection = new THREE.Vector3()
-              .subVectors(targetPosition, view.position)
-              .normalize();
-            const value = { x: 0 };
-            new TWEEN.Tween(value)
-              .to({ x: 1 }, duration)
-              .easing(TWEEN.Easing.Quartic.InOut)
-              .onUpdate(() => {
-                const t = value.x;
-                const pos = new THREE.Vector3(
-                  (1 - t) * position.x + t * targetPosition.x,
-                  (1 - t) * position.y + t * targetPosition.y,
-                  (1 - t) * position.z + t * targetPosition.z,
+    goToWaypoint(waypointId, duration = 1000) {
+      const waypoint = this.selectedWaypoints.find(
+        (w) => w.data.id === waypointId,
+      );
+      const { coordinate: coordinates } = waypoint.data;
+      let { place: placeId } = waypoint.data;
+      placeId = parseInt(placeId, 10);
+      if (coordinates) {
+        const { view } = this.$viewer.scene;
+        this.hideHotspotPopup();
+        if (duration === 0) {
+          view.position.set(coordinates[0], coordinates[1], coordinates[2]);
+          this.$store.dispatch('setCurrentPlace', placeId);
+        } else {
+          const position = new THREE.Vector3(
+            view.position.x,
+            view.position.y,
+            view.position.z,
+          );
+          const targetPosition = new THREE.Vector3(
+            coordinates[0],
+            coordinates[1],
+            coordinates[2],
+          );
+          const direction = new THREE.Vector3(
+            view.direction.x,
+            view.direction.y,
+            view.direction.z,
+          );
+          const targetDirection = new THREE.Vector3()
+            .subVectors(targetPosition, view.position)
+            .normalize();
+          const value = { x: 0 };
+          new TWEEN.Tween(value)
+            .to({ x: 1 }, duration)
+            .easing(TWEEN.Easing.Quartic.InOut)
+            .onUpdate(() => {
+              const t = value.x;
+              const pos = new THREE.Vector3(
+                (1 - t) * position.x + t * targetPosition.x,
+                (1 - t) * position.y + t * targetPosition.y,
+                (1 - t) * position.z + t * targetPosition.z,
+              );
+              if (t < 0.5) {
+                const target = new THREE.Vector3(
+                  (1 - t * 2) * direction.x + t * 2 * targetDirection.x,
+                  (1 - t * 2) * direction.y + t * 2 * targetDirection.y,
+                  (1 - t * 2) * direction.z + t * 2 * targetDirection.z,
                 );
-                if (t < 0.5) {
-                  const target = new THREE.Vector3(
-                    (1 - t * 2) * direction.x + t * 2 * targetDirection.x,
-                    (1 - t * 2) * direction.y + t * 2 * targetDirection.y,
-                    (1 - t * 2) * direction.z + t * 2 * targetDirection.z,
-                  );
-                  view.direction = target;
-                }
-                view.position.copy(pos);
-                this.updateHotspotPopper();
-              })
-              .onComplete(() => {
-                if (this.room !== room) {
-                  this.$store.dispatch('setRoom', room);
-                }
-                resolve();
-              })
-              .start();
-          }
+                view.direction = target;
+              }
+              view.position.copy(pos);
+              this.updateHotspotPopper();
+            })
+            .onComplete(() => {
+              if (this.place.id !== placeId) {
+                this.$store.dispatch('setCurrentPlace', placeId);
+              }
+            })
+            .start();
         }
-      });
+      }
     },
     showTour(event) {
       if (this.touchDevice) {
@@ -552,7 +573,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
 }
-.room-title {
+.place-name {
   box-sizing: border-box;
   display: flex;
   align-items: center;

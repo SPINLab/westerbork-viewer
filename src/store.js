@@ -3,126 +3,45 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-const testTours = [
-  {
-    name: 'Tour 1: Het huis onder commandant Gemmeker',
-    steps: [
-      {
-        title: 'Lorem ipsum dolor sit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: {
-          file: {
-            data: {
-              type: 'image/jpeg',
-              url: 'storage/uploads/00000000346.jpg',
-            },
-          },
-          caption: 'Lorem ipsum dolor sit amet',
-        },
-        waypoint: 0,
-      },
-      {
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: {
-          file: {
-            data: {
-              type: 'video/mp4',
-              url: 'storage/uploads/00000000115.mp4',
-            },
-          },
-          caption: 'Lorem ipsum dolor sit amet',
-        },
-        waypoint: 1,
-      },
-      {
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: '',
-        waypoint: 1,
-      },
-      {
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: '',
-        waypoint: 1,
-      },
-      {
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: '',
-        waypoint: 1,
-      },
-      {
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: '',
-        waypoint: 1,
-      },
-      {
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: '',
-        waypoint: 1,
-      },
-      {
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: '',
-        waypoint: 1,
-      },
-      {
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: '',
-        waypoint: 1,
-      },
-      {
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-        content:
-          'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint hic inventore ratione quod nobis facilis quo. Magni eveniet, eos suscipit quidem, at illo harum asperiores eaque non facilis maiores cumque?',
-        media: '',
-        waypoint: 1,
-      },
-    ],
-  },
-  {
-    name: 'Tour 2: Onderzoek en herinnering',
-    steps: [],
-  },
-];
+const TOUR_IDS = [3, 4];
 
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     onPremiseMode: process.env.VUE_APP_MODE === 'onpremise',
     touchDevice: matchMedia('(hover: none)').matches,
+    chapters: [],
+    places: [],
+    waypointLabels: [],
+    hotspots: [],
     selectedTour: null,
-    tours: testTours,
-    tourStep: 0,
+    currentChapterIndex: 0,
     tourOpen: true,
     mediaOpen: true,
     welcomeModalOpen: false,
     introductionOpen: true,
     navigationOnboardingOpen: false,
-    room: 'outside',
-    waypoint: 0,
+    currentPlace: null,
+    waypoint: null,
     renderPointCloud: false,
     graphics: 'medium',
     numPoints: process.env.VUE_APP_MODE ? 200000 : 200000,
   },
   mutations: {
-    setRoom(state, value) {
-      state.room = value;
+    setChapters(state, value) {
+      state.chapters = value;
+    },
+    setPlaces(state, value) {
+      state.places = value;
+    },
+    setWaypointLabels(state, value) {
+      state.waypointLabels = value;
+    },
+    setHotspots(state, value) {
+      state.hotspots = value;
+    },
+    setCurrentPlace(state, value) {
+      state.currentPlace = value;
     },
     setWaypoint(state, value) {
       state.waypoint = value;
@@ -154,23 +73,65 @@ export default new Vuex.Store({
     setSelectedTour(state, value) {
       state.selectedTour = value;
     },
-    setTourStep(state, value) {
-      state.tourStep = value;
+    setCurrentChapterIndex(state, value) {
+      state.currentChapterIndex = value;
     },
-    nextTourStep(state) {
-      if (state.tourStep < state.tours[state.selectedTour].steps.length - 1) {
-        state.tourStep += 1;
-      }
+    nextChapter(state) {
+      state.currentChapterIndex += 1;
     },
-    previousTourStep(state) {
-      if (state.tourStep >= 1) {
-        state.tourStep -= 1;
-      }
+    previousChapter(state) {
+      state.currentChapterIndex -= 1;
     },
   },
   actions: {
-    setRoom({ commit }, value) {
-      commit('setRoom', value);
+    async getChapters({ commit }) {
+      const response = await fetch(
+        'https://data.campscapes.org/api/1.1/tables/wch2_chapters/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5',
+      );
+      const json = await response.json();
+      const chapters = json.data.filter((chapter) =>
+        TOUR_IDS.includes(chapter.tour.data.id),
+      );
+
+      // TODO: remove tmp add coordinates to waypoints
+      chapters.forEach((chapter) => {
+        chapter.waypoint.data.coordinate = [236798.257, 548509.232, 17.26];
+      });
+
+      commit('setChapters', chapters);
+      // commit('setSelectedTour', TOUR_IDS.indexOf(chapters[0].tour.data.id));
+    },
+    async getPlaces({ commit }) {
+      const response = await fetch(
+        'https://data.campscapes.org/api/1.1/tables/wch2_places/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5',
+      );
+      const json = await response.json();
+      commit('setPlaces', json.data);
+    },
+    async getWaypointLabels({ commit }) {
+      const response = await fetch(
+        'https://data.campscapes.org/api/1.1/tables/wch2_labels/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5',
+      );
+      const json = await response.json();
+      const waypointLabels = json.data.reduce((acc, label) => {
+        if (typeof acc[label.waypoint.data.id] === 'undefined') {
+          acc[label.waypoint.data.id] = [label];
+        } else {
+          acc[label.waypoint.data.id].push(label);
+        }
+        return acc;
+      }, {});
+      commit('setWaypointLabels', waypointLabels);
+    },
+    async getHotspots({ commit }) {
+      const response = await fetch(
+        'https://data.campscapes.org/api/1.1/tables/wch2_hotspots/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5',
+      );
+      const json = await response.json();
+      commit('setHotspots', json.data);
+    },
+    setCurrentPlace({ commit }, value) {
+      commit('setCurrentPlace', value);
     },
     setWaypoint({ commit }, value) {
       commit('setWaypoint', value);
@@ -202,18 +163,63 @@ export default new Vuex.Store({
     setSelectedTour({ commit }, value) {
       commit('setSelectedTour', value);
     },
-    setTourStep({ commit }, value) {
-      commit('setTourStep', value);
+    setCurrentChapterIndex({ commit, getters }, value) {
+      commit('setCurrentChapterIndex', value);
+      const waypoint = getters.chapter.waypoint.data.id;
+      commit('setWaypoint', waypoint);
     },
-    nextTourStep({ commit }) {
-      commit('nextTourStep');
+    nextChapter({ commit, state, getters }) {
+      if (state.currentChapterIndex < getters.selectedChapters.length - 1) {
+        commit('nextChapter');
+        const waypoint = getters.chapter.waypoint.data.id;
+        commit('setWaypoint', waypoint);
+      }
     },
-    previousTourStep({ commit }) {
-      commit('previousTourStep');
+    previousChapter({ commit, state, getters }) {
+      if (state.currentChapterIndex >= 1) {
+        commit('previousChapter');
+        const waypoint = getters.chapter.waypoint.data.id;
+        commit('setWaypoint', waypoint);
+      }
     },
   },
   getters: {
-    tour: (state) => state.tours[state.selectedTour] ?? { name: '', steps: [] },
-    currentTourStep: (state, getters) => getters.tour.steps?.[state.tourStep],
+    tours: (state) =>
+      TOUR_IDS.map(
+        (id) =>
+          state.chapters.find((chapter) => chapter.tour.data.id === id)?.tour
+            .data,
+      ).filter(Boolean),
+    tour: (state, getters) =>
+      getters.tours.find((tour) => tour.id === state.selectedTour) ?? {
+        name_en: '',
+        name_nl: '',
+        summary_en: '',
+        summary_nl: '',
+      },
+    selectedChapters: (state) =>
+      state.chapters.filter(
+        (chapter) => chapter.tour.data.id === state.selectedTour,
+      ),
+    chapter: (state, getters) =>
+      getters.selectedChapters[state.currentChapterIndex],
+    media: (_, getters) => getters.chapter?.pages?.data?.[0]?.media,
+    mediaIsImage: (_, getters) =>
+      getters.media?.file?.data?.type.startsWith('image'),
+    mediaIsVideo: (_, getters) =>
+      getters.media?.file?.data?.type.startsWith('video'),
+    mediaDataUrl: (_, getters) =>
+      getters.media?.file?.data?.url
+        ? `https://data.campscapes.org/${getters.media.file.data.url}`
+        : '',
+    mediaTitle: (_, getters) => getters.media?.file?.data?.title || '',
+    selectedWaypoints: (_, getters) =>
+      getters.selectedChapters.map((chapter) => chapter.waypoint),
+    currentHotspots: (state) =>
+      state.hotspots.filter(
+        (hotspot) => hotspot.place.id === state.currentPlace,
+      ),
+    place: (state) =>
+      state.places.find((place) => place.id === state.currentPlace),
   },
 });

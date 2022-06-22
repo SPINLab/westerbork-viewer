@@ -22,36 +22,17 @@
               </button>
             </div>
           </li>
-          <li>
+          <li v-for="tour in tours" :key="tour.id">
             <div>
               <div
                 class="button-container active-marker"
-                :class="{ active: selectedTour === 0 }"
+                :class="{ active: selectedTour === tour.id }"
               >
-                <button type="button" @click="showTour(0)">
-                  Tour: Commandant Gemmeker en de woning
+                <button type="button" @click="showTour(tour.id)">
+                  Tour: {{ tour.name_nl }}
                 </button>
               </div>
-              <p>
-                Anton Gemmeker was commandant van Kamp Westerbork onder de
-                nazis. Hij woonde in het huis met zijn maîtresse.
-              </p>
-            </div>
-          </li>
-          <li>
-            <div>
-              <div
-                class="button-container active-marker"
-                :class="{ active: selectedTour === 1 }"
-              >
-                <button type="button" @click="showTour(1)">
-                  Tour: Onderzoek en vondsten
-                </button>
-              </div>
-              <p>
-                Verken de sporen die verschillende periodes en bewoners hebben
-                achtergelaten
-              </p>
+              <p>{{ tour.summary_nl }}</p>
             </div>
           </li>
         </ul>
@@ -61,7 +42,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 import HomeIcon from '../icons/HomeIcon.vue';
 
@@ -75,6 +56,7 @@ export default {
   },
   computed: {
     ...mapState(['welcomeModalOpen', 'selectedTour']),
+    ...mapGetters(['tours']),
   },
   methods: {
     hide() {
@@ -93,9 +75,9 @@ export default {
       this.$store.dispatch('setWelcomeModalOpen', false);
       this.$store.dispatch('setRenderPointCloud', true);
     },
-    showTour(index) {
+    showTour(id) {
       this.initChoiceMade = true;
-      this.$store.dispatch('setSelectedTour', index);
+      this.$store.dispatch('setSelectedTour', id);
       this.$store.dispatch('setTourOpen', true);
       this.$store.dispatch('setWelcomeModalOpen', false);
       this.$store.dispatch('setRenderPointCloud', false);
