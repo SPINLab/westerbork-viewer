@@ -31,7 +31,7 @@ export default {
     },
     createOnboarding() {
       this.clearOnboarding();
-      this.onboarding = new Shepherd.Onboarding({ modalContainer: this.$el });
+      this.onboarding = new Shepherd.Tour({ modalContainer: this.$el });
 
       this.onboarding.addStep({
         id: 'controls',
