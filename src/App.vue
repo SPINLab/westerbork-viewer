@@ -1,189 +1,69 @@
 <template>
-  <div id="app">
-    <div id="top-left-fade" />
-    <TheLogo
-      title-color="#FFFFFF"
-      subtitle-color="#FFFFFF"
-      line-color="#FFFFFF"
-    />
-    <PotreeViewer ref="PotreeViewer" />
-
-    <div>
-      <div v-if="!onPremiseMode" class="options-buttons">
-        <div class="settings-menu-container">
-          <OptionsButton
-            id="settings-button"
-            :title="$t('settings')"
-            icon="settings"
-            @click.native="toggleSettingsMenu"
-          />
-          <SettingsMenu id="settings-menu" ref="settingsMenu" />
-        </div>
-        <OptionsButton
-          id="about-page-button"
-          :title="$t('about')"
-          icon="about"
-          @click.native="openAboutPage"
-        />
-      </div>
-
-      <div class="narrative-container">
-        <NarrativeSelector v-if="!onPremiseMode" />
-        <div id="bottom-fade" />
-      </div>
-
-      <InfoBox ref="infoBox" />
-
-      <MiniMap />
-
-      <SourcePage ref="sourcePage" />
-
-      <AboutPage v-if="!onPremiseMode" ref="aboutPage" />
-
-      <NavigationButton
-        v-if="onPremiseMode"
-        class="to-start-button"
-        :title="$t('toStartText')"
-        @click.native="backToStart"
-      />
-
-      <LanguageSwitchButton
-        v-if="onPremiseMode"
-        id="language-switch"
-        @click.native="switchLanguage"
-      />
-    </div>
-  </div>
+  <main id="app">
+    <IntroductionVideo class="introduction-video" />
+    <WelcomeModal class="welcome-modal" />
+    <TourViewer class="tour-viewer" />
+    <PointCloudViewer class="point-cloud-viewer" />
+  </main>
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
-
-import TheLogo from './components/TheLogo.vue';
-import PotreeViewer from './components/PotreeViewer.vue';
-import SettingsMenu from './components/SettingsMenu.vue';
-import AboutPage from './components/AboutPage.vue';
-import OptionsButton from './components/OptionsButton.vue';
-import NarrativeSelector from './components/NarrativeSelector.vue';
-import InfoBox from './components/InfoBox.vue';
-import SourcePage from './components/SourcePage.vue';
-import MiniMap from './components/MiniMap.vue';
-import NavigationButton from './components/NavigationButton.vue';
-import LanguageSwitchButton from './components/LanguageSwitchButton.vue';
+import IntroductionVideo from './components/IntroductionVideo.vue';
+import WelcomeModal from './components/WelcomeModal.vue';
+import TourViewer from './components/TourViewer.vue';
+import PointCloudViewer from './components/PointCloudViewer.vue';
 
 export default {
   name: 'App',
   components: {
-    TheLogo,
-    PotreeViewer,
-    SettingsMenu,
-    AboutPage,
-    OptionsButton,
-    NarrativeSelector,
-    InfoBox,
-    SourcePage,
-    MiniMap,
-    NavigationButton,
-    LanguageSwitchButton,
-  },
-  computed: {
-    ...mapState([
-      'onPremiseMode',
-      'step',
-      'selectedNarrative',
-      'room',
-      'sources',
-    ]),
-    ...mapGetters(['narrative']),
-  },
-  watch: {
-    async selectedNarrative() {
-      this.updateSourceData();
-    },
-    async room() {
-      this.updateSourceData();
-    },
-  },
-  mounted() {
-    this.$store.dispatch('setNarratives', this.$i18n.locale);
-
-    this.$watch('$i18n.locale', async () => {
-      await this.$store.dispatch('setNarratives', this.$i18n.locale);
-      this.updateSourceData();
-    });
-
-    if (this.onPremiseMode) {
-      let lastActivity = new Date().getTime();
-      const resetTimer = () => {
-        lastActivity = new Date().getTime();
-      };
-      document.onkeydown = resetTimer;
-      document.onmousemove = resetTimer;
-      document.onmousedown = resetTimer;
-      document.ontouchstart = resetTimer;
-      document.onclick = resetTimer;
-      document.onscroll = resetTimer;
-
-      setInterval(() => {
-        if (new Date().getTime() - lastActivity >= 120000) {
-          this.backToStart();
-        }
-      }, 1000);
-    }
-  },
-  methods: {
-    switchLanguage() {
-      this.$i18n.locale = this.$i18n.locale === 'nl' ? 'en' : 'nl';
-    },
-    toggleSettingsMenu() {
-      this.$refs.settingsMenu.toggleMenu();
-    },
-    openAboutPage() {
-      this.$refs.aboutPage.open();
-    },
-    async updateSourceData() {
-      await this.$store.dispatch(
-        'updateSourceData',
-        this.$i18n.locale === 'nl' ? 'dutch' : 'english',
-      );
-      if (
-        (this.sources.house.content ||
-          this.sources.house.media ||
-          this.sources.camp.content ||
-          this.sources.camp.media ||
-          this.sources.memory.content ||
-          this.sources.memory.media) &&
-        !this.$refs.infoBox.visible &&
-        this.step !== 7 &&
-        this.step !== 8
-      ) {
-        this.$refs.infoBox.expand();
-      }
-    },
-    backToStart() {
-      window.location.reload();
-    },
+    IntroductionVideo,
+    WelcomeModal,
+    TourViewer,
+    PointCloudViewer,
   },
 };
 </script>
 
 <style>
 @font-face {
-  font-family: 'CamphorPro-Regular';
-  src: url('assets/fonts/CamphorPro-Regular.woff') format('woff');
+  font-family: 'Source Serif';
+  src: url('assets/fonts/SourceSerif4Variable-Roman.ttf')
+    format('truetype-variations');
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Source Serif';
+  src: url('assets/fonts/SourceSerif4Variable-Italic.ttf')
+    format('truetype-variations');
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('assets/fonts/Montserrat-VariableFont_wght.ttf')
+    format('truetype-variations');
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('assets/fonts/Montserrat-Italic-VariableFont_wght.ttf')
+    format('truetype-variations');
+  font-style: italic;
 }
 
-@font-face {
-  font-family: 'CamphorPro-Italic';
-  src: url('assets/fonts/CamphorPro-Italic.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Flaco-Mono';
-  src: url('assets/fonts/Flaco-Mono.woff2') format('woff2'),
-    url('assets/fonts/Flaco-Mono.woff') format('woff'),
-    url('assets/fonts/Flaco-Mono.ttf') format('truetype'),
-    url('assets/fonts/Flaco-Mono.eot') format('eot');
+:root {
+  --font-serif: 'Source Serif', serif;
+  --font-sans-serif: 'Montserrat', sans-serif;
+  --accent: #49cece;
+  --accent-dark: #0e9c9c;
+  /* --background: #f8f1ed; */
+  --background: #fff4eb;
+  --text: #073333;
+  --grey-light: #b2b2b2;
+  --grey: #808080;
+  --grey-dark: #2b2b2b;
+  --grey-background: #c8c4c1;
+  --white: #fff;
+  --black: #333;
 }
 
 html {
@@ -191,31 +71,56 @@ html {
 }
 
 body {
-  font-family: 'CamphorPro-Regular', sans-serif;
+  font-family: var(--font-sans-serif);
   margin: 0;
   overflow: hidden;
+  background-color: var(--grey-dark);
 }
 
-h1,
-h2,
-h3,
-h4 {
-  font-family: 'Flaco-Mono', sans-serif;
+p {
+  font-family: var(--font-serif);
+}
+
+ol,
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  background: unset;
+  border: unset;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  color: inherit;
+  padding: 0;
+  text-align: left;
 }
 
 #app {
   position: absolute;
   width: 100vw;
   height: 100vh;
-  top: 0;
-  right: 0;
+  inset: 0;
   overflow: hidden;
 }
 
-#potree-viewer {
-  position: absolute;
-  top: 0;
-  left: 0;
+.scrollable {
+  scrollbar-color: var(--scrollbar-color, #b2b2b2)
+    var(--scrollbar-bg-color, #2b2b2b);
+  scrollbar-width: thin;
+}
+.scrollable::-webkit-scrollbar {
+  width: 0.5rem;
+}
+.scrollable::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-color, #b2b2b2);
+}
+.scrollable::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg-color, #2b2b2b);
 }
 
 .fade-enter-active {
@@ -228,95 +133,48 @@ h4 {
 .fade-leave-to {
   opacity: 0;
 }
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    animation-timing-function: ease-out;
+  }
+  15% {
+    transform: scale(1.2);
+    animation-timing-function: ease-out;
+  }
+  30% {
+    transform: scale(1);
+    animation-timing-function: ease-out;
+  }
+  45% {
+    transform: scale(1.2);
+    animation-timing-function: ease-out;
+  }
+  60% {
+    transform: scale(1);
+    animation-timing-function: ease-out;
+  }
+}
 </style>
 
 <style scoped>
-#logo {
-  position: absolute;
-  top: 1rem;
-  left: 3rem;
-  z-index: 9;
-}
-
-#language-switch {
-  position: absolute;
-  top: 7rem;
-  left: 3rem;
-  z-index: 2;
-}
-
-.options-buttons {
-  position: absolute;
-  top: 5rem;
-  left: 2rem;
-  z-index: 2;
-}
-
-.options-buttons button {
-  margin: 1rem 0;
-}
-
-.settings-menu-container {
+#app {
   display: flex;
-  align-items: flex-start;
-  max-height: 2.5rem;
+  overflow: hidden;
 }
 
-.share-menu-container {
-  display: flex;
-  align-items: flex-start;
-  transform: translateY(-1rem);
-  max-height: 2.5rem;
+.introduction-video {
+  z-index: 4;
 }
-
-.narrative-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  display: flex;
-  align-items: flex-end;
-  padding: 0.2rem 0;
-  pointer-events: none;
-}
-
-#bottom-fade {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 7rem;
-  background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
-  pointer-events: none;
-}
-
-#top-left-fade {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 30rem;
-  height: 20rem;
-  background: linear-gradient(
-    to bottom right,
-    rgba(0, 0, 0, 0.9),
-    rgba(0, 0, 0, 0) 50%
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-
-.to-start-button {
-  position: absolute;
-  right: 2%;
-  top: 2%;
-  padding: 0.5rem 0.5rem;
+.welcome-modal {
   z-index: 3;
-  transform: scale(0.7);
 }
-
-@media only screen and (max-width: 1400px) {
-  .narrative-container {
-    flex-wrap: wrap;
-  }
+.tour-viewer {
+  z-index: 2;
+}
+.point-cloud-viewer {
+  z-index: 1;
+  flex: 1;
 }
 </style>

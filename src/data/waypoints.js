@@ -4,7 +4,7 @@ export default {
     coordinates: { x: 236807.5352976607, y: 548506.569323347, z: 18 },
     annotations: [
       {
-        name: 'Entree',
+        name: 'entrance',
         coordinates: [236798.257, 548509.232, 17.26],
         waypoint: 1,
         arrow: 'right',
@@ -12,7 +12,7 @@ export default {
     ],
   },
   1: {
-    room: 'hallway',
+    room: 'entrance',
     coordinates: { x: 236799.468, y: 548507.717, z: 17.614 },
     annotations: [
       {

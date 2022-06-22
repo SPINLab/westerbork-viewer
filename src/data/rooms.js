@@ -3,6 +3,10 @@ export default {
     directusName: 'Buiten',
     floor: 1,
   },
+  entrance: {
+    directusName: '1_Entrance/hallway',
+    floor: 1,
+  },
   hallway: {
     directusName: '1_Entrance/hallway',
     floor: 1,

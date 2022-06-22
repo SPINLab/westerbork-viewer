@@ -27,13 +27,20 @@ export default {
   },
   created() {
     document.addEventListener('click', this.documentClick);
+    document.addEventListener('keydown', this.onKeyDown);
   },
-  destroyed() {
+  beforeDestroy() {
     document.removeEventListener('click', this.documentClick);
+    document.removeEventListener('keydown', this.onKeyDown);
   },
   methods: {
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
+    },
+    onKeyDown(event) {
+      if (event.ctrlKey && event.key === 'i') {
+        this.toggleMenu();
+      }
     },
     documentClick(e) {
       if (

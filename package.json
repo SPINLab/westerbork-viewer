@@ -11,6 +11,7 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.5",
     "lodash.debounce": "^4.0.8",
     "potree": "github:chrislcs/potree#westerbork-2",
     "shepherd.js": "^9.0.0",
