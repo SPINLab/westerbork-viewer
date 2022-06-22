@@ -48,6 +48,10 @@
         </div>
       </div>
     </section>
+    <div v-if="debugMode" class="debug-info">
+      <pre>{{ debugInfo.position }}</pre>
+      <pre>{{ debugInfo.rotation }}</pre>
+    </div>
     <div id="potree-viewer" />
   </div>
 </template>
@@ -126,6 +130,18 @@ export default {
       hotspotPopupShown: false,
       currentHotspot: { title: '', text: '' },
       currentHotspotAnnotation: null,
+      debugMode: false,
+      debugInfo: {
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        rotation: {
+          yaw: null,
+          pitch: null,
+        },
+      },
     };
   },
   computed: {
@@ -198,10 +214,13 @@ export default {
     this.initAnnotations();
     this.initHotspotPopperUpdater();
     this.pauseRender();
+    console.log(this.$viewer.getMoveSpeed());
     document.addEventListener('click', this.onDocumentClick);
+    document.addEventListener('keydown', this.onKeyDown);
   },
   beforeDestroy() {
     document.removeEventListener('click', this.onDocumentClick);
+    document.removeEventListener('keydown', this.onKeyDown);
   },
   methods: {
     loadPointCloud() {
@@ -218,6 +237,7 @@ export default {
       const { material } = pointcloud;
       material.size = size;
       material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+      this.$viewer.setMoveSpeed(0);
     },
     pauseRender() {
       this.$viewer.renderer.setAnimationLoop(null);
@@ -229,7 +249,7 @@ export default {
     },
     setControls() {
       this.$viewer.setControls(new Potree.FirstPersonControls(this.$viewer));
-      this.$viewer.setMoveSpeed(1);
+      this.$viewer.setMoveSpeed(0);
       this.$viewer.controls.rotationSpeed = 100;
       this.$viewer.controls.zoomToLocation = () => true;
       this.$viewer.scene.view.position.set(236807.535, 548506.569, 18);
@@ -480,6 +500,28 @@ export default {
         this.$refs.chapterNotice.classList.remove('expanded');
       }
     },
+    onKeyDown(event) {
+      if (event.ctrlKey && event.key === 'b') {
+        if (this.debugMode) {
+          if (this.debugInterval) {
+            clearInterval(this.debugInterval);
+            this.debugInterval = null;
+          }
+          this.debugMode = false;
+          this.$viewer.setMoveSpeed(0);
+        } else {
+          this.debugMode = true;
+          this.$viewer.setMoveSpeed(1.5);
+          this.debugInterval = setInterval(() => {
+            this.debugInfo.position = this.$viewer.scene.view.position;
+            this.debugInfo.rotation = {
+              yaw: this.$viewer.scene.view.yaw,
+              pitch: this.$viewer.scene.view.pitch,
+            };
+          }, 10);
+        }
+      }
+    },
     showWelcomeModal() {
       this.$store.dispatch('setWelcomeModalOpen', true);
       this.$store.dispatch('setRenderPointCloud', false);
@@ -673,6 +715,18 @@ export default {
 .hotspot-content h3 {
   margin: 0;
   font-size: 1.5rem;
+}
+
+.debug-info {
+  position: absolute;
+  top: 10rem;
+  left: 1rem;
+  z-index: 10;
+  color: black;
+  background-color: white;
+  font-size: 1.2rem;
+  border: 1px solid black;
+  border-radius: 4px;
 }
 </style>
 
