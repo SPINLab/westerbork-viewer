@@ -67,6 +67,8 @@ export function useOverflowFade(element, options = { fadeHeight: 100 }) {
     if (overflown) {
       const fadePosition = getFadePosition();
       setMask(fadePosition);
+    } else {
+      setMask(null);
     }
   }
 
