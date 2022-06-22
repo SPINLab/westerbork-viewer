@@ -214,7 +214,6 @@ export default {
     this.initAnnotations();
     this.initHotspotPopperUpdater();
     this.pauseRender();
-    console.log(this.$viewer.getMoveSpeed());
     document.addEventListener('click', this.onDocumentClick);
     document.addEventListener('keydown', this.onKeyDown);
   },
