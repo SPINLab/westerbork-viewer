@@ -78,6 +78,9 @@ export default {
     content() {
       this.checkOverflow();
     },
+    selectedTour() {
+      this.$store.dispatch('setCurrentChapterIndex', 0);
+    },
   },
   mounted() {
     this.checkOverflow = useOverflowFade(this.$refs.chapterContent);

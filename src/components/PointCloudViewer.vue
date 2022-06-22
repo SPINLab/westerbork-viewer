@@ -186,10 +186,10 @@ export default {
       } else {
         this.updateWaypoint(this.waypoint);
       }
-      // this.createAnnotations();
+      this.createAnnotations();
     },
     place() {
-      // this.createAnnotations();
+      this.createAnnotations();
     },
     renderPointCloud() {
       if (this.renderPointCloud) {

@@ -15,7 +15,7 @@ export default new Vuex.Store({
     waypointLabels: [],
     hotspots: [],
     selectedTour: null,
-    currentChapterIndex: 0,
+    currentChapterIndex: null,
     tourOpen: true,
     mediaOpen: true,
     welcomeModalOpen: false,
@@ -95,11 +95,10 @@ export default new Vuex.Store({
 
       // TODO: remove tmp add coordinates to waypoints
       chapters.forEach((chapter) => {
-        chapter.waypoint.data.coordinate = [236798.257, 548509.232, 17.26];
+        chapter.waypoint.data.coordinate = [236807.535, 548506.569, 18];
       });
 
       commit('setChapters', chapters);
-      // commit('setSelectedTour', TOUR_IDS.indexOf(chapters[0].tour.data.id));
     },
     async getPlaces({ commit }) {
       const response = await fetch(
