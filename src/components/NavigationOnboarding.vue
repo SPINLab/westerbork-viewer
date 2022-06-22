@@ -10,41 +10,41 @@ export default {
   name: 'NavigationOnboarding',
   data() {
     return {
-      tour: null,
+      onboarding: null,
     };
   },
   computed: {
     ...mapState(['onPremiseMode']),
   },
   mounted() {
-    this.createTour();
+    this.createOnboarding();
     this.$watch('$i18n.locale', () => {
-      this.createTour();
+      this.createOnboarding();
     });
-    this.tour.start();
+    this.onboarding.start();
   },
   methods: {
-    clearTour() {
+    clearOnboarding() {
       while (this.$el.firstChild) {
         this.$el.firstChild.remove();
       }
     },
-    createTour() {
-      this.clearTour();
-      this.tour = new Shepherd.Tour({ modalContainer: this.$el });
+    createOnboarding() {
+      this.clearOnboarding();
+      this.onboarding = new Shepherd.Onboarding({ modalContainer: this.$el });
 
-      this.tour.addStep({
+      this.onboarding.addStep({
         id: 'controls',
         text: 'Tap en sleep in het scherm om rond te kijken.',
         buttons: [
           {
             text: 'Ok. Is er ook een kaart?',
-            action: this.tour.complete,
+            action: this.onboarding.complete,
           },
         ],
       });
 
-      this.tour.on('complete', () => {
+      this.onboarding.on('complete', () => {
         this.$store.dispatch('setNavigationOnboardingOpen', false);
       });
     },
