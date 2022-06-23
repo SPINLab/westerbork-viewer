@@ -5,7 +5,7 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <nav ref="tourNav" class="scrollable">
+    <nav>
       <ol>
         <li class="side-menu-item">
           <div class="side-menu-item-icon home-icon-container">
@@ -19,27 +19,29 @@
             {{ tour.name_nl }}
           </button>
         </li>
-        <li
-          v-for="(someChapter, index) in selectedChapters"
-          :id="`chapter-${index}`"
-          :key="someChapter.id"
-          class="side-menu-item"
-          :class="{ active: currentChapterIndex === index }"
-        >
-          <div class="side-menu-item-icon step-number">{{ index + 1 }}</div>
-          <button
-            type="button"
-            class="side-menu-item-description step-description"
-            @click="goToChapter(index)"
+        <div ref="chaptersList" class="chapters-list scrollable">
+          <li
+            v-for="(someChapter, index) in selectedChapters"
+            :id="`chapter-${index}`"
+            :key="someChapter.id"
+            class="side-menu-item"
+            :class="{ active: currentChapterIndex === index }"
           >
-            <div class="step-title">
-              {{ someChapter.pages.data[0].page_title_nl }}
-            </div>
-            <div class="step-place">
-              {{ getChapterPlace(someChapter) }}
-            </div>
-          </button>
-        </li>
+            <div class="side-menu-item-icon step-number">{{ index + 1 }}</div>
+            <button
+              type="button"
+              class="side-menu-item-description step-description"
+              @click="goToChapter(index)"
+            >
+              <div class="step-title">
+                {{ someChapter.pages.data[0].page_title_nl }}
+              </div>
+              <div class="step-place">
+                {{ getChapterPlace(someChapter) }}
+              </div>
+            </button>
+          </li>
+        </div>
       </ol>
     </nav>
   </aside>
@@ -91,7 +93,7 @@ export default {
   },
   mounted() {
     document.addEventListener('click', this.onDocumentClick);
-    this.checkOverflow = useOverflowFade(this.$refs.tourNav, {
+    this.checkOverflow = useOverflowFade(this.$refs.chaptersList, {
       fadeHeight: 200,
     });
   },
@@ -159,21 +161,12 @@ nav {
   position: relative;
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-aside.expanded nav {
-  scrollbar-width: thin;
-}
-nav::-webkit-scrollbar {
-  display: none;
-}
-aside.expanded nav::-webkit-scrollbar {
-  display: unset;
 }
 
 ol {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: 0;
   margin: 0;
   margin-left: 1.8rem;
@@ -183,6 +176,27 @@ ol {
 p {
   margin: 0;
   padding: 0;
+}
+
+.chapters-list {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (hover: hover) {
+  .chapters-list {
+    scrollbar-width: none;
+  }
+  aside.expanded .chapters-list {
+    scrollbar-width: thin;
+  }
+  .chapters-list::-webkit-scrollbar {
+    display: none;
+  }
+  aside.expanded .chapters-list::-webkit-scrollbar {
+    display: unset;
+  }
 }
 
 .side-menu-item {

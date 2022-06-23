@@ -76,6 +76,7 @@ export default {
   },
   watch: {
     content() {
+      this.$refs.chapterContent.scrollTop = 0;
       this.checkOverflow();
     },
     selectedTour() {
@@ -124,8 +125,10 @@ p {
   margin: 0;
   font-size: 1.5rem;
   overflow-y: auto;
-  --scrollbar-bg-color: var(--background);
   padding-right: 1rem;
+  flex: 1;
+  white-space: pre-wrap;
+  --scrollbar-bg-color: var(--background);
 }
 
 .header {

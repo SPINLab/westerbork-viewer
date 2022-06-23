@@ -114,19 +114,21 @@ button {
   overflow: hidden;
 }
 
-.scrollable {
-  scrollbar-color: var(--scrollbar-color, #b2b2b2)
-    var(--scrollbar-bg-color, #2b2b2b);
-  scrollbar-width: thin;
-}
-.scrollable::-webkit-scrollbar {
-  width: 0.5rem;
-}
-.scrollable::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-color, #b2b2b2);
-}
-.scrollable::-webkit-scrollbar-track {
-  background: var(--scrollbar-bg-color, #2b2b2b);
+@media (hover: hover) {
+  .scrollable {
+    scrollbar-color: var(--scrollbar-color, #b2b2b2)
+      var(--scrollbar-bg-color, #2b2b2b);
+    scrollbar-width: thin;
+  }
+  .scrollable::-webkit-scrollbar {
+    width: 0.5rem;
+  }
+  .scrollable::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-color, #b2b2b2);
+  }
+  .scrollable::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg-color, #2b2b2b);
+  }
 }
 
 .fade-enter-active {
