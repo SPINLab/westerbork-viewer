@@ -207,6 +207,7 @@ export default {
     Vue.prototype.$viewer = new Potree.Viewer(this.$el);
     this.$viewer.setFOV(80);
     this.$viewer.setBackground('skybox');
+    this.$viewer.skybox = Potree.Utils.loadSkybox('assets/skybox/');
     this.updateGraphics(this.graphics);
     this.updateNumPoints(this.numPoints);
     this.loadPointCloud();
