@@ -49,8 +49,8 @@
       </div>
     </section>
     <div v-if="debugMode" class="debug-info">
-      <pre>{{ debugInfo.position }}</pre>
-      <pre>{{ debugInfo.rotation }}</pre>
+      <pre style="white-space: nowrap">{{ debugInfo.position }}</pre>
+      <pre style="white-space: nowrap">{{ debugInfo.rotation }}</pre>
     </div>
     <div id="potree-viewer" />
   </div>
@@ -512,10 +512,24 @@ export default {
           this.debugMode = true;
           this.$viewer.setMoveSpeed(1.5);
           this.debugInterval = setInterval(() => {
-            this.debugInfo.position = this.$viewer.scene.view.position;
+            const round = (num) =>
+              Math.round((num + Number.EPSILON) * 1000) / 1000;
+            this.debugInfo.position = {
+              x: round(this.$viewer.scene.view.position.x),
+              y: round(this.$viewer.scene.view.position.y),
+              z: round(this.$viewer.scene.view.position.z),
+            };
+            // limit yaw between minus pi and pi
+            let { yaw } = this.$viewer.scene.view;
+            while (yaw > Math.PI) {
+              yaw -= 2 * Math.PI;
+            }
+            while (yaw < -Math.PI) {
+              yaw += 2 * Math.PI;
+            }
             this.debugInfo.rotation = {
-              yaw: this.$viewer.scene.view.yaw,
-              pitch: this.$viewer.scene.view.pitch,
+              yaw: round(yaw),
+              pitch: round(this.$viewer.scene.view.pitch),
             };
           }, 10);
         }
@@ -726,6 +740,7 @@ export default {
   font-size: 1.2rem;
   border: 1px solid black;
   border-radius: 4px;
+  padding: 1rem;
 }
 </style>
 
