@@ -16,13 +16,14 @@ export default new Vuex.Store({
     hotspots: [],
     selectedTour: null,
     currentChapterIndex: null,
+    currentPlace: null,
+    waypoint: null,
+    media: null,
     tourOpen: true,
     mediaOpen: true,
     welcomeModalOpen: false,
     introductionOpen: true,
     navigationOnboardingOpen: false,
-    currentPlace: null,
-    waypoint: null,
     renderPointCloud: false,
     graphics: 'medium',
     numPoints: process.env.VUE_APP_MODE ? 200000 : 200000,
@@ -46,14 +47,20 @@ export default new Vuex.Store({
     setWaypoint(state, value) {
       state.waypoint = value;
     },
-    setRenderPointCloud(state, value) {
-      state.renderPointCloud = value;
+    setSelectedTour(state, value) {
+      state.selectedTour = value;
     },
-    setGraphics(state, value) {
-      state.graphics = value;
+    setCurrentChapterIndex(state, value) {
+      state.currentChapterIndex = value;
     },
-    setNumPoints(state, value) {
-      state.numPoints = value;
+    nextChapter(state) {
+      state.currentChapterIndex += 1;
+    },
+    previousChapter(state) {
+      state.currentChapterIndex -= 1;
+    },
+    setMedia(state, value) {
+      state.media = value;
     },
     setTourOpen(state, value) {
       state.tourOpen = value;
@@ -70,17 +77,14 @@ export default new Vuex.Store({
     setNavigationOnboardingOpen(state, value) {
       state.navigationOnboardingOpen = value;
     },
-    setSelectedTour(state, value) {
-      state.selectedTour = value;
+    setRenderPointCloud(state, value) {
+      state.renderPointCloud = value;
     },
-    setCurrentChapterIndex(state, value) {
-      state.currentChapterIndex = value;
+    setGraphics(state, value) {
+      state.graphics = value;
     },
-    nextChapter(state) {
-      state.currentChapterIndex += 1;
-    },
-    previousChapter(state) {
-      state.currentChapterIndex -= 1;
+    setNumPoints(state, value) {
+      state.numPoints = value;
     },
   },
   actions: {
@@ -92,12 +96,6 @@ export default new Vuex.Store({
       const chapters = json.data.filter((chapter) =>
         TOUR_IDS.includes(chapter.tour.data.id),
       );
-
-      // TODO: remove tmp add coordinates to waypoints
-      chapters.forEach((chapter) => {
-        chapter.waypoint.data.coordinate = [236807.535, 548506.569, 18];
-      });
-
       commit('setChapters', chapters);
     },
     async getPlaces({ commit }) {
@@ -129,35 +127,18 @@ export default new Vuex.Store({
       const json = await response.json();
       commit('setHotspots', json.data);
     },
+    async getMedia({ commit }, id) {
+      const response = await fetch(
+        `https://data.campscapes.org/api/1.1/files/${id}?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5`,
+      );
+      const json = await response.json();
+      commit('setMedia', json.data);
+    },
     setCurrentPlace({ commit }, value) {
       commit('setCurrentPlace', value);
     },
     setWaypoint({ commit }, value) {
       commit('setWaypoint', value);
-    },
-    setRenderPointCloud({ commit }, value) {
-      commit('setRenderPointCloud', value);
-    },
-    setGraphics({ commit }, value) {
-      commit('setGraphics', value);
-    },
-    setNumPoints({ commit }, value) {
-      commit('setNumPoints', value);
-    },
-    setMediaOpen({ commit }, value) {
-      commit('setMediaOpen', value);
-    },
-    setTourOpen({ commit }, value) {
-      commit('setTourOpen', value);
-    },
-    setWelcomeModalOpen({ commit }, value) {
-      commit('setWelcomeModalOpen', value);
-    },
-    setIntroductionOpen({ commit }, value) {
-      commit('setIntroductionOpen', value);
-    },
-    setNavigationOnboardingOpen({ commit }, value) {
-      commit('setNavigationOnboardingOpen', value);
     },
     setSelectedTour({ commit }, value) {
       commit('setSelectedTour', value);
@@ -181,6 +162,33 @@ export default new Vuex.Store({
         commit('setWaypoint', waypoint);
       }
     },
+    setMedia({ commit }, value) {
+      commit('setMedia', value);
+    },
+    setMediaOpen({ commit }, value) {
+      commit('setMediaOpen', value);
+    },
+    setTourOpen({ commit }, value) {
+      commit('setTourOpen', value);
+    },
+    setWelcomeModalOpen({ commit }, value) {
+      commit('setWelcomeModalOpen', value);
+    },
+    setIntroductionOpen({ commit }, value) {
+      commit('setIntroductionOpen', value);
+    },
+    setNavigationOnboardingOpen({ commit }, value) {
+      commit('setNavigationOnboardingOpen', value);
+    },
+    setRenderPointCloud({ commit }, value) {
+      commit('setRenderPointCloud', value);
+    },
+    setGraphics({ commit }, value) {
+      commit('setGraphics', value);
+    },
+    setNumPoints({ commit }, value) {
+      commit('setNumPoints', value);
+    },
   },
   getters: {
     tours: (state) =>
@@ -202,16 +210,11 @@ export default new Vuex.Store({
       ),
     chapter: (state, getters) =>
       getters.selectedChapters[state.currentChapterIndex],
-    media: (_, getters) => getters.chapter?.pages?.data?.[0]?.media,
-    mediaIsImage: (_, getters) =>
-      getters.media?.file?.data?.type.startsWith('image'),
-    mediaIsVideo: (_, getters) =>
-      getters.media?.file?.data?.type.startsWith('video'),
-    mediaDataUrl: (_, getters) =>
-      getters.media?.file?.data?.url
-        ? `https://data.campscapes.org/${getters.media.file.data.url}`
-        : '',
-    mediaTitle: (_, getters) => getters.media?.file?.data?.title || '',
+    mediaIsImage: (state) => state.media?.type.startsWith('image'),
+    mediaIsVideo: (state) => state.media?.type.startsWith('video'),
+    mediaDataUrl: (state) =>
+      state.media?.url ? `https://data.campscapes.org/${state.media.url}` : '',
+    mediaTitle: (state) => state.media?.title || '',
     selectedWaypoints: (_, getters) =>
       getters.selectedChapters.map((chapter) => chapter.waypoint),
     currentHotspots: (state) =>

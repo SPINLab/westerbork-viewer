@@ -5,7 +5,7 @@
     </div>
     <div class="figure-container">
       <figure :class="{ 'video-figure': mediaIsVideo }">
-        <img v-if="mediaIsImage" :src="dataUrl" :alt="mediaTitle" />
+        <img v-if="mediaIsImage" :src="mediaDataUrl" :alt="mediaTitle" />
         <video v-if="mediaIsVideo" controls>
           <source :src="mediaDataUrl" type="video/mp4" />
           Your browser does not support the video tag.
@@ -17,11 +17,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'TourMedia',
   computed: {
+    ...mapState(['media']),
     ...mapGetters([
       'chapter',
       'mediaIsImage',
@@ -30,13 +31,29 @@ export default {
       'mediaTitle',
     ]),
     caption() {
-      return this.chapter?.pages?.data?.[0]?.media?.caption || '';
+      return this.media?.caption || '';
     },
+  },
+  watch: {
+    chapter() {
+      this.getMedia();
+    },
+  },
+  mounted() {
+    this.getMedia();
   },
   methods: {
     minimize() {
       this.$store.dispatch('setMediaOpen', false);
       this.$store.dispatch('setRenderPointCloud', true);
+    },
+    getMedia() {
+      const mediaId = this.chapter?.pages?.data?.[0]?.media;
+      if (mediaId) {
+        this.$store.dispatch('getMedia', mediaId);
+      } else {
+        this.$store.dispatch('setMedia', null);
+      }
     },
   },
 };

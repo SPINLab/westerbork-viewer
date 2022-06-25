@@ -1,6 +1,6 @@
 <template>
   <button type="button" @click="showMedia">
-    <img v-if="mediaIsImage" :src="dataUrl" :alt="mediaTitle" />
+    <img v-if="mediaIsImage" :src="mediaDataUrl" :alt="mediaTitle" />
     <video v-if="mediaIsVideo" preload="metadata">
       <source :src="`${mediaDataUrl}\#t=0.5`" type="video/mp4" />
     </video>
