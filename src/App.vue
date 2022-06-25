@@ -70,6 +70,7 @@ export default {
   --grey-background: #c8c4c1;
   --white: #fff;
   --black: #333;
+  font-size: 75%;
 }
 
 html {
