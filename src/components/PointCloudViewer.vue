@@ -43,8 +43,8 @@
     >
       <div class="hotspot-overflow">
         <div class="hotspot-content scrollable">
-          <h3 class="hotspot-title">{{ currentHotspot.title_nl }}</h3>
-          <p class="hotspot-text">{{ currentHotspot.text_nl }}</p>
+          <h3 class="hotspot-title">{{ selectedHotspot.title_nl }}</h3>
+          <p class="hotspot-text">{{ selectedHotspot.text_nl }}</p>
         </div>
       </div>
     </section>
@@ -128,8 +128,8 @@ export default {
       onboardingShown: false,
       popperOverflowY: '0px',
       hotspotPopupShown: false,
-      currentHotspot: { title: '', text: '' },
-      currentHotspotAnnotation: null,
+      selectedHotspot: { title: '', text: '' },
+      selectedHotspotAnnotation: null,
       debugMode: false,
       debugInfo: {
         position: {
@@ -152,16 +152,25 @@ export default {
       'step',
       'graphics',
       'numPoints',
-      'waypoint',
+      'waypointId',
       'tourOpen',
       'mediaOpen',
       'navigationOnboardingOpen',
       'renderPointCloud',
     ]),
-    ...mapGetters(['tour', 'selectedWaypoints', 'selectedChapters', 'place']),
+    ...mapGetters([
+      'tour',
+      'waypoints',
+      'tourChapters',
+      'chapter',
+      'waypoint',
+      'chapterAtWaypoint',
+      'place',
+      'placeHotspots',
+    ]),
     waypointHasChapter() {
-      return this.selectedChapters.find(
-        (chapter) => chapter.waypoint.data.id === this.waypoint,
+      return this.tourChapters.find(
+        (chapter) => chapter.waypoint.data.id === this.waypointId,
       );
     },
     cssVariables() {
@@ -180,11 +189,11 @@ export default {
     numPoints() {
       this.updateNumPoints(this.numPoints);
     },
-    waypoint() {
-      if (this.tourOpen) {
-        this.goToWaypoint(this.waypoint, 0);
+    waypointId() {
+      if (this.mediaOpen) {
+        this.goToWaypoint(this.waypointId, 0);
       } else {
-        this.updateWaypoint(this.waypoint);
+        this.goToWaypoint(this.waypointId);
       }
       this.createAnnotations();
     },
@@ -267,16 +276,34 @@ export default {
       this.createWaypoints();
       this.createHotspots();
     },
+    parseCoordinates(coordinatesString) {
+      try {
+        return Object.values(JSON.parse(coordinatesString));
+      } catch (error) {
+        return null;
+      }
+    },
+    parseDirection(directionString) {
+      try {
+        const { yaw, pitch } = JSON.parse(directionString);
+        const direction = new THREE.Vector3(0, 1, 0);
+        direction.applyAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
+        direction.applyAxisAngle(new THREE.Vector3(0, 0, 1), yaw);
+        return direction;
+      } catch (error) {
+        return null;
+      }
+    },
     createWaypoints() {
-      const waypointLabels = this.waypointLabels[this.waypoint];
+      const waypointLabels = this.waypointLabels[this.waypointId];
       if (waypointLabels?.length) {
         waypointLabels.forEach((label) => {
           const potreeAnnotation = new Potree.Annotation({
-            position: label.coordinate,
+            position: this.parseCoordinates(label.coordinate),
             title: label.text_nl,
           });
           potreeAnnotation.domElement[0].onclick = () => {
-            this.$store.dispatch('setWaypoint', label.waypoint.data.id);
+            this.$store.dispatch('setWaypointId', label.to_waypoint.data.id);
           };
           if (label.arrow_direction) {
             potreeAnnotation.domElement[0].classList.add(
@@ -290,27 +317,26 @@ export default {
       }
     },
     createHotspots() {
-      const hotspotsAtPlace = this.hotspots.filter(
-        (hotspot) => hotspot.place.data.id === this.place?.id,
-      );
-      if (hotspotsAtPlace?.length) {
-        hotspotsAtPlace.forEach((hotspot) => {
-          const potreeAnnotation = new Potree.Annotation({
-            position: hotspot.coordinates,
-            title: hotspot.title_nl,
-          });
-          potreeAnnotation.elTitle.append(infoIconSvg);
-          potreeAnnotation.domElement[0].onclick = () => {
-            this.toggleHotspot(hotspot, potreeAnnotation);
-          };
-          potreeAnnotation.elTitle.off();
-          potreeAnnotation.domElement.off();
-          this.$viewer.scene.annotations.add(potreeAnnotation);
+      if (this.placeHotspots?.length) {
+        this.placeHotspots.forEach((hotspot) => {
+          if (hotspot.coordinates != null) {
+            const potreeAnnotation = new Potree.Annotation({
+              position: this.parseCoordinates(hotspot.coordinates),
+              title: hotspot.title_nl,
+            });
+            potreeAnnotation.elTitle.append(infoIconSvg);
+            potreeAnnotation.domElement[0].onclick = () => {
+              this.toggleHotspot(hotspot, potreeAnnotation);
+            };
+            potreeAnnotation.elTitle.off();
+            potreeAnnotation.domElement.off();
+            this.$viewer.scene.annotations.add(potreeAnnotation);
+          }
         });
       }
     },
     toggleHotspot(hotspot, annotation) {
-      if (this.hotspotPopupShown && this.currentHotspot === hotspot) {
+      if (this.hotspotPopupShown && this.selectedHotspot === hotspot) {
         this.hideHotspotPopup();
       } else {
         this.showHotspotPopup(hotspot, annotation);
@@ -323,7 +349,7 @@ export default {
         this.currentAnnotation.elTitle.append(infoIconSvg);
         this.currentAnnotation = null;
       }
-      this.currentHotspot = {
+      this.selectedHotspot = {
         title_en: '',
         title_nl: '',
         text_en: '',
@@ -336,7 +362,7 @@ export default {
         this.currentAnnotation.elTitle.append(infoIconSvg);
       }
       this.hotspotPopupShown = true;
-      this.currentHotspot = hotspot;
+      this.selectedHotspot = hotspot;
       this.currentAnnotation = annotation;
       annotation.elTitle.empty();
       annotation.elTitle.append(crossIconSvg);
@@ -413,66 +439,97 @@ export default {
     updateNumPoints(numPoints) {
       this.$viewer.setPointBudget(numPoints);
     },
-    goToWaypoint(waypointId, duration = 1000) {
-      const waypoint = this.selectedWaypoints.find(
-        (w) => w.data.id === waypointId,
-      );
-      const { coordinate: coordinates } = waypoint.data;
-      let { place: placeId } = waypoint.data;
-      placeId = parseInt(placeId, 10);
-      if (coordinates) {
-        const { view } = this.$viewer.scene;
-        this.hideHotspotPopup();
-        if (duration === 0) {
-          view.position.set(coordinates[0], coordinates[1], coordinates[2]);
-          this.$store.dispatch('setCurrentPlace', placeId);
-        } else {
-          const position = new THREE.Vector3(
-            view.position.x,
-            view.position.y,
-            view.position.z,
-          );
-          const targetPosition = new THREE.Vector3(
-            coordinates[0],
-            coordinates[1],
-            coordinates[2],
-          );
-          const direction = new THREE.Vector3(
-            view.direction.x,
-            view.direction.y,
-            view.direction.z,
-          );
-          const targetDirection = new THREE.Vector3()
-            .subVectors(targetPosition, view.position)
-            .normalize();
-          const value = { x: 0 };
-          new TWEEN.Tween(value)
-            .to({ x: 1 }, duration)
-            .easing(TWEEN.Easing.Quartic.InOut)
-            .onUpdate(() => {
-              const t = value.x;
-              const pos = new THREE.Vector3(
-                (1 - t) * position.x + t * targetPosition.x,
-                (1 - t) * position.y + t * targetPosition.y,
-                (1 - t) * position.z + t * targetPosition.z,
+    goToWaypoint(waypointId, duration = 2000) {
+      const waypoint = this.waypoints?.find((w) => w.id === waypointId);
+      if (!waypoint) return;
+
+      let { coordinate: coordinates, cam_view: targetFinalDirection } =
+        waypoint;
+      coordinates = this.parseCoordinates(coordinates);
+      targetFinalDirection = this.parseDirection(targetFinalDirection);
+
+      if (!coordinates) return;
+
+      this.hideHotspotPopup();
+      const { view } = this.$viewer.scene;
+      if (duration === 0) {
+        view.position.set(coordinates[0], coordinates[1], coordinates[2]);
+        if (targetFinalDirection) {
+          view.direction = targetFinalDirection;
+        }
+        this.onNewWaypoint();
+      } else {
+        const position = new THREE.Vector3(
+          view.position.x,
+          view.position.y,
+          view.position.z,
+        );
+        const targetPosition = new THREE.Vector3(
+          coordinates[0],
+          coordinates[1],
+          coordinates[2],
+        );
+        const direction = new THREE.Vector3(
+          view.direction.x,
+          view.direction.y,
+          view.direction.z,
+        );
+        const targetDirection = new THREE.Vector3()
+          .subVectors(targetPosition, view.position)
+          .normalize();
+        const value = { x: 0 };
+        new TWEEN.Tween(value)
+          .to({ x: 1 }, duration)
+          .easing(TWEEN.Easing.Quartic.InOut)
+          .onUpdate(() => {
+            const t = value.x;
+            const pos = new THREE.Vector3(
+              (1 - t) * position.x + t * targetPosition.x,
+              (1 - t) * position.y + t * targetPosition.y,
+              (1 - t) * position.z + t * targetPosition.z,
+            );
+            if (t < 0.5) {
+              const target = new THREE.Vector3(
+                (1 - t * 2) * direction.x + t * 2 * targetDirection.x,
+                (1 - t * 2) * direction.y + t * 2 * targetDirection.y,
+                (1 - t * 2) * direction.z + t * 2 * targetDirection.z,
               );
-              if (t < 0.5) {
-                const target = new THREE.Vector3(
-                  (1 - t * 2) * direction.x + t * 2 * targetDirection.x,
-                  (1 - t * 2) * direction.y + t * 2 * targetDirection.y,
-                  (1 - t * 2) * direction.z + t * 2 * targetDirection.z,
-                );
-                view.direction = target;
-              }
-              view.position.copy(pos);
-              this.updateHotspotPopper();
-            })
-            .onComplete(() => {
-              if (this.place.id !== placeId) {
-                this.$store.dispatch('setCurrentPlace', placeId);
-              }
-            })
-            .start();
+              view.direction = target;
+            }
+            if (t >= 0.5 && targetFinalDirection) {
+              const target = new THREE.Vector3(
+                (1 - (t - 0.5) * 2) * direction.x +
+                  (t - 0.5) * 2 * targetFinalDirection.x,
+                (1 - (t - 0.5) * 2) * direction.y +
+                  (t - 0.5) * 2 * targetFinalDirection.y,
+                (1 - (t - 0.5) * 2) * direction.z +
+                  (t - 0.5) * 2 * targetFinalDirection.z,
+              );
+              view.direction = target;
+            }
+            view.position.copy(pos);
+            this.updateHotspotPopper();
+          })
+          .onComplete(() => {
+            this.onNewWaypoint();
+          })
+          .start();
+      }
+    },
+    onNewWaypoint() {
+      if (!this.waypoint) return;
+
+      const placeId = parseInt(this.waypoint.place, 10);
+      if (this.place?.id !== placeId) {
+        this.$store.dispatch('setPlaceId', placeId);
+      }
+
+      if (this.chapterAtWaypoint?.id !== this.chapter?.id) {
+        const chapterIndex = this.tourChapters.findIndex(
+          (c) => c.id === this.chapterAtWaypoint?.id,
+        );
+        if (chapterIndex !== -1) {
+          this.$store.dispatch('setChapterIndex', chapterIndex);
         }
       }
     },

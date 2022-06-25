@@ -21,11 +21,11 @@
         </li>
         <div ref="chaptersList" class="chapters-list scrollable">
           <li
-            v-for="(someChapter, index) in selectedChapters"
+            v-for="(someChapter, index) in tourChapters"
             :id="`chapter-${index}`"
             :key="someChapter.id"
             class="side-menu-item"
-            :class="{ active: currentChapterIndex === index }"
+            :class="{ active: chapterIndex === index }"
           >
             <div class="side-menu-item-icon step-number">{{ index + 1 }}</div>
             <button
@@ -65,8 +65,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(['currentChapterIndex', 'touchDevice', 'places']),
-    ...mapGetters(['tour', 'chapter', 'selectedChapters']),
+    ...mapState(['chapterIndex', 'touchDevice', 'places']),
+    ...mapGetters(['tour', 'chapter', 'tourChapters']),
   },
   watch: {
     tour() {
@@ -75,7 +75,7 @@ export default {
       }
     },
     chapter(newChapter) {
-      const index = this.selectedChapters.indexOf(newChapter);
+      const index = this.tourChapters.indexOf(newChapter);
       const element = document.getElementById(`chapter-${index}`);
       if (element) {
         const clientRect = element.getBoundingClientRect();
@@ -105,7 +105,7 @@ export default {
       this.$store.dispatch('setWelcomeModalOpen', true);
     },
     goToChapter(index) {
-      this.$store.dispatch('setCurrentChapterIndex', index);
+      this.$store.dispatch('setChapterIndex', index);
       document.activeElement.blur();
     },
     onClick() {

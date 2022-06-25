@@ -7,7 +7,7 @@
           :key="someTour.id"
           type="button"
           class="tour-tab"
-          :class="{ active: selectedTour === someTour.id }"
+          :class="{ active: tourId === someTour.id }"
           @click="selectTour(someTour.id)"
         >
           Tour {{ index + 1 }}: {{ someTour.name_nl }}
@@ -23,14 +23,14 @@
     <div class="navigation-buttons">
       <button
         type="button"
-        :class="{ hidden: currentChapterIndex === 0 }"
+        :class="{ hidden: chapterIndex === 0 }"
         @click="previousStep"
       >
         &lt; Vorige
       </button>
       <button
         type="button"
-        :class="{ hidden: currentChapterIndex === selectedChapters.length - 1 }"
+        :class="{ hidden: chapterIndex === tourChapters.length - 1 }"
         @click="nextStep"
       >
         Volgende &gt;
@@ -51,14 +51,8 @@ export default {
     CrossIcon,
   },
   computed: {
-    ...mapState(['currentChapterIndex', 'selectedTour', 'places']),
-    ...mapGetters([
-      'tours',
-      'tour',
-      'chapter',
-      'selectedChapters',
-      'selectedWaypoints',
-    ]),
+    ...mapState(['chapterIndex', 'tourId', 'places']),
+    ...mapGetters(['tours', 'tour', 'chapter', 'tourChapters']),
     title() {
       return this.chapter?.pages?.data?.[0]?.page_title_nl || '';
     },
@@ -79,8 +73,8 @@ export default {
       this.$refs.chapterContent.scrollTop = 0;
       this.checkOverflow();
     },
-    selectedTour() {
-      this.$store.dispatch('setCurrentChapterIndex', 0);
+    tourId() {
+      this.$store.dispatch('setChapterIndex', 0);
     },
   },
   mounted() {
@@ -92,7 +86,7 @@ export default {
       nextStep: 'nextChapter',
     }),
     selectTour(id) {
-      this.$store.dispatch('setSelectedTour', id);
+      this.$store.dispatch('setTourId', id);
     },
     closeTour() {
       this.$store.dispatch('setTourOpen', false);

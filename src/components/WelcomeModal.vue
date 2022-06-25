@@ -26,7 +26,7 @@
             <div>
               <div
                 class="button-container active-marker"
-                :class="{ active: selectedTour === tour.id }"
+                :class="{ active: tourId === tour.id }"
               >
                 <button type="button" @click="showTour(tour.id)">
                   Tour: {{ tour.name_nl }}
@@ -55,7 +55,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['welcomeModalOpen', 'selectedTour']),
+    ...mapState(['welcomeModalOpen', 'tourId']),
     ...mapGetters(['tours']),
   },
   methods: {
@@ -70,14 +70,14 @@ export default {
     },
     showPointCloudViewer() {
       this.initChoiceMade = true;
-      this.$store.dispatch('setSelectedTour', null);
+      this.$store.dispatch('setTourId', null);
       this.$store.dispatch('setTourOpen', false);
       this.$store.dispatch('setWelcomeModalOpen', false);
       this.$store.dispatch('setRenderPointCloud', true);
     },
     showTour(id) {
       this.initChoiceMade = true;
-      this.$store.dispatch('setSelectedTour', id);
+      this.$store.dispatch('setTourId', id);
       this.$store.dispatch('setTourOpen', true);
       this.$store.dispatch('setWelcomeModalOpen', false);
       this.$store.dispatch('setRenderPointCloud', false);
