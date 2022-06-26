@@ -1,28 +1,36 @@
 <template>
   <section>
-    <div class="minimize-button-container">
+    <div class="header">
+      <ViewerPreview></ViewerPreview>
       <button type="button" class="minimize-button" @click="minimize">-</button>
     </div>
-    <div class="figure-container">
-      <figure :class="{ 'video-figure': mediaIsVideo }">
-        <img v-if="mediaIsImage" :src="mediaDataUrl" :alt="mediaTitle" />
-        <video v-if="mediaIsVideo" controls>
-          <source :src="mediaDataUrl" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <figcaption>{{ caption }}</figcaption>
-      </figure>
-    </div>
+    <transition name="fade">
+      <div v-show="showMedia" class="figure-container">
+        <figure :class="{ 'video-figure': mediaIsVideo }">
+          <img v-if="mediaIsImage" :src="mediaDataUrl" :alt="mediaTitle" />
+          <video v-if="mediaIsVideo" ref="videoElement" controls>
+            <source :src="mediaDataUrl" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>{{ caption }}</figcaption>
+        </figure>
+      </div>
+    </transition>
   </section>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex';
 
+import ViewerPreview from './ViewerPreview.vue';
+
 export default {
   name: 'TourMedia',
+  components: {
+    ViewerPreview,
+  },
   computed: {
-    ...mapState(['media']),
+    ...mapState(['media', 'mediaOpen', 'showMedia']),
     ...mapGetters([
       'chapter',
       'mediaIsImage',
@@ -37,6 +45,16 @@ export default {
   watch: {
     chapter() {
       this.getMedia();
+    },
+    showMedia() {
+      if (this.showMedia) {
+        this.$nextTick(() => {
+          this.autoplay();
+        });
+      }
+    },
+    mediaOpen() {
+      this.autoplay();
     },
   },
   mounted() {
@@ -55,6 +73,15 @@ export default {
         this.$store.dispatch('setMedia', null);
       }
     },
+    autoplay() {
+      if (this.mediaIsVideo) {
+        if (this.mediaOpen) {
+          this.$refs.videoElement.play();
+        } else {
+          this.$refs.videoElement.pause();
+        }
+      }
+    },
   },
 };
 </script>
@@ -65,9 +92,9 @@ section {
   padding: 2rem;
 }
 
-.minimize-button-container {
+.header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .minimize-button {
@@ -90,8 +117,8 @@ section {
 figure {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   margin: 0;
+  width: 100%;
 }
 figure.video-figure {
   width: 100%;
@@ -99,9 +126,10 @@ figure.video-figure {
 
 figure >>> video,
 figure >>> img {
-  max-height: calc(100vh - 14rem);
+  max-height: calc(100vh - 20rem);
   height: auto;
   max-width: 100%;
+  object-fit: contain;
 }
 figure >>> video {
   width: 100%;

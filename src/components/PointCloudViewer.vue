@@ -1,10 +1,14 @@
 <template>
-  <div class="point-cloud-viewer" :style="cssVariables">
+  <div
+    class="point-cloud-viewer"
+    :class="{ 'point-cloud-viewer-hidden': mediaOpen }"
+    :style="cssVariables"
+  >
     <transition name="fade">
       <NavigationOnboarding v-if="navigationOnboardingOpen" />
     </transition>
     <div class="point-cloud-viewer-ui">
-      <div v-show="!tourOpen" class="top-left">
+      <div v-show="!tourOpen" class="top-left home-chapter-container">
         <HomeButton
           class="home-button"
           @click.native="showWelcomeModal"
@@ -24,11 +28,13 @@
           </button>
         </transition>
       </div>
-      <div :class="{ 'top-center': !tourOpen, 'top-left': tourOpen }">
+      <div v-show="tourOpen" class="top-left">
+        <MediaPreview v-show="tourOpen && !mediaOpen" class="media-preview" />
+      </div>
+      <div class="top-center">
         <h2 class="place-name">{{ placeName }}</h2>
       </div>
       <div class="top-right">
-        <MediaPreview v-show="tourOpen && !mediaOpen" class="media-preview" />
         <button class="menu-button" @click="showHelpMenu">?</button>
         <HelpMenu ref="helpMenu" class="help-menu" />
       </div>
@@ -125,6 +131,7 @@ export default {
   },
   data() {
     return {
+      firstRenderInitialized: false,
       onboardingShown: false,
       popperOverflowY: '0px',
       hotspotPopupShown: false,
@@ -148,6 +155,7 @@ export default {
     ...mapState([
       'touchDevice',
       'waypointLabels',
+      'waypoints',
       'hotspots',
       'step',
       'graphics',
@@ -160,13 +168,13 @@ export default {
     ]),
     ...mapGetters([
       'tour',
-      'waypoints',
       'tourChapters',
       'chapter',
       'waypoint',
       'chapterAtWaypoint',
+      'labelsAtWaypoint',
       'place',
-      'placeHotspots',
+      'hotspotsAtPlace',
     ]),
     waypointHasChapter() {
       return this.tourChapters.find(
@@ -190,7 +198,7 @@ export default {
       this.updateNumPoints(this.numPoints);
     },
     waypointId() {
-      if (this.mediaOpen) {
+      if (this.tourOpen && this.mediaOpen) {
         this.goToWaypoint(this.waypointId, 0);
       } else {
         this.goToWaypoint(this.waypointId);
@@ -202,7 +210,9 @@ export default {
     },
     renderPointCloud() {
       if (this.renderPointCloud) {
-        if (!this.onboardingShown) {
+        if (!this.firstRenderInitialized) {
+          this.firstRenderInitialized = true;
+        } else if (!this.onboardingShown) {
           this.$store.dispatch('setNavigationOnboardingOpen', true);
           this.onboardingShown = true;
         }
@@ -224,11 +234,9 @@ export default {
     this.initAnnotations();
     this.initHotspotPopperUpdater();
     this.pauseRender();
-    document.addEventListener('click', this.onDocumentClick);
     document.addEventListener('keydown', this.onKeyDown);
   },
   beforeDestroy() {
-    document.removeEventListener('click', this.onDocumentClick);
     document.removeEventListener('keydown', this.onKeyDown);
   },
   methods: {
@@ -295,9 +303,8 @@ export default {
       }
     },
     createWaypoints() {
-      const waypointLabels = this.waypointLabels[this.waypointId];
-      if (waypointLabels?.length) {
-        waypointLabels.forEach((label) => {
+      if (this.labelsAtWaypoint?.length) {
+        this.labelsAtWaypoint.forEach((label) => {
           const potreeAnnotation = new Potree.Annotation({
             position: this.parseCoordinates(label.coordinate),
             title: label.text_nl,
@@ -317,8 +324,8 @@ export default {
       }
     },
     createHotspots() {
-      if (this.placeHotspots?.length) {
-        this.placeHotspots.forEach((hotspot) => {
+      if (this.hotspotsAtPlace?.length) {
+        this.hotspotsAtPlace.forEach((hotspot) => {
           if (hotspot.coordinates != null) {
             const potreeAnnotation = new Potree.Annotation({
               position: this.parseCoordinates(hotspot.coordinates),
@@ -439,7 +446,7 @@ export default {
     updateNumPoints(numPoints) {
       this.$viewer.setPointBudget(numPoints);
     },
-    goToWaypoint(waypointId, duration = 2000) {
+    goToWaypoint(waypointId, duration = 3000) {
       const waypoint = this.waypoints?.find((w) => w.id === waypointId);
       if (!waypoint) return;
 
@@ -480,34 +487,48 @@ export default {
         const value = { x: 0 };
         new TWEEN.Tween(value)
           .to({ x: 1 }, duration)
-          .easing(TWEEN.Easing.Quartic.InOut)
+          .easing(TWEEN.Easing.Quadratic.InOut)
           .onUpdate(() => {
             const t = value.x;
-            const pos = new THREE.Vector3(
-              (1 - t) * position.x + t * targetPosition.x,
-              (1 - t) * position.y + t * targetPosition.y,
-              (1 - t) * position.z + t * targetPosition.z,
-            );
-            if (t < 0.5) {
+
+            const positionDuration = 0.8;
+            if (t < positionDuration) {
+              const progress = t * (1 / positionDuration);
+              const left = 1 - progress;
+              const pos = new THREE.Vector3(
+                left * position.x + progress * targetPosition.x,
+                left * position.y + progress * targetPosition.y,
+                left * position.z + progress * targetPosition.z,
+              );
+              view.position.copy(pos);
+            }
+
+            const directionDuration = 0.4;
+            if (t < directionDuration) {
+              const progress = t * (1 / directionDuration);
+              const left = 1 - progress;
               const target = new THREE.Vector3(
-                (1 - t * 2) * direction.x + t * 2 * targetDirection.x,
-                (1 - t * 2) * direction.y + t * 2 * targetDirection.y,
-                (1 - t * 2) * direction.z + t * 2 * targetDirection.z,
+                left * direction.x + progress * targetDirection.x,
+                left * direction.y + progress * targetDirection.y,
+                left * direction.z + progress * targetDirection.z,
               );
               view.direction = target;
             }
-            if (t >= 0.5 && targetFinalDirection) {
+
+            const finalDirectionDuration = 0.4;
+            if (t >= 1 - finalDirectionDuration && targetFinalDirection) {
+              const progress =
+                (t - (1 - finalDirectionDuration)) *
+                (1 / finalDirectionDuration);
+              const left = 1 - progress;
               const target = new THREE.Vector3(
-                (1 - (t - 0.5) * 2) * direction.x +
-                  (t - 0.5) * 2 * targetFinalDirection.x,
-                (1 - (t - 0.5) * 2) * direction.y +
-                  (t - 0.5) * 2 * targetFinalDirection.y,
-                (1 - (t - 0.5) * 2) * direction.z +
-                  (t - 0.5) * 2 * targetFinalDirection.z,
+                left * targetDirection.x + progress * targetFinalDirection.x,
+                left * targetDirection.y + progress * targetFinalDirection.y,
+                left * targetDirection.z + progress * targetFinalDirection.z,
               );
               view.direction = target;
             }
-            view.position.copy(pos);
+
             this.updateHotspotPopper();
           })
           .onComplete(() => {
@@ -519,7 +540,7 @@ export default {
     onNewWaypoint() {
       if (!this.waypoint) return;
 
-      const placeId = parseInt(this.waypoint.place, 10);
+      const placeId = this.waypoint.place.data.id;
       if (this.place?.id !== placeId) {
         this.$store.dispatch('setPlaceId', placeId);
       }
@@ -532,30 +553,23 @@ export default {
           this.$store.dispatch('setChapterIndex', chapterIndex);
         }
       }
-    },
-    showTour(event) {
-      if (this.touchDevice) {
-        if (event.target.closest('.alert-circle-container') !== null) {
-          const chapterNotice = event.target.closest('.chapter-notice');
-          if (chapterNotice) {
-            if (!chapterNotice.classList.contains('expanded')) {
-              chapterNotice.classList.add('expanded');
-              return;
-            }
-          }
-        }
+
+      const isRendering = this.renderPointCloud;
+      if (!isRendering) {
+        this.resumeRender();
       }
+      setTimeout(() => {
+        const canvasImageDataUrl = this.$viewer.renderer.domElement.toDataURL();
+        this.$store.dispatch('setViewerPreview', canvasImageDataUrl);
+        if (!isRendering) {
+          this.pauseRender();
+        }
+      }, 0);
+    },
+    showTour() {
       this.$store.dispatch('setTourOpen', true);
       this.$store.dispatch('setMediaOpen', true);
       this.$store.dispatch('setRenderPointCloud', false);
-    },
-    onDocumentClick(event) {
-      if (
-        this.touchDevice &&
-        !this.$refs.chapterNotice.contains(event.target)
-      ) {
-        this.$refs.chapterNotice.classList.remove('expanded');
-      }
     },
     onKeyDown(event) {
       if (event.ctrlKey && event.key === 'b') {
@@ -612,6 +626,12 @@ export default {
   color: var(--white);
 }
 
+.point-cloud-viewer-hidden {
+  position: absolute;
+  width: 16rem;
+  height: 16rem;
+}
+
 #potree-viewer,
 .point-cloud-viewer-ui {
   position: absolute;
@@ -628,6 +648,8 @@ export default {
   position: absolute;
   top: 2rem;
   left: 2rem;
+}
+.home-chapter-container {
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -640,22 +662,10 @@ export default {
   z-index: 1;
   display: flex;
   align-items: center;
-  box-sizing: border-box;
   height: 3rem;
-  max-width: calc(3rem + 4px);
   border: 2px solid var(--white);
-  overflow: hidden;
   background-color: var(--grey-dark);
-  transition: max-width 0.4s ease-in-out;
   pointer-events: auto;
-}
-.chapter-notice.expanded {
-  max-width: 80vw;
-}
-@media (hover: hover) {
-  .chapter-notice:hover {
-    max-width: 80vw;
-  }
 }
 
 .alert-circle-container {

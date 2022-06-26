@@ -18,8 +18,12 @@
       </button>
     </div>
     <div class="place-tag">{{ placeName }}</div>
-    <h2>{{ title }}</h2>
-    <p ref="chapterContent" class="scrollable">{{ content }}</p>
+    <transition name="slide">
+      <div v-show="showChapter" class="chapter-content">
+        <h2>{{ title }}</h2>
+        <p ref="chapterContent" class="scrollable">{{ content }}</p>
+      </div>
+    </transition>
     <div class="navigation-buttons">
       <button
         type="button"
@@ -51,7 +55,7 @@ export default {
     CrossIcon,
   },
   computed: {
-    ...mapState(['chapterIndex', 'tourId', 'places']),
+    ...mapState(['chapterIndex', 'tourId', 'places', 'showChapter']),
     ...mapGetters(['tours', 'tour', 'chapter', 'tourChapters']),
     title() {
       return this.chapter?.pages?.data?.[0]?.page_title_nl || '';
@@ -120,7 +124,6 @@ p {
   font-size: 1.5rem;
   overflow-y: auto;
   padding-right: 1rem;
-  flex: 1;
   white-space: pre-wrap;
   --scrollbar-bg-color: var(--background);
 }
@@ -180,6 +183,12 @@ p {
   border-radius: 2px;
   font-variation-settings: 'wght' 600;
   font-size: 1.1rem;
+}
+
+.chapter-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .navigation-buttons {

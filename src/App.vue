@@ -23,9 +23,15 @@ export default {
   },
   mounted() {
     this.$store.dispatch('getChapters');
+    this.$store.dispatch('getWaypoints');
     this.$store.dispatch('getPlaces');
     this.$store.dispatch('getWaypointLabels');
     this.$store.dispatch('getHotspots');
+
+    this.$store.dispatch('setRenderPointCloud', true);
+    setTimeout(() => {
+      this.$store.dispatch('setRenderPointCloud', false);
+    }, 0);
   },
 };
 </script>
@@ -141,6 +147,17 @@ button {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.slide-leave-active,
+.slide-enter-active {
+  transition: 500ms;
+}
+.slide-enter {
+  transform: translate(110%, 0);
+}
+.slide-leave-to {
+  transform: translate(-110%, 0);
 }
 
 @keyframes pulse {

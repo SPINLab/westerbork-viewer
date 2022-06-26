@@ -31,8 +31,8 @@ export default {
 
 <style scoped>
 button {
-  height: 5rem;
-  width: 5rem;
+  height: 8rem;
+  width: 8rem;
   overflow: hidden;
   border: 3px solid var(--white);
   border-radius: 4px;

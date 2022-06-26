@@ -11,6 +11,7 @@ export default new Vuex.Store({
     onPremiseMode: process.env.VUE_APP_MODE === 'onpremise',
     touchDevice: matchMedia('(hover: none)').matches,
     chapters: [],
+    waypoints: [],
     places: [],
     waypointLabels: [],
     hotspots: [],
@@ -21,16 +22,22 @@ export default new Vuex.Store({
     media: null,
     tourOpen: true,
     mediaOpen: true,
+    showChapter: true,
+    showMedia: true,
     welcomeModalOpen: false,
     introductionOpen: true,
     navigationOnboardingOpen: false,
     renderPointCloud: false,
     graphics: 'medium',
     numPoints: process.env.VUE_APP_MODE ? 200000 : 200000,
+    viewerPreview: null,
   },
   mutations: {
     setChapters(state, value) {
       state.chapters = value;
+    },
+    setWaypoints(state, value) {
+      state.waypoints = value;
     },
     setPlaces(state, value) {
       state.places = value;
@@ -68,6 +75,12 @@ export default new Vuex.Store({
     setMediaOpen(state, value) {
       state.mediaOpen = value;
     },
+    setShowChapter(state, value) {
+      state.showChapter = value;
+    },
+    setShowMedia(state, value) {
+      state.showMedia = value;
+    },
     setWelcomeModalOpen(state, value) {
       state.welcomeModalOpen = value;
     },
@@ -86,6 +99,9 @@ export default new Vuex.Store({
     setNumPoints(state, value) {
       state.numPoints = value;
     },
+    setViewerPreview(state, value) {
+      state.viewerPreview = value;
+    },
   },
   actions: {
     async getChapters({ commit }) {
@@ -97,6 +113,13 @@ export default new Vuex.Store({
         TOUR_IDS.includes(chapter.tour.data.id),
       );
       commit('setChapters', chapters);
+    },
+    async getWaypoints({ commit }) {
+      const response = await fetch(
+        'https://data.campscapes.org/api/1.1/tables/wch2_waypoints/rows?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5',
+      );
+      const json = await response.json();
+      commit('setWaypoints', json.data);
     },
     async getPlaces({ commit }) {
       const response = await fetch(
@@ -128,11 +151,22 @@ export default new Vuex.Store({
       commit('setHotspots', json.data);
     },
     async getMedia({ commit }, id) {
+      commit('setShowMedia', false);
+      const time = new Date().getTime();
       const response = await fetch(
         `https://data.campscapes.org/api/1.1/files/${id}?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5`,
       );
       const json = await response.json();
-      commit('setMedia', json.data);
+      const timeElapsed = new Date().getTime() - time;
+      if (timeElapsed < 500) {
+        setTimeout(() => {
+          commit('setMedia', json.data);
+          commit('setShowMedia', true);
+        }, 500 - timeElapsed);
+      } else {
+        commit('setMedia', json.data);
+        commit('setShowMedia', true);
+      }
     },
     setPlaceId({ commit }, value) {
       commit('setPlaceId', value);
@@ -144,22 +178,37 @@ export default new Vuex.Store({
       commit('setTourId', value);
     },
     setChapterIndex({ commit, getters }, value) {
-      commit('setChapterIndex', value);
-      const waypointId = getters.chapter.waypoint.data.id;
-      commit('setWaypointId', waypointId);
+      commit('setShowMedia', false);
+      commit('setShowChapter', false);
+      setTimeout(() => {
+        commit('setChapterIndex', value);
+        commit('setShowChapter', true);
+        const waypointId = getters.chapter.waypoint.data.id;
+        commit('setWaypointId', waypointId);
+      }, 500);
     },
     nextChapter({ commit, state, getters }) {
       if (state.chapterIndex < getters.tourChapters.length - 1) {
-        commit('nextChapter');
-        const waypointId = getters.chapter.waypoint.data.id;
-        commit('setWaypointId', waypointId);
+        commit('setShowMedia', false);
+        commit('setShowChapter', false);
+        setTimeout(() => {
+          commit('nextChapter');
+          commit('setShowChapter', true);
+          const waypointId = getters.chapter.waypoint.data.id;
+          commit('setWaypointId', waypointId);
+        }, 500);
       }
     },
     previousChapter({ commit, state, getters }) {
       if (state.chapterIndex >= 1) {
-        commit('previousChapter');
-        const waypointId = getters.chapter.waypoint.data.id;
-        commit('setWaypointId', waypointId);
+        commit('setShowMedia', false);
+        commit('setShowChapter', false);
+        setTimeout(() => {
+          commit('previousChapter');
+          commit('setShowChapter', true);
+          const waypointId = getters.chapter.waypoint.data.id;
+          commit('setWaypointId', waypointId);
+        }, 500);
       }
     },
     setMedia({ commit }, value) {
@@ -189,6 +238,9 @@ export default new Vuex.Store({
     setNumPoints({ commit }, value) {
       commit('setNumPoints', value);
     },
+    setViewerPreview({ commit }, value) {
+      commit('setViewerPreview', value);
+    },
   },
   getters: {
     tours: (state) =>
@@ -197,8 +249,6 @@ export default new Vuex.Store({
           state.chapters.find((chapter) => chapter.tour.data.id === id)?.tour
             .data,
       ).filter(Boolean),
-    waypoints: (state) =>
-      state.chapters.map((chapter) => chapter.waypoint.data),
     tour: (state, getters) =>
       getters.tours.find((tour) => tour.id === state.tourId) ?? {
         name_en: '',
@@ -208,17 +258,16 @@ export default new Vuex.Store({
       },
     tourChapters: (state) =>
       state.chapters.filter((chapter) => chapter.tour.data.id === state.tourId),
-    chapterWaypoints: (_, getters) =>
-      getters.tourChapters.map((chapter) => chapter.waypoint),
     chapter: (state, getters) => getters.tourChapters[state.chapterIndex],
-    waypoint: (state, getters) =>
-      getters.waypoints.find((waypoint) => waypoint.id === state.waypointId),
+    waypoint: (state) =>
+      state.waypoints.find((waypoint) => waypoint.id === state.waypointId),
     chapterAtWaypoint: (state, getters) =>
       getters.tourChapters.find(
         (chapter) => chapter.waypoint.data.id === state.waypointId,
       ),
+    labelsAtWaypoint: (state) => state.waypointLabels[state.waypointId],
     place: (state) => state.places.find((place) => place.id === state.placeId),
-    placeHotspots: (state) =>
+    hotspotsAtPlace: (state) =>
       state.hotspots.filter((hotspot) => hotspot.place.id === state.placeId),
     mediaIsImage: (state) => state.media?.type.startsWith('image'),
     mediaIsVideo: (state) => state.media?.type.startsWith('video'),
