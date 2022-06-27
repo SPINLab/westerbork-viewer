@@ -152,21 +152,12 @@ export default new Vuex.Store({
     },
     async getMedia({ commit }, id) {
       commit('setShowMedia', false);
-      const time = new Date().getTime();
       const response = await fetch(
         `https://data.campscapes.org/api/1.1/files/${id}?access_token=kA5o4zmgEZM7mE7jgAATkFUEylN4Rnm5`,
       );
       const json = await response.json();
-      const timeElapsed = new Date().getTime() - time;
-      if (timeElapsed < 500) {
-        setTimeout(() => {
-          commit('setMedia', json.data);
-          commit('setShowMedia', true);
-        }, 500 - timeElapsed);
-      } else {
-        commit('setMedia', json.data);
-        commit('setShowMedia', true);
-      }
+      commit('setMedia', json.data);
+      commit('setShowMedia', true);
     },
     setPlaceId({ commit }, value) {
       commit('setPlaceId', value);
@@ -180,22 +171,23 @@ export default new Vuex.Store({
     setChapterIndex({ commit, getters }, value) {
       commit('setShowMedia', false);
       commit('setShowChapter', false);
+      const waypointId = getters.tourChapters[value].waypoint.data.id;
+      commit('setWaypointId', waypointId);
       setTimeout(() => {
         commit('setChapterIndex', value);
         commit('setShowChapter', true);
-        const waypointId = getters.chapter.waypoint.data.id;
-        commit('setWaypointId', waypointId);
       }, 500);
     },
     nextChapter({ commit, state, getters }) {
       if (state.chapterIndex < getters.tourChapters.length - 1) {
         commit('setShowMedia', false);
         commit('setShowChapter', false);
+        const waypointId =
+          getters.tourChapters[state.chapterIndex + 1].waypoint.data.id;
+        commit('setWaypointId', waypointId);
         setTimeout(() => {
           commit('nextChapter');
           commit('setShowChapter', true);
-          const waypointId = getters.chapter.waypoint.data.id;
-          commit('setWaypointId', waypointId);
         }, 500);
       }
     },
@@ -203,11 +195,12 @@ export default new Vuex.Store({
       if (state.chapterIndex >= 1) {
         commit('setShowMedia', false);
         commit('setShowChapter', false);
+        const waypointId =
+          getters.tourChapters[state.chapterIndex - 1].waypoint.data.id;
+        commit('setWaypointId', waypointId);
         setTimeout(() => {
           commit('previousChapter');
           commit('setShowChapter', true);
-          const waypointId = getters.chapter.waypoint.data.id;
-          commit('setWaypointId', waypointId);
         }, 500);
       }
     },

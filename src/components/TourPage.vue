@@ -17,29 +17,29 @@
         <CrossIcon class="close-icon" />
       </button>
     </div>
-    <div class="place-tag">{{ placeName }}</div>
-    <transition name="slide">
+    <transition name="fade">
       <div v-show="showChapter" class="chapter-content">
+        <div class="place-tag">{{ placeName }}</div>
         <h2>{{ title }}</h2>
         <p ref="chapterContent" class="scrollable">{{ content }}</p>
+        <div class="navigation-buttons">
+          <button
+            type="button"
+            :class="{ hidden: chapterIndex === 0 }"
+            @click="previousStep"
+          >
+            &lt; Vorige
+          </button>
+          <button
+            type="button"
+            :class="{ hidden: chapterIndex === tourChapters.length - 1 }"
+            @click="nextStep"
+          >
+            Volgende &gt;
+          </button>
+        </div>
       </div>
     </transition>
-    <div class="navigation-buttons">
-      <button
-        type="button"
-        :class="{ hidden: chapterIndex === 0 }"
-        @click="previousStep"
-      >
-        &lt; Vorige
-      </button>
-      <button
-        type="button"
-        :class="{ hidden: chapterIndex === tourChapters.length - 1 }"
-        @click="nextStep"
-      >
-        Volgende &gt;
-      </button>
-    </div>
   </section>
 </template>
 
@@ -188,6 +188,7 @@ p {
 .chapter-content {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   overflow: hidden;
 }
 
@@ -198,10 +199,11 @@ p {
   border-top: 1px solid var(--grey);
   margin-top: 2rem;
   padding-top: 1rem;
-  margin-inline: 0.5rem;
+  padding-inline: 0.5rem;
   font-variation-settings: 'wght' 600;
   font-size: 1.5rem;
   color: var(--grey);
+  box-sizing: border-box;
 }
 
 @media (hover: hover) {

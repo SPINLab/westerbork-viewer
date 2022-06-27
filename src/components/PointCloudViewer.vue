@@ -1,7 +1,10 @@
 <template>
   <div
     class="point-cloud-viewer"
-    :class="{ 'point-cloud-viewer-hidden': mediaOpen }"
+    :class="{
+      'point-cloud-viewer-hidden': tourOpen && mediaOpen,
+      'is-transitioning': isTransitioning,
+    }"
     :style="cssVariables"
   >
     <transition name="fade">
@@ -15,7 +18,7 @@
         ></HomeButton>
         <transition name="fade">
           <button
-            v-show="waypointHasChapter"
+            v-show="waypointHasChapter && !isTransitioning"
             ref="chapterNotice"
             type="button"
             class="chapter-notice"
@@ -28,12 +31,16 @@
           </button>
         </transition>
       </div>
-      <div v-show="tourOpen" class="top-left">
-        <MediaPreview v-show="tourOpen && !mediaOpen" class="media-preview" />
-      </div>
-      <div class="top-center">
-        <h2 class="place-name">{{ placeName }}</h2>
-      </div>
+      <transition name="fade">
+        <div v-show="tourOpen && !isTransitioning" class="top-left">
+          <MediaPreview v-show="tourOpen && !mediaOpen" class="media-preview" />
+        </div>
+      </transition>
+      <transition name="fade">
+        <div v-show="!isTransitioning" class="top-center">
+          <h2 class="place-name">{{ placeName }}</h2>
+        </div>
+      </transition>
       <div class="top-right">
         <button class="menu-button" @click="showHelpMenu">?</button>
         <HelpMenu ref="helpMenu" class="help-menu" />
@@ -78,8 +85,8 @@ const POINT_CLOUD = 'Commandantshuis';
 const ARROW_DIRECTIONS = {
   value1: 'left',
   value2: 'right',
-  value3: 'up',
-  value4: 'down',
+  value3: 'top',
+  value4: 'bottom',
 };
 
 const infoIconSvg = `
@@ -137,6 +144,7 @@ export default {
       hotspotPopupShown: false,
       selectedHotspot: { title: '', text: '' },
       selectedHotspotAnnotation: null,
+      isTransitioning: false,
       debugMode: false,
       debugInfo: {
         position: {
@@ -199,7 +207,9 @@ export default {
     },
     waypointId() {
       if (this.tourOpen && this.mediaOpen) {
-        this.goToWaypoint(this.waypointId, 0);
+        setTimeout(() => {
+          this.goToWaypoint(this.waypointId, 0);
+        }, 200);
       } else {
         this.goToWaypoint(this.waypointId);
       }
@@ -446,7 +456,7 @@ export default {
     updateNumPoints(numPoints) {
       this.$viewer.setPointBudget(numPoints);
     },
-    goToWaypoint(waypointId, duration = 3000) {
+    goToWaypoint(waypointId, duration = 4000) {
       const waypoint = this.waypoints?.find((w) => w.id === waypointId);
       if (!waypoint) return;
 
@@ -457,6 +467,7 @@ export default {
 
       if (!coordinates) return;
 
+      this.isTransitioning = true;
       this.hideHotspotPopup();
       const { view } = this.$viewer.scene;
       if (duration === 0) {
@@ -491,7 +502,7 @@ export default {
           .onUpdate(() => {
             const t = value.x;
 
-            const positionDuration = 0.8;
+            const positionDuration = 0.6;
             if (t < positionDuration) {
               const progress = t * (1 / positionDuration);
               const left = 1 - progress;
@@ -503,7 +514,7 @@ export default {
               view.position.copy(pos);
             }
 
-            const directionDuration = 0.4;
+            const directionDuration = 0.3;
             if (t < directionDuration) {
               const progress = t * (1 / directionDuration);
               const left = 1 - progress;
@@ -538,6 +549,8 @@ export default {
       }
     },
     onNewWaypoint() {
+      this.isTransitioning = false;
+
       if (!this.waypoint) return;
 
       const placeId = this.waypoint.place.data.id;
@@ -564,7 +577,7 @@ export default {
         if (!isRendering) {
           this.pauseRender();
         }
-      }, 0);
+      }, 100);
     },
     showTour() {
       this.$store.dispatch('setTourOpen', true);
@@ -815,6 +828,12 @@ export default {
 <style>
 #potree_annotation_container {
   z-index: 2 !important;
+  transition: opacity 200ms ease-out;
+  opacity: 1;
+}
+.point-cloud-viewer.is-transitioning #potree_annotation_container {
+  opacity: 0;
+  transition-duration: 0ms;
 }
 
 .annotation {

@@ -1,19 +1,20 @@
 <template>
   <section>
-    <div class="header">
-      <ViewerPreview></ViewerPreview>
-      <button type="button" class="minimize-button" @click="minimize">-</button>
-    </div>
     <transition name="fade">
-      <div v-show="showMedia" class="figure-container">
-        <figure :class="{ 'video-figure': mediaIsVideo }">
-          <img v-if="mediaIsImage" :src="mediaDataUrl" :alt="mediaTitle" />
-          <video v-if="mediaIsVideo" ref="videoElement" controls>
-            <source :src="mediaDataUrl" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <figcaption>{{ caption }}</figcaption>
-        </figure>
+      <div v-show="showMedia">
+        <div class="header">
+          <ViewerPreview></ViewerPreview>
+        </div>
+        <div class="figure-container">
+          <figure :class="{ 'video-figure': mediaIsVideo }">
+            <img v-if="mediaIsImage" :src="mediaDataUrl" :alt="mediaTitle" />
+            <video v-if="mediaIsVideo" ref="videoElement" controls>
+              <source :src="mediaDataUrl" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <figcaption>{{ caption }}</figcaption>
+          </figure>
+        </div>
       </div>
     </transition>
   </section>
@@ -68,6 +69,7 @@ export default {
     getMedia() {
       const mediaId = this.chapter?.pages?.data?.[0]?.media;
       if (mediaId) {
+        this.$store.dispatch('setMedia', null);
         this.$store.dispatch('getMedia', mediaId);
       } else {
         this.$store.dispatch('setMedia', null);
@@ -94,7 +96,8 @@ section {
 
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .minimize-button {
