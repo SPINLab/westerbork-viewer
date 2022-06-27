@@ -166,7 +166,11 @@ export default new Vuex.Store({
       commit('setWaypointId', value);
     },
     setTourId({ commit }, value) {
-      commit('setTourId', value);
+      commit('setShowChapter', false);
+      commit('setShowMedia', false);
+      setTimeout(() => {
+        commit('setTourId', value);
+      }, 200);
     },
     setChapterIndex({ commit, getters }, value) {
       commit('setShowMedia', false);

@@ -74,8 +74,10 @@ export default {
   },
   watch: {
     content() {
-      this.$refs.chapterContent.scrollTop = 0;
-      this.checkOverflow();
+      this.$nextTick(() => {
+        this.$refs.chapterContent.scrollTop = 0;
+        this.checkOverflow();
+      });
     },
     tourId() {
       this.$store.dispatch('setChapterIndex', 0);
