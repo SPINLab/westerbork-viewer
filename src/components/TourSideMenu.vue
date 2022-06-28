@@ -7,16 +7,18 @@
   >
     <nav>
       <ol>
-        <li class="side-menu-item">
-          <div class="side-menu-item-icon home-icon-container">
-            <HomeIcon class="home-icon" />
-          </div>
+        <li>
           <button
             type="button"
-            class="side-menu-item-description tour-title"
+            class="side-menu-item home-item"
             @click="showWelcomeModal"
           >
-            {{ tour.name_nl }}
+            <div class="side-menu-item-icon home-icon-container">
+              <HomeIcon class="home-icon" />
+            </div>
+            <div class="side-menu-item-description tour-title">
+              Tour {{ tours.indexOf(tour) + 1 }}: {{ tour.name_nl }}
+            </div>
           </button>
         </li>
         <div ref="chaptersList" class="chapters-list scrollable">
@@ -24,20 +26,21 @@
             v-for="(someChapter, index) in tourChapters"
             :id="`chapter-${index}`"
             :key="someChapter.id"
-            class="side-menu-item"
-            :class="{ active: chapterIndex === index }"
           >
-            <div class="side-menu-item-icon step-number">{{ index + 1 }}</div>
             <button
               type="button"
-              class="side-menu-item-description step-description"
+              class="side-menu-item"
+              :class="{ active: chapterIndex === index }"
               @click="goToChapter(index)"
             >
-              <div class="step-title">
-                {{ someChapter.pages.data[0].page_title_nl }}
-              </div>
-              <div class="step-place">
-                {{ getChapterPlace(someChapter) }}
+              <div class="side-menu-item-icon step-number">{{ index + 1 }}</div>
+              <div class="side-menu-item-description step-description">
+                <div class="step-title">
+                  {{ someChapter.pages.data[0].page_title_nl }}
+                </div>
+                <div class="step-place">
+                  {{ getChapterPlace(someChapter) }}
+                </div>
               </div>
             </button>
           </li>
@@ -66,7 +69,7 @@ export default {
   },
   computed: {
     ...mapState(['chapterIndex', 'touchDevice', 'places']),
-    ...mapGetters(['tour', 'chapter', 'tourChapters']),
+    ...mapGetters(['tours', 'tour', 'chapter', 'tourChapters']),
   },
   watch: {
     tour() {
@@ -102,11 +105,15 @@ export default {
   },
   methods: {
     showWelcomeModal() {
-      this.$store.dispatch('setWelcomeModalOpen', true);
+      if (this.expanded) {
+        this.$store.dispatch('setWelcomeModalOpen', true);
+      }
     },
     goToChapter(index) {
-      this.$store.dispatch('setChapterIndex', index);
-      document.activeElement.blur();
+      if (this.expanded) {
+        this.$store.dispatch('setChapterIndex', index);
+        document.activeElement.blur();
+      }
     },
     onClick() {
       this.expanded = true;
@@ -210,10 +217,14 @@ p {
   padding-left: 0;
 }
 
+.home-item {
+  margin-bottom: 0;
+}
+
 .side-menu-item.active .step-number {
   color: var(--white);
   border: 3px solid var(--white);
-  background-color: #49cece;
+  background-color: var(--accent-dark);
 }
 
 .side-menu-item-icon {
@@ -288,8 +299,14 @@ p {
 }
 
 @media (hover: hover) {
-  .side-menu-item-description:hover {
+  .side-menu-item:hover .side-menu-item-description {
     color: var(--white);
+  }
+
+  .side-menu-item:hover .step-number {
+    background-color: var(--accent);
+    color: var(--white);
+    border-color: var(--white);
   }
 }
 </style>
