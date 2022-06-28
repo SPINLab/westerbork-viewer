@@ -82,6 +82,7 @@ export default {
       this.initChoiceMade = true;
       this.$store.dispatch('setTourId', id);
       this.$store.dispatch('setTourOpen', true);
+      this.$store.dispatch('setMediaOpen', true);
       this.$store.dispatch('setWelcomeModalOpen', false);
       this.$store.dispatch('setRenderPointCloud', false);
     },
@@ -102,7 +103,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(30rem, 80vw, 54rem);
+  width: clamp(30rem, 80vw, 60rem);
   background-color: var(--background);
   border-radius: 12px;
   padding: 2rem;
@@ -137,7 +138,7 @@ ul {
 }
 
 li {
-  width: 23rem;
+  width: calc(50% - 1.5rem);
 }
 
 button {
