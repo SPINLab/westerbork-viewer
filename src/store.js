@@ -265,7 +265,9 @@ export default new Vuex.Store({
     labelsAtWaypoint: (state) => state.waypointLabels[state.waypointId],
     place: (state) => state.places.find((place) => place.id === state.placeId),
     hotspotsAtPlace: (state) =>
-      state.hotspots.filter((hotspot) => hotspot.place.id === state.placeId),
+      state.hotspots.filter(
+        (hotspot) => hotspot.place.data.id === state.placeId,
+      ),
     mediaIsImage: (state) => state.media?.type.startsWith('image'),
     mediaIsVideo: (state) => state.media?.type.startsWith('video'),
     mediaDataUrl: (state) =>

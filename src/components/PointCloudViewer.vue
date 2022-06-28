@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="pointCloudViewer"
     class="point-cloud-viewer"
     :class="{
       'point-cloud-viewer-hidden': tourOpen && mediaOpen,
@@ -339,7 +340,7 @@ export default {
           if (hotspot.coordinates != null) {
             const potreeAnnotation = new Potree.Annotation({
               position: this.parseCoordinates(hotspot.coordinates),
-              title: hotspot.title_nl,
+              title: ' ',
             });
             potreeAnnotation.elTitle.append(infoIconSvg);
             potreeAnnotation.domElement[0].onclick = () => {
@@ -400,10 +401,14 @@ export default {
               name: 'preventOverflow',
               options: {
                 padding: 10,
+                boundary: this.$refs.pointCloudViewer,
               },
             },
             {
               name: 'flip',
+              options: {
+                boundary: this.$refs.pointCloudViewer,
+              },
             },
           ],
         },
@@ -423,9 +428,12 @@ export default {
         }
       });
       this.$viewer.controls.addEventListener('end', () => {
-        if (hotspotPopper && updateInterval) {
-          clearInterval(updateInterval);
-          updateInterval = null;
+        if (hotspotPopper) {
+          this.updateHotspotPopper();
+          if (updateInterval) {
+            clearInterval(updateInterval);
+            updateInterval = null;
+          }
         }
       });
     },
@@ -811,6 +819,11 @@ export default {
   font-size: 1.5rem;
 }
 
+.hotspot-text {
+  white-space: pre-wrap;
+  font-size: 1.2rem;
+}
+
 .debug-info {
   position: absolute;
   top: 10rem;
@@ -902,7 +915,7 @@ export default {
   width: 1.5rem;
   height: 1.5rem;
   fill: var(--white);
-  border: 5px solid var(--white);
+  border: 3px solid var(--white);
   border-radius: 50%;
   padding: 0.2rem;
 }
