@@ -71,9 +71,12 @@ export default {
     showPointCloudViewer() {
       this.initChoiceMade = true;
       this.$store.dispatch('setTourId', null);
-      this.$store.dispatch('setTourOpen', false);
-      this.$store.dispatch('setWelcomeModalOpen', false);
-      this.$store.dispatch('setRenderPointCloud', true);
+      this.$store.dispatch('setWaypointId', 5);
+      this.$nextTick(() => {
+        this.$store.dispatch('setTourOpen', false);
+        this.$store.dispatch('setWelcomeModalOpen', false);
+        this.$store.dispatch('setRenderPointCloud', true);
+      });
     },
     showTour(id) {
       this.initChoiceMade = true;

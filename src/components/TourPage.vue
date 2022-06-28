@@ -80,7 +80,9 @@ export default {
       });
     },
     tourId() {
-      this.$store.dispatch('setChapterIndex', 0);
+      if (this.tourId != null) {
+        this.$store.dispatch('setChapterIndex', 0);
+      }
     },
   },
   mounted() {
