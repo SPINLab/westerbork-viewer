@@ -4,7 +4,7 @@
       <button type="button" @click="next">Ga verder</button>
       <video autoplay muted loop>
         <source
-          src="https://data.campscapes.org/storage/uploads/00000000115.mp4"
+          src="https://data.campscapes.org/storage/uploads/00000000370.mp4"
           type="video/mp4"
         />
         Your browser does not support the video tag.
