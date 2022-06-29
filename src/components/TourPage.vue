@@ -10,7 +10,8 @@
           :class="{ active: tourId === someTour.id }"
           @click="selectTour(someTour.id)"
         >
-          Tour {{ index + 1 }}: {{ someTour.name_nl }}
+          Tour {{ index + 1 }}:<br />
+          {{ someTour.name_nl }}
         </button>
       </div>
       <button type="button" class="close-button" @click="closeTour">
@@ -116,10 +117,10 @@ section {
 }
 
 h2 {
-  color: var(--accent);
-  font-variation-settings: 'wght' 700;
+  color: var(--accent-dark);
+  font-variation-settings: 'wght' 600;
   padding-block: 0;
-  margin-block: 1.5rem;
+  margin-block: 1.2rem;
   font-size: 2.5rem;
 }
 
@@ -158,13 +159,7 @@ p {
 .tour-tab {
   color: var(--grey-background);
   border-left: 1px solid var(--grey-background);
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  text-overflow: ellipsis;
   padding-left: 0.5rem;
-  text-align: left;
   width: calc(50% - 1rem);
   font-variation-settings: 'wght' 600;
   font-size: 1.1rem;
@@ -176,11 +171,12 @@ p {
 .close-button {
   padding-inline: 1rem;
   margin-left: 1rem;
+  margin-right: -1rem;
 }
 
 .place-tag {
   display: inline-flex;
-  margin-top: 1rem;
+  margin-top: 2rem;
   color: var(--grey);
   border: 1px solid var(--grey);
   padding: 0.1rem 0.4rem;
@@ -203,7 +199,7 @@ p {
   border-top: 1px solid var(--grey);
   margin-top: 2rem;
   padding-top: 1rem;
-  padding-inline: 0.5rem;
+  padding-inline: 0.2rem;
   font-variation-settings: 'wght' 600;
   font-size: 1.5rem;
   color: var(--grey);

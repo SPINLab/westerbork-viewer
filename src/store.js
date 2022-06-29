@@ -29,7 +29,7 @@ export default new Vuex.Store({
     navigationOnboardingOpen: false,
     renderPointCloud: false,
     graphics: 'medium',
-    numPoints: process.env.VUE_APP_MODE ? 200000 : 200000,
+    numPoints: process.env.VUE_APP_MODE === 'onpremise' ? 5000000 : 5000000,
     viewerPreview: null,
   },
   mutations: {

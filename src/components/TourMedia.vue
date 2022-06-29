@@ -91,13 +91,12 @@ export default {
 <style scoped>
 section {
   background-color: var(--grey-dark);
-  padding: 2rem;
+  padding: 2rem 3rem;
 }
 
 .header {
   display: flex;
   justify-content: flex-end;
-  margin-top: 1rem;
 }
 
 .minimize-button {
@@ -114,7 +113,7 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem;
+  padding-block: 3.4rem;
 }
 
 figure {
@@ -139,9 +138,9 @@ figure >>> video {
 }
 
 figcaption {
-  margin-top: 1.5rem;
+  margin-top: 0.6rem;
   color: var(--grey);
-  text-align: right;
-  font-size: 1.1rem;
+  text-align: center;
+  font-size: 1rem;
 }
 </style>

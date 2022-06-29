@@ -144,20 +144,19 @@ li {
 button {
   font-size: 1.5rem;
   font-variation-settings: 'wght' 500;
-  border-left: 4px solid var(--grey);
-  padding-left: 0.5rem;
-  margin: 0.4rem;
+  border-left: 3px solid var(--grey);
+  padding-left: 0.6rem;
 }
 .button-container {
-  border: 4px solid transparent;
+  border: 3px solid transparent;
 }
 .active-marker::before {
   content: '';
   display: block;
-  height: 1.2rem;
+  height: 1.8rem;
 }
 .active {
-  border: 4px solid var(--accent);
+  border: 3px solid var(--accent);
 }
 .active::before {
   content: 'Nu actief';
@@ -166,12 +165,13 @@ button {
   color: var(--accent);
   font-variation-settings: 'wght' 600;
   font-size: 1.1rem;
-  padding-left: calc(0.9rem + 4px);
+  padding-left: calc(0.9rem + 3px);
+  padding-top: 0.6rem;
 }
 
 p {
   font-family: var(--sans-serif);
-  padding-left: calc(0.5rem + 4px);
+  padding-left: calc(0.6rem + 6px);
   padding-right: 3rem;
   font-variation-settings: 'wght' 500;
   font-size: 1.1rem;

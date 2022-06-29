@@ -324,6 +324,7 @@ export default {
           potreeAnnotation.domElement[0].onclick = () => {
             this.$store.dispatch('setWaypointId', label.to_waypoint.data.id);
           };
+          potreeAnnotation.domElement[0].classList.add('waypoint-annotation');
           if (label.arrow_direction) {
             potreeAnnotation.domElement[0].classList.add(
               `arrow-${ARROW_DIRECTIONS[label.arrow_direction]}`,
@@ -586,7 +587,7 @@ export default {
         if (!isRendering) {
           this.pauseRender();
         }
-      }, 100);
+      }, 200);
     },
     showTour() {
       this.$store.dispatch('setTourOpen', true);
@@ -675,8 +676,8 @@ export default {
 
 .top-left {
   position: absolute;
-  top: 2rem;
-  left: 2rem;
+  top: 3rem;
+  left: 3rem;
 }
 .home-chapter-container {
   display: flex;
@@ -693,6 +694,7 @@ export default {
   align-items: center;
   height: 3rem;
   border: 2px solid var(--white);
+  border-radius: 6px;
   background-color: var(--grey-dark);
   pointer-events: auto;
 }
@@ -721,7 +723,7 @@ export default {
 
 .top-center {
   position: absolute;
-  top: 2rem;
+  top: 3rem;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -730,33 +732,38 @@ export default {
   display: flex;
   align-items: center;
   height: 3rem;
-  border: 2px solid var(--white);
-  padding-inline: 0.4rem;
-  font-size: 1.8rem;
+  padding-inline: 0.8rem;
+  font-size: 1.5rem;
   margin: 0;
+  border: 2px solid var(--white);
+  color: var (--white);
+  background-color: rgba(0, 0, 0, 0.3);
   pointer-events: auto;
 }
 
 .top-right {
   position: absolute;
-  top: 2rem;
-  right: 2rem;
+  top: 3rem;
+  right: 3rem;
   display: flex;
   align-items: flex-start;
   gap: 2rem;
 }
 .menu-button {
-  width: 2rem;
-  height: 2rem;
-  font-size: 1.2rem;
+  width: 3rem;
+  height: 3rem;
+  font-size: 2rem;
+  background-color: rgba(0, 0, 0, 0.4);
   border: 2px solid var(--white);
   border-radius: 4px;
   font-variation-settings: 'wght' 600;
   pointer-events: auto;
   text-align: center;
 }
-.menu-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+@media (hover: hover) {
+  .menu-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
 }
 
 .help-menu {
@@ -783,12 +790,12 @@ export default {
   position: absolute;
   z-index: 3;
   display: flex;
-  max-width: 20rem;
-  max-height: 20rem;
+  max-width: 24rem;
+  max-height: 30rem;
   background: var(--background);
-  border-radius: 8px;
+  border-radius: 6px;
   color: var(--grey-dark);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  box-shadow: 0 2px 20px 0px rgb(0 0 0 / 30%), 0 2px 20px 0px rgb(0 0 0 / 30%);
   --scrollbar-bg-color: var(--background);
 }
 
@@ -798,7 +805,9 @@ export default {
   top: calc(50% - 4px - var(--popper-overflow-y, 0px));
   background-color: var(--white);
   width: 50px;
-  height: 3px;
+  height: 2px;
+  filter: drop-shadow(0px 2px 2px black);
+  z-index: -1;
 }
 
 .hotspot-popup[data-popper-placement='left']::after {
@@ -824,7 +833,10 @@ export default {
 
 .hotspot-content h3 {
   margin: 0;
+  margin-top: 0.5rem;
+  color: var(--accent);
   font-size: 1.5rem;
+  font-variation-settings: 'wght' 600;
 }
 
 .hotspot-text {
@@ -864,6 +876,7 @@ export default {
   opacity: 1 !important;
   pointer-events: auto;
   user-select: none;
+  filter: drop-shadow(0px 2px 2px black);
 }
 
 .annotation:hover {
@@ -873,6 +886,7 @@ export default {
 .annotation::after {
   content: '';
   position: absolute;
+  filter: drop-shadow(0px 2px 2px #000);
 }
 
 .annotation.arrow-left::after {
@@ -909,10 +923,14 @@ export default {
 }
 
 .annotation-titlebar {
-  padding: 1px 8px;
-  color: #fff;
-  font-size: 1.2rem;
-  filter: drop-shadow(0px 2px 2px #00000029);
+  padding: 0.3rem 0.6rem;
+  color: var(--white);
+  border-radius: 4px;
+  font-size: 1.3rem;
+}
+
+.waypoint-annotation .annotation-titlebar {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .annotation-description {
@@ -923,9 +941,11 @@ export default {
   width: 1.5rem;
   height: 1.5rem;
   fill: var(--white);
-  border: 3px solid var(--white);
+  background-color: var(--grey-dark);
+  border: 2px solid var(--white);
   border-radius: 50%;
   padding: 0.2rem;
+  filter: drop-shadow(0px 2px 2px black);
 }
 
 .cross-icon {

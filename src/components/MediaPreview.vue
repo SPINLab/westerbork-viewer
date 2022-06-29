@@ -34,9 +34,9 @@ button {
   height: 8rem;
   width: 12rem;
   overflow: hidden;
-  border: 3px solid var(--white);
-  border-radius: 4px;
-  background-color: var(--white);
+  border: 2px solid var(--white);
+  border-radius: 6px;
+  background-color: var(--grey-dark);
 }
 
 video,
