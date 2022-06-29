@@ -1,5 +1,6 @@
 <template>
   <main id="app">
+    <ResetDialog />
     <IntroductionVideo class="introduction-video" />
     <WelcomeModal class="welcome-modal" />
     <TourViewer class="tour-viewer" />
@@ -8,6 +9,7 @@
 </template>
 
 <script>
+import ResetDialog from './components/ResetDialog.vue';
 import IntroductionVideo from './components/IntroductionVideo.vue';
 import WelcomeModal from './components/WelcomeModal.vue';
 import TourViewer from './components/TourViewer.vue';
@@ -16,6 +18,7 @@ import PointCloudViewer from './components/PointCloudViewer.vue';
 export default {
   name: 'App',
   components: {
+    ResetDialog,
     IntroductionVideo,
     WelcomeModal,
     TourViewer,
