@@ -34,7 +34,6 @@ export default {
   },
   watch: {
     introductionOpen() {
-      console.log('introductionOpen', this.introductionOpen);
       if (!this.initiated) {
         this.initiated = true;
         this.reloadOnInactive();
