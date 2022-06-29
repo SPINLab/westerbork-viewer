@@ -12,6 +12,7 @@
       <NavigationOnboarding v-if="navigationOnboardingOpen" />
     </transition>
     <div class="point-cloud-viewer-ui">
+      <div class="onboarding-center-location"></div>
       <div v-show="!tourOpen" class="top-left home-chapter-container">
         <HomeButton
           class="home-button"
@@ -663,6 +664,13 @@ export default {
 
 .point-cloud-viewer-ui {
   z-index: 4;
+}
+
+.onboarding-center-location {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
 }
 
 .top-left {
