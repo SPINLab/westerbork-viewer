@@ -912,8 +912,10 @@ export default {
   user-select: none;
 }
 
-.annotation:hover {
-  cursor: pointer;
+@media (hover: hover) {
+  .annotation:hover {
+    cursor: pointer;
+  }
 }
 
 .annotation::after {
