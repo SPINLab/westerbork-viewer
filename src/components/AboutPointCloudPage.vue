@@ -140,7 +140,7 @@ section {
   background-color: var(--background);
   border-radius: 4px;
   padding: 3rem;
-  max-width: 55rem;
+  max-width: 40rem;
 }
 
 .point-cloud-images {
