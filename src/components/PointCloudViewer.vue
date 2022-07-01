@@ -458,16 +458,17 @@ export default {
         if (hotspotPopper) {
           updateInterval = setInterval(() => {
             this.updateHotspotPopper();
-          }, 10);
+          }, 16);
         }
       });
       this.$viewer.controls.addEventListener('end', () => {
         if (hotspotPopper) {
-          this.updateHotspotPopper();
-          if (updateInterval) {
-            clearInterval(updateInterval);
-            updateInterval = null;
-          }
+          setTimeout(() => {
+            if (updateInterval) {
+              clearInterval(updateInterval);
+              updateInterval = null;
+            }
+          }, 200);
         }
       });
     },
