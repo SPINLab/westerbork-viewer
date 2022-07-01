@@ -2,12 +2,20 @@
   <transition name="fade">
     <div v-show="open" class="help-menu">
       <ul>
-        <li><button type="button">Hoe navigeer ik?</button></li>
-        <li><button type="button">Overzicht periodes en bewoners</button></li>
-        <li><button type="button">Over de 3D scan</button></li>
-        <li><button type="button">Feedback</button></li>
         <li>
-          <button type="button" @click="showAboutPage">Over dit project</button>
+          <button type="button" @click="showNavigationOnboarding">
+            Hoe navigeer ik?
+          </button>
+        </li>
+        <li>
+          <button type="button" @click="showAboutPointCloudPage">
+            Over de 3D scan
+          </button>
+        </li>
+        <li>
+          <button type="button" @click="showAboutUsPage">
+            Over dit project
+          </button>
         </li>
       </ul>
       <button type="button" class="close-button" @click="toggle">
@@ -43,8 +51,17 @@ export default {
         if (this.open) this.open = false;
       }
     },
-    showAboutPage() {
-      // this.$store.dispatch()
+    showNavigationOnboarding() {
+      this.$store.dispatch('setNavigationOnboardingOpen', true);
+      this.open = false;
+    },
+    showAboutUsPage() {
+      this.$store.dispatch('setAboutUsPageOpen', true);
+      this.open = false;
+    },
+    showAboutPointCloudPage() {
+      this.$store.dispatch('setAboutPointCloudPageOpen', true);
+      this.open = false;
     },
   },
 };
@@ -53,6 +70,7 @@ export default {
 <style scoped>
 .help-menu {
   display: flex;
+  justify-content: space-between;
   width: 20rem;
   background-color: var(--background);
   padding-inline: 1.5rem;

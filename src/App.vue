@@ -3,6 +3,8 @@
     <ResetDialog />
     <IntroductionVideo class="introduction-video" />
     <WelcomeModal class="welcome-modal" />
+    <AboutUsPage class="about-us-page" />
+    <AboutPointCloudPage class="about-point-cloud-page" />
     <TourViewer class="tour-viewer" />
     <PointCloudViewer class="point-cloud-viewer" />
   </main>
@@ -12,6 +14,8 @@
 import ResetDialog from './components/ResetDialog.vue';
 import IntroductionVideo from './components/IntroductionVideo.vue';
 import WelcomeModal from './components/WelcomeModal.vue';
+import AboutUsPage from './components/AboutUsPage.vue';
+import AboutPointCloudPage from './components/AboutPointCloudPage.vue';
 import TourViewer from './components/TourViewer.vue';
 import PointCloudViewer from './components/PointCloudViewer.vue';
 
@@ -21,6 +25,8 @@ export default {
     ResetDialog,
     IntroductionVideo,
     WelcomeModal,
+    AboutUsPage,
+    AboutPointCloudPage,
     TourViewer,
     PointCloudViewer,
   },
@@ -194,9 +200,15 @@ button {
 }
 
 .introduction-video {
-  z-index: 4;
+  z-index: 5;
 }
 .welcome-modal {
+  z-index: 4;
+}
+.about-us-page {
+  z-index: 3;
+}
+.about-point-cloud-page {
   z-index: 3;
 }
 .tour-viewer {

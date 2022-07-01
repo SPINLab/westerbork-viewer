@@ -27,6 +27,8 @@ export default new Vuex.Store({
     welcomeModalOpen: false,
     introductionOpen: true,
     navigationOnboardingOpen: false,
+    aboutUsPageOpen: false,
+    aboutPointCloudPageOpen: false,
     renderPointCloud: false,
     graphics: 'medium',
     numPoints: process.env.VUE_APP_MODE === 'onpremise' ? 5000000 : 5000000,
@@ -90,6 +92,12 @@ export default new Vuex.Store({
     setNavigationOnboardingOpen(state, value) {
       state.navigationOnboardingOpen = value;
     },
+    setAboutUsPageOpen(state, value) {
+      state.aboutUsPageOpen = value;
+    },
+    setAboutPointCloudPageOpen(state, value) {
+      state.aboutPointCloudPageOpen = value;
+    },
     setRenderPointCloud(state, value) {
       state.renderPointCloud = value;
     },
@@ -134,6 +142,7 @@ export default new Vuex.Store({
       );
       const json = await response.json();
       const waypointLabels = json.data.reduce((acc, label) => {
+        if (typeof label.waypoint?.data?.id === 'undefined') return acc;
         if (typeof acc[label.waypoint.data.id] === 'undefined') {
           acc[label.waypoint.data.id] = [label];
         } else {
@@ -225,6 +234,12 @@ export default new Vuex.Store({
     },
     setNavigationOnboardingOpen({ commit }, value) {
       commit('setNavigationOnboardingOpen', value);
+    },
+    setAboutUsPageOpen({ commit }, value) {
+      commit('setAboutUsPageOpen', value);
+    },
+    setAboutPointCloudPageOpen({ commit }, value) {
+      commit('setAboutPointCloudPageOpen', value);
     },
     setRenderPointCloud({ commit }, value) {
       commit('setRenderPointCloud', value);
