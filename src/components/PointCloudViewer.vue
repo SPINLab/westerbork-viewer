@@ -225,8 +225,10 @@ export default {
         if (!this.firstRenderInitialized) {
           this.firstRenderInitialized = true;
         } else if (!this.onboardingShown) {
-          this.$store.dispatch('setNavigationOnboardingOpen', true);
-          this.onboardingShown = true;
+          setTimeout(() => {
+            this.$store.dispatch('setNavigationOnboardingOpen', true);
+            this.onboardingShown = true;
+          }, 300);
         }
         this.resumeRender();
       } else {
