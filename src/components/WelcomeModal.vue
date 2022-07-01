@@ -1,6 +1,7 @@
 <template>
   <transition name="fade">
     <div v-if="welcomeModalOpen">
+      <div class="background"></div>
       <div class="fade" @click="hide"></div>
       <section ref="modal" class="modal">
         <h2>
@@ -91,7 +92,15 @@ export default {
 </script>
 
 <style scoped>
+.background {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  background-image: url('../assets/images/outside.jpg');
+  background-size: cover;
+}
 .fade {
+  z-index: 2;
   position: absolute;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
@@ -99,6 +108,7 @@ export default {
 }
 
 .modal {
+  z-index: 3;
   position: absolute;
   top: 50%;
   left: 50%;
