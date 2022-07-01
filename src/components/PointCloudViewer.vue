@@ -47,9 +47,9 @@
         <button class="menu-button" @click="showHelpMenu">?</button>
         <HelpMenu ref="helpMenu" class="help-menu" />
       </div>
-      <div class="bottom-left">
+      <!-- <div class="bottom-left">
         <div class="map-button">M</div>
-      </div>
+      </div> -->
     </div>
     <section
       v-show="hotspotPopupShown"
