@@ -20,7 +20,7 @@ export default new Vuex.Store({
     placeId: null,
     waypointId: null,
     media: null,
-    tourOpen: true,
+    tourOpen: false,
     mediaOpen: true,
     showChapter: true,
     showMedia: true,

@@ -147,6 +147,7 @@ export default {
       selectedHotspot: { title: '', text: '' },
       selectedHotspotAnnotation: null,
       isTransitioning: false,
+      firstWaypoint: true,
       debugMode: false,
       debugInfo: {
         position: {
@@ -208,7 +209,12 @@ export default {
       this.updateNumPoints(this.numPoints);
     },
     waypointId() {
-      if (this.tourOpen && this.mediaOpen) {
+      if (this.firstWaypoint) {
+        setTimeout(() => {
+          this.goToWaypoint(this.waypointId, 0);
+          this.firstWaypoint = false;
+        }, 200);
+      } else if (this.tourOpen && this.mediaOpen) {
         setTimeout(() => {
           this.goToWaypoint(this.waypointId, 0);
         }, 200);
@@ -288,9 +294,13 @@ export default {
       this.$viewer.setMoveSpeed(0);
       this.$viewer.controls.rotationSpeed = 100;
       this.$viewer.controls.zoomToLocation = () => true;
-      this.$viewer.scene.view.position.set(236807.535, 548506.569, 18);
-      this.$viewer.scene.view.yaw = 1.485;
-      this.$viewer.scene.view.pitch = 0;
+      this.$viewer.scene.view.position.set(
+        236806.19965048347,
+        548503.3800463589,
+        18,
+      );
+      this.$viewer.scene.view.yaw = 1.251;
+      this.$viewer.scene.view.pitch = 0.1;
     },
     initAnnotations() {
       this.createAnnotations();
