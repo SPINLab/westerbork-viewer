@@ -1,6 +1,6 @@
 <template>
   <div v-if="shown" class="fade" @click="close">
-    <section class="dialog">
+    <section class="modal">
       <h3>Bent u er nog?</h3>
       <p>
         Er is een paar minuten geen activiteit geweest. Raak het scherm aan om
@@ -15,7 +15,7 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'ResetDialog',
+  name: 'ResetModal',
   data() {
     return {
       initiated: false,
@@ -88,14 +88,15 @@ export default {
   backdrop-filter: blur(6px);
 }
 
-.dialog {
+.modal {
   z-index: 999;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   width: clamp(20rem, 50vw, 40rem);
-  background-color: var(--background);
+  background-color: var(--emerald-dark);
+  color: var(--white);
   border-radius: 12px;
   padding: 2rem;
   box-sizing: border-box;
@@ -110,24 +111,5 @@ h3 {
 
 p {
   font-family: var(--sans-serif);
-}
-
-.buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-button {
-  border: 1px solid var(--grey);
-  border-radius: 20rem;
-  padding: 0.5rem 1rem;
-}
-
-@media (hover: hover) {
-  button:hover {
-    color: var(--accent-dark);
-    border-color: var(--accent-dark);
-  }
 }
 </style>

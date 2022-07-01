@@ -102,30 +102,30 @@ export default {
 }
 
 .shepherd-element {
-  background-color: #0a2424 !important;
+  background-color: var(--emerald-dark) !important;
   border-radius: 12px;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   z-index: 2;
 }
 .shepherd-element-attached-left .shepherd-arrow {
-  border-right-color: #0a2424 !important;
+  border-right-color: var(--emerald-dark) !important;
 }
 .shepherd-element-attached-right .shepherd-arrow {
-  border-left-color: #0a2424 !important;
+  border-left-color: var(--emerald-dark) !important;
 }
 .shepherd-element-attached-top .shepherd-arrow {
-  border-bottom-color: #0a2424 !important;
+  border-bottom-color: var(--emerald-dark) !important;
 }
 .shepherd-element-attached-bottom .shepherd-arrow {
-  border-top-color: #0a2424 !important;
+  border-top-color: var(--emerald-dark) !important;
 }
 .shepherd-arrow:before {
-  background: #0a2424;
+  background: var(--emerald-dark);
 }
 
 .shepherd-text {
   font-size: 1.5rem;
-  color: #fff;
+  color: var(--white);
 }
 
 .shepherd-footer {
@@ -134,16 +134,16 @@ export default {
 }
 
 .shepherd-footer .shepherd-button {
-  background: #0a2424;
-  border: 2px solid #00e3e3;
+  background: var(--emerald-dark);
+  border: 2px solid var(--accent);
   border-radius: 20rem;
   font-size: 1.5rem;
-  color: #fff;
+  color: var(--white);
 }
 
 @media (hover: hover) {
   .shepherd-footer .shepherd-button:not(:disabled):hover {
-    background: #144a4a;
+    background: var(--emerald);
   }
 }
 </style>

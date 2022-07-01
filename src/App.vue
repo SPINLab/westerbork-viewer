@@ -1,6 +1,6 @@
 <template>
   <main id="app">
-    <ResetDialog />
+    <ResetModal />
     <IntroductionVideo class="introduction-video" />
     <WelcomeModal class="welcome-modal" />
     <AboutUsPage class="about-us-page" />
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import ResetDialog from './components/ResetDialog.vue';
+import ResetModal from './components/ResetModal.vue';
 import IntroductionVideo from './components/IntroductionVideo.vue';
 import WelcomeModal from './components/WelcomeModal.vue';
 import AboutUsPage from './components/AboutUsPage.vue';
@@ -22,7 +22,7 @@ import PointCloudViewer from './components/PointCloudViewer.vue';
 export default {
   name: 'App',
   components: {
-    ResetDialog,
+    ResetModal,
     IntroductionVideo,
     WelcomeModal,
     AboutUsPage,
@@ -76,13 +76,14 @@ export default {
   --font-sans-serif: 'Montserrat', sans-serif;
   --accent: #49cece;
   --accent-dark: #0e9c9c;
-  /* --background: #f8f1ed; */
   --background: #fff4eb;
   --text: #073333;
   --grey-light: #b2b2b2;
   --grey: #808080;
   --grey-dark: #2b2b2b;
   --grey-background: #c8c4c1;
+  --emerald: #144a4a;
+  --emerald-dark: #0a2424;
   --white: #fff;
   --black: #333;
   font-size: 75%;
