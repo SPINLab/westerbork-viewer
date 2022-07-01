@@ -168,18 +168,24 @@ export default new Vuex.Store({
       commit('setMedia', json.data);
       commit('setShowMedia', true);
     },
-    setPlaceId({ commit }, value) {
-      commit('setPlaceId', value);
+    setPlaceId({ commit, state }, value) {
+      if (value !== state.placeId) {
+        commit('setPlaceId', value);
+      }
     },
-    setWaypointId({ commit }, value) {
-      commit('setWaypointId', value);
+    setWaypointId({ commit, state }, value) {
+      if (value !== state.waypointId) {
+        commit('setWaypointId', value);
+      }
     },
-    setTourId({ commit }, value) {
-      commit('setShowChapter', false);
-      commit('setShowMedia', false);
-      setTimeout(() => {
-        commit('setTourId', value);
-      }, 200);
+    setTourId({ commit, state }, value) {
+      if (value !== state.tourId) {
+        commit('setShowChapter', false);
+        commit('setShowMedia', false);
+        setTimeout(() => {
+          commit('setTourId', value);
+        }, 200);
+      }
     },
     setChapterIndex({ commit, getters }, value) {
       commit('setShowMedia', false);
