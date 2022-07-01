@@ -1,17 +1,12 @@
 <template>
-  <div v-if="shown" class="fade" @click="onClickOutside">
-    <section ref="dialog" class="dialog">
-      <h3>Inactiviteit</h3>
+  <div v-if="shown" class="fade" @click="close">
+    <section class="dialog">
+      <h3>Bent u er nog?</h3>
       <p>
-        Er is 2 minuten geen activiteit geweest. Over een aantal seconden zal de
-        applicatie resetten. Druk op de annuleer knop of buiten dit venster om
-        dit te voorkomen.
+        Er is een paar minuten geen activiteit geweest. Raak het scherm aan om
+        een reset te voorkomen.
       </p>
       <p>Reset in {{ timer }} seconden...</p>
-      <div class="buttons">
-        <button class="button" @click="close">Annuleren</button>
-        <button class="button" @click="reset">Nu resetten</button>
-      </div>
     </section>
   </div>
 </template>
@@ -24,7 +19,7 @@ export default {
   data() {
     return {
       initiated: false,
-      timer: 10,
+      timer: 20,
       shown: false,
       lastActivity: new Date().getTime(),
     };
@@ -61,7 +56,7 @@ export default {
     },
     show() {
       this.shown = true;
-      this.timer = 10;
+      this.timer = 20;
       this.timerInterval = setInterval(() => {
         if (this.timer > 0) {
           this.timer -= 1;
@@ -79,14 +74,6 @@ export default {
     },
     reset() {
       window.location.reload();
-    },
-    onClickOutside(event) {
-      if (this.$refs.dialog) {
-        if (this.$refs.dialog.contains(event.target)) {
-          return;
-        }
-        this.close();
-      }
     },
   },
 };
