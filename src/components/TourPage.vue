@@ -158,7 +158,7 @@ p {
 
 .tour-tab {
   color: var(--grey-background);
-  border-left: 1px solid var(--grey-background);
+  border-left: 2px solid var(--grey-background);
   padding-left: 0.5rem;
   width: calc(50% - 1rem);
   font-variation-settings: 'wght' 600;

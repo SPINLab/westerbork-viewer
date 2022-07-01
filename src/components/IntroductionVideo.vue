@@ -40,14 +40,15 @@ export default {
 .introduction-video button {
   z-index: 1;
   position: absolute;
-  top: 2rem;
-  right: 2rem;
-  background-color: var(--grey);
+  top: 3rem;
+  right: 3rem;
+  background-color: var(--grey-dark);
   color: var(--white);
-  padding: 1rem 2rem;
+  padding: 0.6rem 0.8rem;
   border-radius: 6px;
-  font-size: 1.1rem;
-  font-variation-settings: 'wght' 600;
+  font-size: 1.2rem;
+  font-variation-settings: 'wght' 500;
+  border: 2px solid var(--white);
 }
 
 video {

@@ -854,7 +854,7 @@ export default {
 .hotspot-content h3 {
   margin: 0;
   margin-top: 0.5rem;
-  color: var(--accent);
+  color: var(--accent-dark);
   font-size: 1.5rem;
   font-variation-settings: 'wght' 600;
 }
@@ -862,6 +862,7 @@ export default {
 .hotspot-text {
   white-space: pre-wrap;
   font-size: 1.2rem;
+  margin-top: 0.6rem;
 }
 
 .debug-info {
@@ -896,7 +897,6 @@ export default {
   opacity: 1 !important;
   pointer-events: auto;
   user-select: none;
-  filter: drop-shadow(0px 2px 2px black);
 }
 
 .annotation:hover {
@@ -906,7 +906,7 @@ export default {
 .annotation::after {
   content: '';
   position: absolute;
-  filter: drop-shadow(0px 2px 2px #000);
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 1));
 }
 
 .annotation.arrow-left::after {
@@ -945,7 +945,7 @@ export default {
 .annotation-titlebar {
   padding: 0.3rem 0.6rem;
   color: var(--white);
-  border-radius: 4px;
+  border-radius: 2px;
   font-size: 1.3rem;
 }
 
@@ -965,7 +965,7 @@ export default {
   border: 2px solid var(--white);
   border-radius: 50%;
   padding: 0.2rem;
-  filter: drop-shadow(0px 2px 2px black);
+  filter: drop-shadow(0px 1px 3px #000);
 }
 
 .cross-icon {

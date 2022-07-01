@@ -149,6 +149,8 @@ button {
 }
 .button-container {
   border: 3px solid transparent;
+  padding: 0.6rem;
+  border-radius: 6px;
 }
 .active-marker::before {
   content: '';
@@ -161,12 +163,11 @@ button {
 .active::before {
   content: 'Nu actief';
   display: block;
-  height: 1.2rem;
+  height: 1rem;
   color: var(--accent);
   font-variation-settings: 'wght' 600;
   font-size: 1.1rem;
-  padding-left: calc(0.9rem + 3px);
-  padding-top: 0.6rem;
+  padding-bottom: 0.5rem;
 }
 
 p {

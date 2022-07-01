@@ -31,9 +31,9 @@ button {
   height: 8rem;
   width: 12rem;
   overflow: hidden;
-  border: 3px solid #000;
-  border-radius: 4px;
-  background-color: #000;
+  border: 2px solid var(--white);
+  border-radius: 6px;
+  background-color: var(--grey-dark);
   position: relative;
 }
 
@@ -50,8 +50,8 @@ img {
   transform: translateX(-50%);
   color: var(--white);
   padding: 0.3rem 0.6rem;
-  border: 2px solid var(--white);
-  border-radius: 3px;
+  border: 1px solid var(--white);
+  border-radius: 2px;
   background-color: var(--grey-dark);
   white-space: nowrap;
   max-width: 100%;
