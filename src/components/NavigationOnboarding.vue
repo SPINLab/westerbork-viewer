@@ -13,15 +13,16 @@ export default {
     };
   },
   mounted() {
-    setTimeout(() => {
-      this.createOnboarding();
-      this.onboarding.start();
-    }, 300);
+    setTimeout(this.start, 300);
     this.$watch('$i18n.locale', () => {
       this.createOnboarding();
     });
   },
   methods: {
+    start() {
+      this.createOnboarding();
+      this.onboarding.start();
+    },
     clearOnboarding() {
       while (this.$el.firstChild) {
         this.$el.firstChild.remove();

@@ -233,6 +233,11 @@ export default {
         this.pauseRender();
       }
     },
+    navigationOnboardingOpen() {
+      if (!this.navigationOnboardingOpen) {
+        this.blickWaypoints();
+      }
+    },
   },
   mounted() {
     Vue.prototype.$viewer = new Potree.Viewer(this.$el);
@@ -333,6 +338,21 @@ export default {
           potreeAnnotation.elTitle.off();
           potreeAnnotation.domElement.off();
           this.$viewer.scene.annotations.add(potreeAnnotation);
+        });
+      }
+    },
+    blickWaypoints() {
+      if (this.labelsAtWaypoint?.length) {
+        this.labelsAtWaypoint.forEach((label) => {
+          const potreeAnnotation = this.$viewer.scene.annotations.children.find(
+            (annotation) => annotation.title === label.text_nl,
+          );
+          if (potreeAnnotation) {
+            potreeAnnotation.domElement[0].classList.add('waypoint-blick');
+            setTimeout(() => {
+              potreeAnnotation.domElement[0].classList.remove('waypoint-blick');
+            }, 3000);
+          }
         });
       }
     },
@@ -951,5 +971,22 @@ export default {
 .cross-icon {
   stroke: var(--white);
   stroke-width: 1rem;
+}
+
+.waypoint-annotation {
+  border: 2px solid transparent;
+  border-radius: 4px;
+}
+.waypoint-blick {
+  animation: blick-border 1s step-end infinite;
+}
+@keyframes blick-border {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: var(--white);
+  }
 }
 </style>
