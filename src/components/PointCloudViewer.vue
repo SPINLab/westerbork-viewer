@@ -836,7 +836,7 @@ export default {
   position: absolute;
   top: calc(50% - 4px - var(--popper-overflow-y, 0px));
   background-color: var(--white);
-  width: 50px;
+  width: 48px;
   height: 2px;
   filter: drop-shadow(0px 2px 2px black);
   z-index: -1;
