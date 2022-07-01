@@ -135,6 +135,7 @@ p {
 
 .header {
   display: flex;
+  align-items: flex-start;
   width: 100%;
 }
 

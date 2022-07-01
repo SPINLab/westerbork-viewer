@@ -91,7 +91,7 @@ export default {
 <style scoped>
 section {
   background-color: var(--grey-dark);
-  padding: 2rem 3rem;
+  padding: 3rem;
 }
 
 .header {
