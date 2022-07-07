@@ -187,15 +187,21 @@ export default new Vuex.Store({
         }, 200);
       }
     },
-    setChapterIndex({ commit, getters }, value) {
-      commit('setShowMedia', false);
-      commit('setShowChapter', false);
-      const waypointId = getters.tourChapters[value].waypoint.data.id;
-      commit('setWaypointId', waypointId);
-      setTimeout(() => {
-        commit('setChapterIndex', value);
-        commit('setShowChapter', true);
-      }, 500);
+    setChapterIndex({ commit, state, getters }, value) {
+      if (value !== state.chapterIndex) {
+        commit('setShowMedia', false);
+        commit('setShowChapter', false);
+        const waypointId = getters.tourChapters[value].waypoint.data.id;
+        commit('setWaypointId', waypointId);
+        setTimeout(() => {
+          commit('setChapterIndex', value);
+          commit('setShowChapter', true);
+        }, 500);
+      } else {
+        setTimeout(() => {
+          commit('setShowChapter', true);
+        }, 500);
+      }
     },
     nextChapter({ commit, state, getters }) {
       if (state.chapterIndex < getters.tourChapters.length - 1) {
