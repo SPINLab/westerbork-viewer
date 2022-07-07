@@ -66,8 +66,7 @@ export default {
       }
     },
     showIntroductionVideo() {
-      this.$store.dispatch('setWelcomeModalOpen', false);
-      this.$store.dispatch('setIntroductionOpen', true);
+      window.location.reload();
     },
     showPointCloudViewer() {
       this.initChoiceMade = true;
