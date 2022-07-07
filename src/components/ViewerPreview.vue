@@ -28,8 +28,8 @@ export default {
 
 <style scoped>
 button {
-  height: 8rem;
-  width: 12rem;
+  height: 10rem;
+  width: 16rem;
   overflow: hidden;
   border: 2px solid var(--white);
   border-radius: 6px;

@@ -108,7 +108,7 @@ export default {
 <style scoped>
 section {
   background-color: var(--background);
-  padding: 3rem;
+  padding: 4rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -120,8 +120,8 @@ h2 {
   color: var(--accent-dark);
   font-variation-settings: 'wght' 600;
   padding-block: 0;
-  margin-block: 1.2rem;
-  font-size: 2.5rem;
+  margin-block: 2rem;
+  font-size: 2.6rem;
 }
 
 p {
@@ -177,13 +177,13 @@ p {
 
 .place-tag {
   display: inline-flex;
-  margin-top: 2rem;
+  margin-top: 3.6rem;
   color: var(--grey);
   border: 1px solid var(--grey);
-  padding: 0.1rem 0.4rem;
+  padding: 0.2rem 0.2rem;
   border-radius: 2px;
   font-variation-settings: 'wght' 600;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
 }
 
 .chapter-content {
@@ -202,7 +202,7 @@ p {
   padding-top: 1rem;
   padding-inline: 0.2rem;
   font-variation-settings: 'wght' 600;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: var(--grey);
   box-sizing: border-box;
 }

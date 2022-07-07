@@ -91,7 +91,7 @@ export default {
 <style scoped>
 section {
   background-color: var(--grey-dark);
-  padding: 3rem;
+  padding: 4rem;
 }
 
 .header {
@@ -113,7 +113,7 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-block: 3.4rem;
+  padding-block: 4.4rem;
 }
 
 figure {
@@ -128,7 +128,7 @@ figure.video-figure {
 
 figure >>> video,
 figure >>> img {
-  max-height: calc(100vh - 20rem);
+  max-height: calc(100vh - 28rem);
   height: auto;
   max-width: 100%;
   object-fit: contain;

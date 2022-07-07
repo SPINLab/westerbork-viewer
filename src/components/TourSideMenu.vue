@@ -152,7 +152,7 @@ aside {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 6rem;
+  width: 7.4rem;
   transition: width 0.3s ease-out;
   overflow: hidden;
 }
@@ -209,12 +209,10 @@ p {
 .side-menu-item {
   display: flex;
   align-items: center;
-  gap: 1.8rem;
+  gap: 2.2rem;
   width: calc(30rem - 3.6rem);
-  margin-block: 1.5rem;
-  height: 6rem;
-  padding-right: 1.5rem;
-  padding-left: 0;
+  margin-block: 1rem;
+  height: 8rem;
 }
 
 .home-item {
@@ -228,12 +226,11 @@ p {
 }
 
 .side-menu-item-icon {
-  height: 2.2rem;
-  width: 2.2rem;
+  height: 3rem;
+  width: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 0.3rem;
 }
 
 .home-icon-container {
@@ -253,13 +250,13 @@ p {
   border: 3px solid var(--grey-light);
   border-radius: 20rem;
   font-variation-settings: 'wght' 600;
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 
 .side-menu-item-description {
   flex: 1;
   text-align: left;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-variation-settings: 'wght' 600;
 }
 
@@ -272,7 +269,7 @@ p {
   -webkit-line-clamp: 2;
   text-overflow: ellipsis;
   padding-left: 0.5rem;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 .step-description {
@@ -295,7 +292,7 @@ p {
 }
 
 .step-place {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 @media (hover: hover) {

@@ -52,13 +52,13 @@ export default {
   top: 0;
   left: 0;
   bottom: 0;
-  min-width: 6rem;
+  min-width: 7.4rem;
 }
 
 article {
   display: grid;
-  grid-template-columns: minmax(35rem, 45rem) auto;
+  grid-template-columns: 50rem auto;
   height: 100%;
-  margin-left: 6rem;
+  margin-left: 7.4rem;
 }
 </style>
