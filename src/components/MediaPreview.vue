@@ -24,6 +24,7 @@ export default {
     showMedia() {
       this.$store.dispatch('setTourOpen', true);
       this.$store.dispatch('setMediaOpen', true);
+      this.$store.dispatch('setRenderPointCloud', false);
     },
   },
 };

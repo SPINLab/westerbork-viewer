@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Shepherd from 'shepherd.js';
 
 export default {
@@ -11,6 +12,17 @@ export default {
     return {
       onboarding: null,
     };
+  },
+  computed: {
+    ...mapState(['renderPointCloud', 'navigationOnboardingCompleted']),
+  },
+  watch: {
+    renderPointCloud() {
+      if (!this.renderPointCloud && !this.navigationOnboardingCompleted) {
+        this.onboarding.cancel();
+        this.$store.dispatch('setNavigationOnboardingOpen', false);
+      }
+    },
   },
   mounted() {
     this.start();
@@ -90,6 +102,7 @@ export default {
       });
 
       this.onboarding.on('complete', () => {
+        this.$store.dispatch('setNavigationOnboardingCompleted', true);
         this.$store.dispatch('setNavigationOnboardingOpen', false);
       });
     },

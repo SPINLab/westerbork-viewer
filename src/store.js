@@ -27,6 +27,7 @@ export default new Vuex.Store({
     welcomeModalOpen: false,
     introductionOpen: true,
     navigationOnboardingOpen: false,
+    navigationOnboardingCompleted: false,
     aboutUsPageOpen: false,
     aboutPointCloudPageOpen: false,
     renderPointCloud: false,
@@ -91,6 +92,9 @@ export default new Vuex.Store({
     },
     setNavigationOnboardingOpen(state, value) {
       state.navigationOnboardingOpen = value;
+    },
+    setNavigationOnboardingCompleted(state, value) {
+      state.navigationOnboardingCompleted = value;
     },
     setAboutUsPageOpen(state, value) {
       state.aboutUsPageOpen = value;
@@ -246,6 +250,9 @@ export default new Vuex.Store({
     },
     setNavigationOnboardingOpen({ commit }, value) {
       commit('setNavigationOnboardingOpen', value);
+    },
+    setNavigationOnboardingCompleted({ commit }, value) {
+      commit('setNavigationOnboardingCompleted', value);
     },
     setAboutUsPageOpen({ commit }, value) {
       commit('setAboutUsPageOpen', value);

@@ -141,7 +141,6 @@ export default {
   data() {
     return {
       firstRenderInitialized: false,
-      onboardingShown: false,
       popperOverflowY: '0px',
       hotspotPopupShown: false,
       selectedHotspot: { title: '', text: '' },
@@ -175,6 +174,7 @@ export default {
       'tourOpen',
       'mediaOpen',
       'navigationOnboardingOpen',
+      'navigationOnboardingCompleted',
       'renderPointCloud',
     ]),
     ...mapGetters([
@@ -230,10 +230,9 @@ export default {
       if (this.renderPointCloud) {
         if (!this.firstRenderInitialized) {
           this.firstRenderInitialized = true;
-        } else if (!this.onboardingShown) {
+        } else if (!this.navigationOnboardingCompleted) {
           setTimeout(() => {
             this.$store.dispatch('setNavigationOnboardingOpen', true);
-            this.onboardingShown = true;
           }, 300);
         }
         this.resumeRender();
