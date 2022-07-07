@@ -13,15 +13,20 @@ export default {
     };
   },
   mounted() {
-    setTimeout(this.start, 300);
+    this.start();
     this.$watch('$i18n.locale', () => {
       this.createOnboarding();
     });
   },
   methods: {
     start() {
-      this.createOnboarding();
-      this.onboarding.start();
+      const interval = setInterval(() => {
+        if (document.querySelector('.onboarding-center-location')) {
+          this.createOnboarding();
+          this.onboarding.start();
+          clearInterval(interval);
+        }
+      }, 100);
     },
     clearOnboarding() {
       while (this.$el.firstChild) {
