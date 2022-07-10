@@ -27,7 +27,7 @@
             Op zoek naar meer informatie, vragen of opmerkingen? Neem dan
             contact op met het Herinneringscentrum Kamp Westerbork ↓
             <br /><br />
-            <a href="mailto:bas@kampwesterbork.nl">bas@kampwesterbork.nl</a>
+            <span class="email">bas@kampwesterbork.nl</span>
           </p>
         </section>
         <section class="people-about">
@@ -79,9 +79,7 @@
 
             <p class="software">
               <strong>Software:</strong>
-              Deze applicatie is gemaakt met
-              <a href="https://vuejs.org/">Vue</a> voor de UI en
-              <a href="https://potree.github.io/">Potree</a> voor de
+              Deze applicatie is gemaakt met Vue voor de UI en Potree voor de
               3D-visualisatie.
             </p>
           </div>
@@ -165,7 +163,8 @@ article {
   box-sizing: border-box;
 }
 
-a {
+a,
+.email {
   color: var(--accent-dark);
   font-variation-settings: 'wght' 600;
   text-decoration: none;
