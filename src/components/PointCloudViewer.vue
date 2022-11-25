@@ -303,9 +303,6 @@ export default {
     },
     initAnnotations() {
       this.createAnnotations();
-      this.$watch('$i18n.locale', () => {
-        this.createAnnotations();
-      });
     },
     createAnnotations() {
       this.$viewer.scene.annotations.children = [];

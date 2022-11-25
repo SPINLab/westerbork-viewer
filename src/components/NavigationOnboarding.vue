@@ -26,9 +26,6 @@ export default {
   },
   mounted() {
     this.start();
-    this.$watch('$i18n.locale', () => {
-      this.createOnboarding();
-    });
   },
   methods: {
     start() {
