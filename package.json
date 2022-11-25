@@ -4,32 +4,36 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
     "build:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service build --dest dist-on-premise",
-    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
-    "serve:onpremise": "cross-env VUE_APP_MODE=onpremise vue-cli-service serve"
+    "lint": "vue-cli-service lint",
+    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "potree": "github:chrislcs/potree#westerbork",
-    "shepherd.js": "^8.0.2",
-    "vue": "^2.6.11",
-    "vue-i18n": "^8.20.0",
-    "vue-slider-component": "^3.2.2"
+    "@popperjs/core": "^2.11.5",
+    "lodash.debounce": "^4.0.8",
+    "potree": "github:chrislcs/potree#westerbork-2",
+    "shepherd.js": "^9.0.0",
+    "vue": "^2.6.14",
+    "vue-i18n": "^8.27.1",
+    "vue-slider-component": "^3.2.15",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.17.0",
     "@intlify/vue-i18n-loader": "^1.0.0",
-    "@vue/cli-plugin-babel": "~4.4.6",
-    "@vue/cli-plugin-eslint": "~4.4.6",
-    "@vue/cli-service": "~4.4.6",
-    "babel-eslint": "^10.1.0",
-    "copy-webpack-plugin": "^6.0.3",
-    "cross-env": "^7.0.2",
-    "eslint": "^7.6.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-vue": "^6.1.2",
-    "vue-cli-plugin-i18n": "^1.0.1",
-    "vue-template-compiler": "^2.6.11"
+    "@vue/cli-plugin-babel": "~5.0.4",
+    "@vue/cli-plugin-eslint": "~5.0.4",
+    "@vue/cli-service": "~5.0.4",
+    "copy-webpack-plugin": "^10.2.4",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.12.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-vue": "^8.5.0",
+    "vue-cli-plugin-i18n": "~2.3.1",
+    "vue-template-compiler": "^2.6.14"
   }
 }
