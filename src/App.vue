@@ -1,5 +1,5 @@
 <template>
-  <main id="app">
+  <main id="app" :class="{ 'on-premise': onPremiseMode }">
     <ResetModal />
     <IntroductionVideo class="introduction-video" />
     <WelcomeModal class="welcome-modal" />
@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import ResetModal from './components/ResetModal.vue';
 import IntroductionVideo from './components/IntroductionVideo.vue';
 import WelcomeModal from './components/WelcomeModal.vue';
@@ -29,6 +31,9 @@ export default {
     AboutPointCloudPage,
     TourViewer,
     PointCloudViewer,
+  },
+  computed: {
+    ...mapState(['onPremiseMode']),
   },
   mounted() {
     this.$store.dispatch('getChapters');
@@ -131,19 +136,26 @@ button {
   overflow: hidden;
 }
 
+#app.on-premise .scrollable {
+  scrollbar-width: none;
+}
+#app.on-premise .scrollable::-webkit-scrollbar {
+  display: none;
+}
+
 @media (hover: hover) {
-  .scrollable {
+  #app:not(.on-premise) .scrollable {
     scrollbar-color: var(--scrollbar-color, #b2b2b2)
       var(--scrollbar-bg-color, #2b2b2b);
     scrollbar-width: thin;
   }
-  .scrollable::-webkit-scrollbar {
+  #app:not(.on-premise) .scrollable::-webkit-scrollbar {
     width: 0.5rem;
   }
-  .scrollable::-webkit-scrollbar-thumb {
+  #app:not(.on-premise) .scrollable::-webkit-scrollbar-thumb {
     background: var(--scrollbar-color, #b2b2b2);
   }
-  .scrollable::-webkit-scrollbar-track {
+  #app:not(.on-premise) .scrollable::-webkit-scrollbar-track {
     background: var(--scrollbar-bg-color, #2b2b2b);
   }
 }
